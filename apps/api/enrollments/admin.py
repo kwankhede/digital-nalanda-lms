@@ -1,3 +1,11 @@
 from django.contrib import admin
 
-# Register enrollments models here as they are added.
+from .models import Enrollment
+
+
+@admin.register(Enrollment)
+class EnrollmentAdmin(admin.ModelAdmin):
+    list_display = ("student", "course", "status", "progress_percentage", "enrolled_at")
+    list_filter = ("status",)
+    search_fields = ("student__email", "course__title")
+    autocomplete_fields = ()
