@@ -12,6 +12,7 @@ urlpatterns = [
     path("api/", include("enrollments.urls")),
     path("api/", include("progress.urls")),
     path("api/", include("certificates.urls")),
+    path("api/", include("live_sessions.urls")),
 ]
 
 # Serve uploaded/generated media in development.
