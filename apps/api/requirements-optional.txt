@@ -1,0 +1,9 @@
+# Optional dependencies — install when you need them.
+#   pip install -r requirements-optional.txt
+#
+# Async task queue & cache (needs a running Redis):
+celery==5.4.0
+redis==5.0.4
+
+# Production WSGI server (used in Docker/deployment, not for runserver):
+gunicorn==22.0.0

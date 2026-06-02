@@ -1,6 +1,15 @@
-# Digital Nalanda LMS — service orchestration (PLACEHOLDER)
-# Services are scaffolded but not yet implemented. Build contexts and
-# images will be wired up in later phases. Do not rely on this for prod.
+# Digital Nalanda LMS — OPTIONAL Docker orchestration (future deployment).
+#
+# Docker is NOT required for local development. To run locally without Docker,
+# see the README ("Local Setup") — just `python manage.py runserver` and
+# `npm run dev`. This file is kept for containerized deployment and for anyone
+# who prefers to spin up the whole stack at once:
+#
+#     docker compose up --build
+#
+# Note: the `api` service overrides DATABASE_URL/REDIS_URL below so it points at
+# the container service names (postgres/redis) regardless of apps/api/.env,
+# which is configured for localhost.
 
 services:
   postgres:
@@ -14,6 +23,11 @@ services:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:7-alpine
@@ -22,21 +36,34 @@ services:
       - "6379:6379"
 
   api:
-    # build: ./apps/api          # enable once Dockerfile exists
-    image: dn_api_placeholder
+    build: ./apps/api
     container_name: dn_api
-    depends_on:
-      - postgres
-      - redis
+    # Apply migrations on boot, then start the dev server.
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./apps/api:/app
     env_file:
-      - .env
+      - ./apps/api/.env
+    environment:
+      # Override localhost hosts from .env with container service names.
+      DATABASE_URL: postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-digital_nalanda}
+      DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1,api
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
     ports:
       - "8000:8000"
 
   web:
-    # build: ./apps/web          # enable once Dockerfile exists
-    image: dn_web_placeholder
+    build: ./apps/web
     container_name: dn_web
+    volumes:
+      - ./apps/web:/app
+      - /app/node_modules
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000
     depends_on:
       - api
     ports:

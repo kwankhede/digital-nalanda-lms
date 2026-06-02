@@ -1,0 +1,14 @@
+# --- Core (required for local development) ---
+Django==5.0.6
+djangorestframework==3.15.1
+django-cors-headers==4.3.1
+django-environ==0.11.2
+psycopg2-binary==2.9.9
+
+# --- Optional: async tasks & cache (NOT required to run locally) ---
+# Install only when you start using background jobs / Celery.
+# celery==5.4.0
+# redis==5.0.4
+
+# --- Optional: production WSGI server (used in Docker/deployment) ---
+# gunicorn==22.0.0
