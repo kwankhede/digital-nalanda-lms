@@ -146,6 +146,34 @@ pip install -r apps/api/requirements-optional.txt   # installs celery + redis
 # then uncomment REDIS_URL / CELERY_BROKER_URL in apps/api/.env
 ```
 
+## API Endpoints
+
+Base URL: `http://localhost:8000`
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/health/` | Service health check |
+| GET | `/api/categories/` | List all course categories |
+| GET | `/api/courses/` | List published courses |
+| GET | `/api/courses/<slug>/` | Course detail with modules + lessons |
+
+**Course list filters** (query params, combinable):
+
+- `?category=<slug>` — e.g. `?category=computer`
+- `?level=<beginner\|intermediate\|advanced>`
+- `?language=<language>` — e.g. `?language=Hindi`
+
+Example: `GET /api/courses/?category=computer&level=beginner`
+
+Responses are paginated: `{ "count", "next", "previous", "results": [...] }`.
+
+**Seed example data:**
+
+```bash
+cd apps/api
+python manage.py seed_courses   # 5 courses, 5 categories, 12 lessons (idempotent)
+```
+
 ## License
 
 Proprietary — Digital Nalanda. All rights reserved.
