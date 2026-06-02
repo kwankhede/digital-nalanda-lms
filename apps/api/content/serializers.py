@@ -1,18 +1,18 @@
 from rest_framework import serializers
 
-from .models import CommunityLibrary, Educator, LearningPath, NewsletterSubscriber, School
+from .models import CommunityLibrary, Educator, ImpactMetric, LearningPath, NewsletterSubscriber, School
 
 
 class SchoolSerializer(serializers.ModelSerializer):
     class Meta:
         model = School
-        fields = ["id", "name", "slug", "description", "icon", "course_count"]
+        fields = ["id", "name", "slug", "description", "icon", "image_url", "course_count"]
 
 
 class LearningPathSerializer(serializers.ModelSerializer):
     class Meta:
         model = LearningPath
-        fields = ["id", "name", "slug", "description", "icon", "course_count"]
+        fields = ["id", "name", "slug", "description", "icon", "image_url", "course_count"]
 
 
 class EducatorSerializer(serializers.ModelSerializer):
@@ -34,3 +34,44 @@ class NewsletterSerializer(serializers.ModelSerializer):
 
     def validate_email(self, value):
         return value.lower().strip()
+
+
+class ImpactMetricSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ImpactMetric
+        fields = ["id", "value", "suffix", "label"]
+
+
+from .models import Story, StoryMedia  # noqa: E402
+
+
+class StoryMediaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StoryMedia
+        fields = ["id", "media_type", "url", "caption", "order"]
+
+
+class StoryListSerializer(serializers.ModelSerializer):
+    category = serializers.CharField(source="category.name", read_only=True, default=None)
+
+    class Meta:
+        model = Story
+        fields = [
+            "id", "title", "slug", "summary", "featured_image",
+            "student_name", "institution", "city", "graduation_year",
+            "quote", "is_featured", "category", "published_at",
+        ]
+
+
+class StoryDetailSerializer(serializers.ModelSerializer):
+    category = serializers.CharField(source="category.name", read_only=True, default=None)
+    media = StoryMediaSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Story
+        fields = [
+            "id", "title", "slug", "summary", "content", "featured_image",
+            "student_name", "institution", "city", "graduation_year",
+            "quote", "is_featured", "category", "media",
+            "published_at", "created_at", "updated_at",
+        ]

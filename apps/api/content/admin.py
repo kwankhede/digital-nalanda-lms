@@ -3,6 +3,7 @@ from django.contrib import admin
 from .models import (
     CommunityLibrary,
     Educator,
+    ImpactMetric,
     LearningPath,
     NewsletterSubscriber,
     School,
@@ -41,3 +42,33 @@ class NewsletterSubscriberAdmin(admin.ModelAdmin):
     list_display = ("email", "created_at")
     search_fields = ("email",)
     readonly_fields = ("created_at",)
+
+
+@admin.register(ImpactMetric)
+class ImpactMetricAdmin(admin.ModelAdmin):
+    list_display = ("label", "value", "suffix", "order", "is_published")
+    list_editable = ("value", "suffix", "order", "is_published")
+
+
+from .models import Story, StoryCategory, StoryMedia  # noqa: E402
+
+
+class StoryMediaInline(admin.TabularInline):
+    model = StoryMedia
+    extra = 1
+
+
+@admin.register(StoryCategory)
+class StoryCategoryAdmin(admin.ModelAdmin):
+    list_display = ("name", "order")
+    prepopulated_fields = {"slug": ("name",)}
+
+
+@admin.register(Story)
+class StoryAdmin(admin.ModelAdmin):
+    list_display = ("title", "student_name", "institution", "is_featured", "is_published", "display_order")
+    list_editable = ("is_featured", "is_published", "display_order")
+    list_filter = ("is_featured", "is_published", "category")
+    search_fields = ("title", "student_name", "institution")
+    prepopulated_fields = {"slug": ("title",)}
+    inlines = [StoryMediaInline]

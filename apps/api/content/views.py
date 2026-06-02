@@ -3,23 +3,16 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import CommunityLibrary, Educator, LearningPath, NewsletterSubscriber, School
+from .models import CommunityLibrary, Educator, ImpactMetric, LearningPath, NewsletterSubscriber, School
 from .serializers import (
     CommunityLibrarySerializer,
     EducatorSerializer,
+    ImpactMetricSerializer,
     LearningPathSerializer,
     NewsletterSerializer,
     SchoolSerializer,
 )
 
-# Configured impact numbers (marketing figures, not raw DB counts).
-IMPACT = [
-    {"value": 5000, "suffix": "+", "label": "Students Reached"},
-    {"value": 600, "suffix": "+", "label": "Successful Learners"},
-    {"value": 20, "suffix": "+", "label": "Educators"},
-    {"value": 14, "suffix": "", "label": "Community Libraries"},
-    {"value": 100, "suffix": "%", "label": "Free Education"},
-]
 
 
 class SchoolListView(generics.ListAPIView):
@@ -57,11 +50,11 @@ class CommunityLibraryListView(generics.ListAPIView):
     pagination_class = None
 
 
-class ImpactView(APIView):
+class ImpactView(generics.ListAPIView):
+    queryset = ImpactMetric.objects.filter(is_published=True)
+    serializer_class = ImpactMetricSerializer
     permission_classes = [AllowAny]
-
-    def get(self, request):
-        return Response(IMPACT)
+    pagination_class = None
 
 
 class NewsletterSubscribeView(APIView):
@@ -76,3 +69,35 @@ class NewsletterSubscribeView(APIView):
             {"detail": "Subscribed", "email": email},
             status=status.HTTP_201_CREATED,
         )
+
+
+from .models import Story  # noqa: E402
+from .serializers import StoryDetailSerializer, StoryListSerializer  # noqa: E402
+
+
+class StoryListView(generics.ListAPIView):
+    serializer_class = StoryListSerializer
+    permission_classes = [AllowAny]
+    pagination_class = None
+
+    def get_queryset(self):
+        return Story.objects.filter(is_published=True).select_related("category")
+
+
+class FeaturedStoriesView(generics.ListAPIView):
+    serializer_class = StoryListSerializer
+    permission_classes = [AllowAny]
+    pagination_class = None
+
+    def get_queryset(self):
+        return (
+            Story.objects.filter(is_published=True, is_featured=True)
+            .select_related("category")
+        )
+
+
+class StoryDetailView(generics.RetrieveAPIView):
+    queryset = Story.objects.filter(is_published=True).prefetch_related("media")
+    serializer_class = StoryDetailSerializer
+    permission_classes = [AllowAny]
+    lookup_field = "slug"

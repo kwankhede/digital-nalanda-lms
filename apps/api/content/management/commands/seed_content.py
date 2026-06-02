@@ -2,7 +2,7 @@
 from django.core.management.base import BaseCommand
 from django.utils.text import slugify
 
-from content.models import CommunityLibrary, Educator, LearningPath, School
+from content.models import CommunityLibrary, Educator, ImpactMetric, LearningPath, School, Story
 
 SCHOOLS = [
     ("Arts School", "🎨", "Literature, history & the humanities.", 12),
@@ -32,6 +32,25 @@ EDUCATORS = [
     ("Samdish Chumber", "Economics", "Management School"),
     ("Meera Joshi", "Data Science & Statistics", "Data Science"),
     ("Arjun Rao", "Law & Constitution", "Law School"),
+]
+
+IMPACT = [
+    (5000, "+", "Students Reached"),
+    (600, "+", "Successful Learners"),
+    (20, "+", "Educators"),
+    (14, "", "Community Libraries"),
+    (100, "%", "Free Education"),
+]
+
+STORIES = [
+    ("From village to first job", "Roopa Nagenahalli", "Azim Premji University", "Karnataka", "2019",
+     "When I joined Nalanda in 2017, I couldn't write a paragraph in English — I studied in Kannada and was a school drop-out. Nalanda gave me my first real chance to study properly."),
+    ("A learning home far from home", "Chetan Kant", "TISS Mumbai", "Odisha", "2020",
+     "I'm from a village in Odisha; my parents died when I was young. I could join Nalanda only because it taught students free of cost and provided stipends."),
+    ("Studying abroad, once unimaginable", "Raviraj Gajbhiye", "University of Alberta, Canada", "Maharashtra", "2021",
+     "Studying abroad never crossed my mind before Nalanda. It's the only place I derive my inspiration, motivation and confidence from."),
+    ("A family that believes in equality", "Karuna Patel", "Central University of Punjab", "Bihar", "2022",
+     "I met students from different states at Nalanda. Nalanda is like a family that believes in equality and equal access to education."),
 ]
 
 LIBRARIES = [
@@ -68,9 +87,27 @@ class Command(BaseCommand):
                 name=name,
                 defaults={"location": loc, "description": desc, "order": i},
             )
+        from django.utils import timezone
+        for i, (title, name, inst, city, year, quote) in enumerate(STORIES):
+            Story.objects.update_or_create(
+                student_name=name, title=title,
+                defaults={
+                    "summary": quote[:140], "content": quote, "quote": quote,
+                    "institution": inst, "city": city, "graduation_year": year,
+                    "is_featured": True, "is_published": True,
+                    "display_order": i, "published_at": timezone.now(),
+                },
+            )
+        for i, (value, suffix, label) in enumerate(IMPACT):
+            ImpactMetric.objects.update_or_create(
+                label=label,
+                defaults={"value": value, "suffix": suffix, "order": i},
+            )
         self.stdout.write(self.style.SUCCESS(
             f"Seeded {School.objects.count()} schools, "
             f"{LearningPath.objects.count()} paths, "
             f"{Educator.objects.count()} educators, "
-            f"{CommunityLibrary.objects.count()} libraries."
+            f"{CommunityLibrary.objects.count()} libraries, "
+            f"{ImpactMetric.objects.count()} impact metrics, "
+            f"{Story.objects.count()} stories."
         ))

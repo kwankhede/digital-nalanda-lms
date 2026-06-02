@@ -1,6 +1,9 @@
 from django.urls import path
 
 from .views import (
+    FeaturedStoriesView,
+    StoryDetailView,
+    StoryListView,
     CommunityLibraryListView,
     FeaturedEducatorsView,
     ImpactView,
@@ -18,4 +21,7 @@ urlpatterns = [
     path("community-libraries/", CommunityLibraryListView.as_view(), name="community-library-list"),
     path("home/impact/", ImpactView.as_view(), name="home-impact"),
     path("newsletter/subscribe/", NewsletterSubscribeView.as_view(), name="newsletter-subscribe"),
+    path("stories/", StoryListView.as_view(), name="story-list"),
+    path("stories/featured/", FeaturedStoriesView.as_view(), name="story-featured"),
+    path("stories/<slug:slug>/", StoryDetailView.as_view(), name="story-detail"),
 ]
