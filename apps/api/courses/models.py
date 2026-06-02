@@ -1,6 +1,36 @@
 from django.db import models
 
 
+class MigrationMeta(models.Model):
+    """
+    Mixin of bookkeeping fields that make content migration-ready.
+
+    All fields are optional so existing/native content is unaffected and the
+    public API is unchanged (serializers don't expose these). They let an
+    importer record where a row came from and trace it back to the source.
+    """
+
+    class SourcePlatform(models.TextChoices):
+        NATIVE = "native", "Native (created here)"
+        LEARNWORLDS = "learnworlds", "LearnWorlds"
+        CSV = "csv", "CSV import"
+        OTHER = "other", "Other"
+
+    # ID of this record on the source platform (e.g. LearnWorlds course id).
+    external_id = models.CharField(max_length=191, blank=True, db_index=True)
+    source_platform = models.CharField(
+        max_length=20, choices=SourcePlatform.choices,
+        default=SourcePlatform.NATIVE,
+    )
+    # Canonical URL on the original site, for reference / redirects.
+    original_url = models.URLField(blank=True)
+    migration_notes = models.TextField(blank=True)
+    imported_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        abstract = True
+
+
 class Category(models.Model):
     """Top-level grouping for courses (e.g. Education, Computer, Language)."""
 
@@ -15,7 +45,7 @@ class Category(models.Model):
         return self.name
 
 
-class Course(models.Model):
+class Course(MigrationMeta):
     class Level(models.TextChoices):
         BEGINNER = "beginner", "Beginner"
         INTERMEDIATE = "intermediate", "Intermediate"
@@ -45,7 +75,7 @@ class Course(models.Model):
         return self.title
 
 
-class Module(models.Model):
+class Module(MigrationMeta):
     """A section within a course that groups lessons."""
 
     course = models.ForeignKey(
@@ -61,7 +91,7 @@ class Module(models.Model):
         return f"{self.course.title} - {self.title}"
 
 
-class Lesson(models.Model):
+class Lesson(MigrationMeta):
     class LessonType(models.TextChoices):
         YOUTUBE = "youtube", "YouTube"
         VIDEO = "video", "Video"

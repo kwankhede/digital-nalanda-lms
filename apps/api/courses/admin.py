@@ -23,8 +23,8 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
     list_display = ("title", "category", "level", "language", "is_free", "is_published")
-    list_filter = ("level", "language", "is_free", "is_published", "category")
-    search_fields = ("title", "short_description")
+    list_filter = ("level", "language", "is_free", "is_published", "category", "source_platform")
+    search_fields = ("title", "short_description", "external_id")
     prepopulated_fields = {"slug": ("title",)}
     inlines = [ModuleInline]
 
