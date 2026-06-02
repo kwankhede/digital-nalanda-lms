@@ -1,0 +1,46 @@
+# Digital Nalanda LMS — service orchestration (PLACEHOLDER)
+# Services are scaffolded but not yet implemented. Build contexts and
+# images will be wired up in later phases. Do not rely on this for prod.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: dn_postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-digital_nalanda}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    container_name: dn_redis
+    ports:
+      - "6379:6379"
+
+  api:
+    # build: ./apps/api          # enable once Dockerfile exists
+    image: dn_api_placeholder
+    container_name: dn_api
+    depends_on:
+      - postgres
+      - redis
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+
+  web:
+    # build: ./apps/web          # enable once Dockerfile exists
+    image: dn_web_placeholder
+    container_name: dn_web
+    depends_on:
+      - api
+    ports:
+      - "3000:3000"
+
+volumes:
+  postgres_data:
