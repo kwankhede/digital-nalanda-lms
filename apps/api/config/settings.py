@@ -45,6 +45,8 @@ LOCAL_APPS = [
     "certificates",
     "live_sessions",
     "content",
+    "migration_tools",
+    "adminpanel",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

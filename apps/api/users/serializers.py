@@ -8,9 +8,9 @@ User = get_user_model()
 PROFILE_FIELDS = [
     "id", "email", "full_name", "phone", "gender", "date_of_birth",
     "city", "district", "state", "education_level", "profession",
-    "category", "preferred_language", "role",
+    "category", "preferred_language", "role", "is_staff",
 ]
-READ_ONLY = ["id", "email", "role"]
+READ_ONLY = ["id", "email", "role", "is_staff"]
 
 
 class RegisterSerializer(serializers.ModelSerializer):

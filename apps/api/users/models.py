@@ -13,6 +13,7 @@ class User(AbstractUser):
     class Role(models.TextChoices):
         STUDENT = "student", "Student"
         MENTOR = "mentor", "Mentor"
+        CONTENT_MANAGER = "content_manager", "Content Manager"
         ADMIN = "admin", "Admin"
 
     class Gender(models.TextChoices):
