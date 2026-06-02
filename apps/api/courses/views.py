@@ -38,6 +38,20 @@ class CourseListView(generics.ListAPIView):
         return qs
 
 
+class FeaturedCoursesView(generics.ListAPIView):
+    """GET /api/courses/featured/ — newest published courses for the homepage."""
+
+    serializer_class = CourseListSerializer
+    permission_classes = [AllowAny]
+    pagination_class = None
+
+    def get_queryset(self):
+        return (
+            Course.objects.filter(is_published=True)
+            .select_related("category")[:8]
+        )
+
+
 class CourseDetailView(generics.RetrieveAPIView):
     """GET /api/courses/<slug>/"""
 
