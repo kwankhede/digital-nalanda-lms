@@ -6,4 +6,5 @@ urlpatterns = [
     # API routes live under /api/. Each feature app contributes its own.
     path("api/", include("core.urls")),
     path("api/", include("courses.urls")),
+    path("api/", include("users.urls")),
 ]
