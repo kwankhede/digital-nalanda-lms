@@ -112,7 +112,7 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = "media/"
-MEDIA_ROOT = BASE_DIR / "mediafiles"
+MEDIA_ROOT = env("MEDIA_ROOT", default=str(BASE_DIR / "mediafiles"))
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -133,6 +133,9 @@ REST_FRAMEWORK = {
 CORS_ALLOWED_ORIGINS = env.list(
     "CORS_ALLOWED_ORIGINS", default=["http://localhost:3000"]
 )
+
+# Public site URL — used to build certificate verification links / QR codes.
+FRONTEND_URL = env("FRONTEND_URL", default="http://localhost:3000")
 
 # --- Celery ---
 CELERY_BROKER_URL = env("CELERY_BROKER_URL", default="redis://localhost:6379/0")
