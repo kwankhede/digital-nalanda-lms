@@ -12,9 +12,12 @@ class User(AbstractUser):
 
     class Role(models.TextChoices):
         STUDENT = "student", "Student"
+        TEACHER_APPLICANT = "teacher_applicant", "Teacher Applicant"
+        COURSE_CREATOR = "course_creator", "Course Creator"
         MENTOR = "mentor", "Mentor"
         CONTENT_MANAGER = "content_manager", "Content Manager"
         ADMIN = "admin", "Admin"
+        SUPER_ADMIN = "super_admin", "Super Admin"
 
     class Gender(models.TextChoices):
         MALE = "male", "Male"

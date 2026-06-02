@@ -110,6 +110,7 @@ class Command(BaseCommand):
                     "thumbnail_url": thumb,
                     "is_free": True,
                     "is_published": True,
+                    "status": "published",
                 },
             )
             for m_order, (m_title, lessons) in enumerate(modules, start=1):

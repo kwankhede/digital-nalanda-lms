@@ -27,7 +27,7 @@ class CourseListView(generics.ListAPIView):
     permission_classes = [AllowAny]
 
     def get_queryset(self):
-        qs = Course.objects.filter(is_published=True).select_related("category")
+        qs = Course.objects.filter(status="published").select_related("category")
         params = self.request.query_params
         if category := params.get("category"):
             qs = qs.filter(category__slug=category)
@@ -47,7 +47,7 @@ class FeaturedCoursesView(generics.ListAPIView):
 
     def get_queryset(self):
         return (
-            Course.objects.filter(is_published=True)
+            Course.objects.filter(status="published")
             .select_related("category")[:8]
         )
 
@@ -55,7 +55,7 @@ class FeaturedCoursesView(generics.ListAPIView):
 class CourseDetailView(generics.RetrieveAPIView):
     """GET /api/courses/<slug>/"""
 
-    queryset = Course.objects.filter(is_published=True).prefetch_related(
+    queryset = Course.objects.filter(status="published").prefetch_related(
         "modules__lessons"
     )
     serializer_class = CourseDetailSerializer

@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 
 
@@ -51,6 +52,14 @@ class Course(MigrationMeta):
         INTERMEDIATE = "intermediate", "Intermediate"
         ADVANCED = "advanced", "Advanced"
 
+    class Status(models.TextChoices):
+        DRAFT = "draft", "Draft"
+        SUBMITTED = "submitted", "Submitted"
+        APPROVED = "approved", "Approved"
+        PUBLISHED = "published", "Published"
+        REJECTED = "rejected", "Rejected"
+        ARCHIVED = "archived", "Archived"
+
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=220, unique=True)
     short_description = models.CharField(max_length=300, blank=True)
@@ -65,6 +74,26 @@ class Course(MigrationMeta):
     thumbnail_url = models.URLField(blank=True)
     is_free = models.BooleanField(default=True)
     is_published = models.BooleanField(default=False)
+
+    # --- Ownership & review workflow ---
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.DRAFT)
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, related_name="created_courses",
+        on_delete=models.SET_NULL, null=True, blank=True,
+    )
+    primary_instructor = models.ForeignKey(
+        settings.AUTH_USER_MODEL, related_name="instructing_courses",
+        on_delete=models.SET_NULL, null=True, blank=True,
+    )
+    submitted_at = models.DateTimeField(null=True, blank=True)
+    approved_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, related_name="approved_courses",
+        on_delete=models.SET_NULL, null=True, blank=True,
+    )
+    approved_at = models.DateTimeField(null=True, blank=True)
+    rejected_reason = models.TextField(blank=True)
+    published_at = models.DateTimeField(null=True, blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

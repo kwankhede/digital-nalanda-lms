@@ -47,6 +47,7 @@ LOCAL_APPS = [
     "content",
     "migration_tools",
     "adminpanel",
+    "creators",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

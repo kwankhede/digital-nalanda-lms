@@ -15,6 +15,7 @@ urlpatterns = [
     path("api/", include("live_sessions.urls")),
     path("api/", include("content.urls")),
     path("api/", include("adminpanel.urls")),
+    path("api/", include("creators.urls")),
 ]
 
 # Serve uploaded/generated media in development.
