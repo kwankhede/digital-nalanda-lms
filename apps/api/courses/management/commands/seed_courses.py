@@ -24,7 +24,7 @@ COURSES = [
         "Digital Literacy", "digital-literacy",
         "Basic computer skills and digital tools for everyday life.",
         "computer", "beginner", "Hindi",
-        "https://img.youtube.com/vi/y2srTcN3s_o/hqdefault.jpg",
+        "https://picsum.photos/seed/digital-literacy/600/400",
         [
             ("Getting Started", [
                 ("Introduction to Computers", "intro-to-computers", "youtube", "y2srTcN3s_o", 11, True),
@@ -40,7 +40,7 @@ COURSES = [
         "Spoken English", "spoken-english",
         "Improve your English speaking skills from the beginning.",
         "language", "beginner", "English",
-        "https://img.youtube.com/vi/juKd26qkNQw/hqdefault.jpg",
+        "https://picsum.photos/seed/spoken-english/600/400",
         [
             ("Foundations", [
                 ("Everyday Greetings", "everyday-greetings", "youtube", "juKd26qkNQw", 10, True),
@@ -52,7 +52,7 @@ COURSES = [
         "Basic Mathematics", "basic-mathematics",
         "Learn mathematics from the basics with simple examples.",
         "education", "beginner", "Hindi",
-        "https://img.youtube.com/vi/X4u_yWB7oQ4/hqdefault.jpg",
+        "https://picsum.photos/seed/basic-mathematics/600/400",
         [
             ("Numbers", [
                 ("Understanding Numbers", "understanding-numbers", "youtube", "X4u_yWB7oQ4", 14, True),
@@ -64,7 +64,7 @@ COURSES = [
         "Tally Prime Basics", "tally-prime-basics",
         "Learn accounting with Tally Prime step by step.",
         "skill-development", "intermediate", "Hindi",
-        "https://img.youtube.com/vi/Q4Y3W8oQy5A/hqdefault.jpg",
+        "https://picsum.photos/seed/tally-prime/600/400",
         [
             ("Introduction", [
                 ("What is Tally Prime?", "what-is-tally-prime", "youtube", "Q4Y3W8oQy5A", 13, True),
@@ -76,7 +76,7 @@ COURSES = [
         "Personality Development", "personality-development",
         "Build confidence and improve your personality.",
         "personal-growth", "intermediate", "English",
-        "https://img.youtube.com/vi/8jPQjjsBbIc/hqdefault.jpg",
+        "https://picsum.photos/seed/personality-dev/600/400",
         [
             ("Confidence", [
                 ("Building Self Confidence", "building-self-confidence", "youtube", "8jPQjjsBbIc", 15, True),
