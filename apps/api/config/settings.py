@@ -48,6 +48,7 @@ LOCAL_APPS = [
     "migration_tools",
     "adminpanel",
     "creators",
+    "assistant",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -141,6 +142,9 @@ CORS_ALLOWED_ORIGINS = env.list(
 
 # Public site URL — used to build certificate verification links / QR codes.
 FRONTEND_URL = env("FRONTEND_URL", default="http://localhost:3000")
+
+# Google Gemini (optional) — AI assistant falls back to templates if unset.
+GEMINI_API_KEY = env("GEMINI_API_KEY", default="")
 
 # --- Celery ---
 CELERY_BROKER_URL = env("CELERY_BROKER_URL", default="redis://localhost:6379/0")
