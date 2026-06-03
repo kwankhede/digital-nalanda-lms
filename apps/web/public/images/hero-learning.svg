@@ -1,0 +1,106 @@
+<svg viewBox="0 0 600 500" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Knowledge illustration: a radiant dharma wheel rising over an open book, framed by bodhi leaves">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#102a5c"/>
+      <stop offset="1" stop-color="#0b1f4d"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#fed7aa"/>
+      <stop offset="0.45" stop-color="#f59e0b"/>
+      <stop offset="1" stop-color="#f97316"/>
+    </radialGradient>
+    <linearGradient id="leaf" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fbbf24"/>
+      <stop offset="1" stop-color="#f59e0b"/>
+    </linearGradient>
+    <linearGradient id="book" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#dbe4ff"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Panel -->
+  <rect x="0" y="0" width="600" height="500" rx="28" fill="url(#sky)"/>
+
+  <!-- Distant glow rays -->
+  <g opacity="0.5" stroke="#f59e0b" stroke-width="3" stroke-linecap="round">
+    <line x1="300" y1="40" x2="300" y2="8"/>
+    <line x1="392" y1="64" x2="408" y2="36"/>
+    <line x1="208" y1="64" x2="192" y2="36"/>
+    <line x1="455" y1="135" x2="486" y2="120"/>
+    <line x1="145" y1="135" x2="114" y2="120"/>
+  </g>
+
+  <!-- Stars -->
+  <g fill="#ffffff" opacity="0.7">
+    <circle cx="70" cy="80" r="2.5"/>
+    <circle cx="520" cy="70" r="3"/>
+    <circle cx="540" cy="180" r="2"/>
+    <circle cx="60" cy="200" r="2"/>
+    <circle cx="500" cy="240" r="2.5"/>
+  </g>
+
+  <!-- Radiant sun behind the wheel -->
+  <circle cx="300" cy="175" r="118" fill="url(#sun)" opacity="0.95"/>
+  <circle cx="300" cy="175" r="118" fill="none" stroke="#fff7ed" stroke-width="2" opacity="0.5"/>
+
+  <!-- Dharma wheel (Ashoka chakra) -->
+  <g transform="translate(300 175)" stroke="#0b1f4d" fill="none">
+    <circle r="92" stroke-width="10"/>
+    <circle r="74" stroke-width="4"/>
+    <circle r="14" fill="#0b1f4d" stroke="none"/>
+    <g stroke-width="5" stroke-linecap="round">
+      <line x1="0" y1="-74" x2="0" y2="74"/>
+      <line x1="-74" y1="0" x2="74" y2="0"/>
+      <line x1="-52" y1="-52" x2="52" y2="52"/>
+      <line x1="52" y1="-52" x2="-52" y2="52"/>
+      <line x1="-28" y1="-69" x2="28" y2="69"/>
+      <line x1="28" y1="-69" x2="-28" y2="69"/>
+      <line x1="-69" y1="-28" x2="69" y2="28"/>
+      <line x1="69" y1="-28" x2="-69" y2="28"/>
+    </g>
+  </g>
+
+  <!-- Bodhi / peepal leaves framing the base -->
+  <g>
+    <!-- left leaf -->
+    <path d="M150 360 C 95 330, 70 270, 120 250 C 150 290, 165 330, 150 360 Z" fill="url(#leaf)"/>
+    <path d="M150 360 C 138 320, 128 290, 120 252" stroke="#b45309" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M150 360 L 150 392" stroke="#b45309" stroke-width="3" stroke-linecap="round"/>
+    <!-- right leaf -->
+    <path d="M450 360 C 505 330, 530 270, 480 250 C 450 290, 435 330, 450 360 Z" fill="url(#leaf)"/>
+    <path d="M450 360 C 462 320, 472 290, 480 252" stroke="#b45309" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M450 360 L 450 392" stroke="#b45309" stroke-width="3" stroke-linecap="round"/>
+  </g>
+
+  <!-- Open book -->
+  <g transform="translate(300 392)">
+    <path d="M-130 8 C -80 -18, -20 -18, 0 2 C 20 -18, 80 -18, 130 8 L 130 64 C 80 40, 20 40, 0 60 C -20 40, -80 40, -130 64 Z" fill="url(#book)"/>
+    <path d="M0 2 L 0 60" stroke="#94a3b8" stroke-width="2"/>
+    <g stroke="#c7d2fe" stroke-width="3" stroke-linecap="round">
+      <line x1="-105" y1="18" x2="-25" y2="8"/>
+      <line x1="-105" y1="34" x2="-25" y2="24"/>
+      <line x1="25" y1="8" x2="105" y2="18"/>
+      <line x1="25" y1="24" x2="105" y2="34"/>
+    </g>
+    <!-- pages base -->
+    <path d="M-130 64 C -80 40, -20 40, 0 60 C 20 40, 80 40, 130 64 L 130 74 C 80 50, 20 50, 0 70 C -20 50, -80 50, -130 74 Z" fill="#1d4ed8"/>
+  </g>
+
+  <!-- Learners reaching toward knowledge -->
+  <g>
+    <!-- figure left -->
+    <circle cx="205" cy="430" r="16" fill="#f97316"/>
+    <path d="M183 478 C 183 452, 227 452, 227 478 Z" fill="#1d4ed8"/>
+    <!-- figure center (graduate) -->
+    <circle cx="300" cy="438" r="18" fill="#fbbf24"/>
+    <rect x="285" y="420" width="30" height="9" rx="2" fill="#0b1f4d"/>
+    <path d="M276 490 C 276 460, 324 460, 324 490 Z" fill="#e0492f"/>
+    <!-- figure right -->
+    <circle cx="395" cy="430" r="16" fill="#38bdf8"/>
+    <path d="M373 478 C 373 452, 417 452, 417 478 Z" fill="#1d4ed8"/>
+  </g>
+
+  <!-- ground line -->
+  <rect x="40" y="486" width="520" height="6" rx="3" fill="#ffffff" opacity="0.12"/>
+</svg>

@@ -26,6 +26,7 @@ export interface Lesson {
   lesson_type: string;
   youtube_video_id: string;
   content: string;
+  blocks?: import("@/lib/blocks").Block[];
   order: number;
   duration_minutes: number;
   is_preview: boolean;
@@ -62,5 +63,162 @@ export async function getCourse(slug: string): Promise<CourseDetail | null> {
   const res = await fetch(`${API_URL}/api/courses/${slug}/`, { cache: "no-store" });
   if (res.status === 404) return null;
   if (!res.ok) throw new Error("Failed to load course");
+  return res.json();
+}
+
+// --- Public certificate verification ---
+export interface CertificateVerification {
+  student_name: string;
+  course_name: string;
+  certificate_number: string;
+  issue_date: string;
+  status: "valid" | "invalid";
+}
+
+export async function verifyCertificate(
+  code: string,
+): Promise<CertificateVerification | null> {
+  const res = await fetch(`${API_URL}/api/certificates/verify/${code}/`, {
+    cache: "no-store",
+  });
+  if (!res.ok) return null;
+  return res.json();
+}
+
+// --- Homepage: recordings + upcoming (public) ---
+export interface HomeRecording {
+  id: number;
+  title: string;
+  slug: string;
+  recording_title: string;
+  recording_url: string;
+  recording_thumbnail_url: string;
+  recording_duration_minutes: number | null;
+  start_time: string;
+  mentor_name: string | null;
+  course_title: string | null;
+}
+
+export interface HomeUpcomingItem {
+  id: string;
+  type: "live_session" | "event";
+  title: string;
+  description: string;
+  start_time: string;
+  end_time: string | null;
+  thumbnail_url: string;
+  join_or_register_url: string;
+  status: string;
+  speaker_or_mentor: string | null;
+}
+
+export async function getHomeRecordings(): Promise<HomeRecording[]> {
+  try {
+    const res = await fetch(`${API_URL}/api/home/recordings/`, { cache: "no-store" });
+    if (!res.ok) return [];
+    return res.json();
+  } catch {
+    return [];
+  }
+}
+
+export async function getHomeUpcoming(): Promise<HomeUpcomingItem[]> {
+  try {
+    const res = await fetch(`${API_URL}/api/home/upcoming/`, { cache: "no-store" });
+    if (!res.ok) return [];
+    return res.json();
+  } catch {
+    return [];
+  }
+}
+
+// --- Homepage content (schools, paths, educators, libraries, impact) ---
+
+export interface SchoolDTO {
+  id?: number;
+  name: string;
+  slug: string;
+  description: string;
+  icon: string;
+  image_url?: string;
+  course_count: number;
+}
+export interface PathDTO {
+  id?: number;
+  name: string;
+  slug: string;
+  description: string;
+  icon: string;
+  course_count: number;
+}
+export interface EducatorDTO {
+  id?: number;
+  name: string;
+  expertise: string;
+  school: string;
+}
+export interface LibraryDTO {
+  id?: number;
+  name: string;
+  location: string;
+  description: string;
+}
+export interface ImpactStat {
+  value: number;
+  suffix: string;
+  label: string;
+}
+
+async function getList<T>(path: string): Promise<T[]> {
+  const res = await fetch(`${API_URL}${path}`, { cache: "no-store" });
+  if (!res.ok) throw new Error(`Request failed: ${path}`);
+  return res.json();
+}
+
+// DB-driven (no static fallback). Components handle loading/error/empty.
+export const getSchools = () => getList<SchoolDTO>("/api/schools/");
+export const getLearningPaths = () => getList<PathDTO>("/api/learning-paths/");
+export const getEducators = () => getList<EducatorDTO>("/api/educators/featured/");
+export const getCommunityLibraries = () => getList<LibraryDTO>("/api/community-libraries/");
+export const getImpact = () => getList<ImpactStat>("/api/home/impact/");
+export const getFeaturedCourses = () => getList<CourseListItem>("/api/courses/featured/");
+
+// --- Stories ---
+export interface StoryListItem {
+  id: number;
+  title: string;
+  slug: string;
+  summary: string;
+  featured_image: string;
+  student_name: string;
+  institution: string;
+  city: string;
+  graduation_year: string;
+  quote: string;
+  is_featured: boolean;
+  category: string | null;
+  published_at: string | null;
+}
+
+export interface StoryMediaItem {
+  id: number;
+  media_type: string;
+  url: string;
+  caption: string;
+  order: number;
+}
+
+export interface StoryDetail extends StoryListItem {
+  content: string;
+  media: StoryMediaItem[];
+}
+
+export const getStories = () => getList<StoryListItem>("/api/stories/");
+export const getFeaturedStories = () => getList<StoryListItem>("/api/stories/featured/");
+
+export async function getStory(slug: string): Promise<StoryDetail | null> {
+  const res = await fetch(`${API_URL}/api/stories/${slug}/`, { cache: "no-store" });
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error("Failed to load story");
   return res.json();
 }

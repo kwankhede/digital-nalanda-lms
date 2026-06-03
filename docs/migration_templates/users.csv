@@ -1,0 +1,2 @@
+external_id,email,full_name,phone,gender,date_of_birth,city,district,state,education_level,profession,category,preferred_language,role,source_platform,migration_notes
+LW-USR-9001,ravi@example.com,Ravi Kumar,9999999999,male,2005-01-12,Nalanda,Nalanda,Bihar,Graduation,Student,General,Hindi,student,learnworlds,
