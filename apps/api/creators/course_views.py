@@ -230,6 +230,16 @@ class _CourseTransition(APIView):
         course.save()
         log_action(request.user, f"course_{a}", "Course", course.id,
                    note=course.rejected_reason if a == "reject" else "")
+        if course.created_by_id and a in ("publish", "approve", "reject"):
+            try:
+                from notifications.models import notify
+                titles = {"publish": "Your course is published 🎉",
+                          "approve": "Your course was approved",
+                          "reject": "Your course needs changes"}
+                notify(course.created_by, "course", titles[a], course.title,
+                       f"/creator/courses/{course.id}/edit")
+            except Exception:
+                pass
         return Response(AdminCourseReviewSerializer(course).data)
 
 

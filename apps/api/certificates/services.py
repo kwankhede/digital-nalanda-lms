@@ -47,6 +47,12 @@ def issue_certificate(student, course, generated_by=Certificate.GeneratedBy.SYST
         generated_by=generated_by,
     )
     _save_pdf(certificate)
+    try:
+        from notifications.models import notify
+        notify(student, "certificate", "Certificate issued 🎉",
+               f"You earned a certificate for {course.title}.", "/dashboard")
+    except Exception:
+        pass
     return certificate
 
 

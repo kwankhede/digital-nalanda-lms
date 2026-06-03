@@ -49,6 +49,8 @@ LOCAL_APPS = [
     "adminpanel",
     "creators",
     "assistant",
+    "notifications",
+    "announcements",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

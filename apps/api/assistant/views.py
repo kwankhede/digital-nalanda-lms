@@ -118,4 +118,11 @@ class CounsellingReplyView(APIView):
             if not req.assigned_to:
                 req.assigned_to = request.user
         req.save()
+        if action not in ("assign",):
+            try:
+                from notifications.models import notify
+                notify(req.student, "counselling", "Mentor replied to your request",
+                       req.subject, "/dashboard/counselling")
+            except Exception:
+                pass
         return Response(CounsellingSerializer(req).data)
