@@ -1,64 +1,46 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { getCourses } from "@/lib/api";
+import CoursesBrowser from "@/components/CoursesBrowser";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Courses | Digital Nalanda",
+  description:
+    "Explore Digital Nalanda's free courses across the arts, sciences, law, design and social thought — open to every learner.",
+};
 
 export default async function CoursesPage() {
   const courses = await getCourses();
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-12">
-      <h1 className="text-3xl font-extrabold text-brand-navy">All Courses</h1>
-      <p className="mt-2 text-gray-500">Explore our wide range of free courses.</p>
-
-      {courses.length === 0 ? (
-        <p className="mt-8 text-gray-500">
-          No courses yet. Run <code>python manage.py seed_courses</code> on the backend.
+    <div className="parchment min-h-screen">
+      <div className="mx-auto max-w-6xl px-4 py-14">
+        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-nal-saffron">Learn</p>
+        <h1 className="mt-2 font-display text-4xl font-bold tracking-tight text-nal-navy">All Courses</h1>
+        <p className="mt-3 max-w-2xl text-nal-slate">
+          Explore our growing library of courses — every one free, forever. Search
+          or filter by category and level to find your next step.
         </p>
-      ) : (
-        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {courses.map((c) => (
-            <Link
-              key={c.id}
-              href={`/courses/${c.slug}`}
-              className="flex flex-col overflow-hidden rounded-lg border border-gray-100 shadow-sm transition hover:shadow-md"
-            >
-              {c.thumbnail_url ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={c.thumbnail_url}
-                  alt={c.title}
-                  className="h-36 w-full object-cover"
-                />
-              ) : (
-                <div className="h-36 w-full bg-brand-navy/10" />
-              )}
-              <div className="flex flex-1 flex-col p-4">
-                <div className="flex flex-wrap gap-2">
-                  {c.category && (
-                    <span className="rounded bg-blue-50 px-2 py-0.5 text-xs font-semibold text-brand-blue">
-                      {c.category.name}
-                    </span>
-                  )}
-                  <span className="rounded bg-gray-100 px-2 py-0.5 text-xs font-semibold capitalize text-gray-600">
-                    {c.level}
-                  </span>
-                </div>
-                <h2 className="mt-3 font-bold text-brand-navy">{c.title}</h2>
-                <p className="mt-1 flex-1 text-sm text-gray-500">
-                  {c.short_description}
-                </p>
-                <div className="mt-4 flex items-center justify-between text-sm">
-                  <span className="text-gray-400">{c.language}</span>
-                  {c.is_free && (
-                    <span className="font-bold text-green-600">Free</span>
-                  )}
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-      )}
+
+        {courses.length === 0 ? (
+          <div className="mt-12 rounded-2xl border border-dashed border-nal-border bg-white/60 p-10 text-center">
+            <p className="text-4xl">📚</p>
+            <h2 className="mt-3 font-display text-xl font-bold text-nal-navy">Courses are on the way</h2>
+            <p className="mx-auto mt-2 max-w-md text-sm text-nal-slate">
+              New courses are being prepared. In the meantime, explore our schools
+              or meet the educators who teach here.
+            </p>
+            <div className="mt-6 flex justify-center gap-3">
+              <Link href="/schools" className="rounded-md bg-nal-navy px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-nal-ink">Browse schools</Link>
+              <Link href="/educators" className="rounded-md border border-nal-border bg-white px-5 py-2.5 text-sm font-semibold text-nal-navy transition hover:border-nal-saffron hover:text-nal-saffron">Meet educators</Link>
+            </div>
+          </div>
+        ) : (
+          <CoursesBrowser courses={courses} />
+        )}
+      </div>
     </div>
   );
 }

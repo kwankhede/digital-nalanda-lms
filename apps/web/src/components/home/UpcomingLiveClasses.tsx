@@ -44,7 +44,7 @@ export default function UpcomingLiveClasses({ items }: { items: HomeUpcomingItem
     <div className="flex h-full flex-col rounded-2xl border border-nal-border bg-white p-6 shadow-soft">
       <div className="flex items-center justify-between">
         <h3 className="font-display text-xl font-bold text-nal-navy">Upcoming Live Classes</h3>
-        <Link href="/#events" className="text-xs font-semibold text-nal-saffron hover:underline">
+        <Link href="/events" className="text-xs font-semibold text-nal-saffron hover:underline">
           View All →
         </Link>
       </div>
@@ -52,7 +52,7 @@ export default function UpcomingLiveClasses({ items }: { items: HomeUpcomingItem
       <ul className="mt-5 space-y-4">
         {shown.map((it) => {
           const b = badge(it.start_time);
-          const arrowHref = it.join_or_register_url || "/#events";
+          const arrowHref = it.join_or_register_url || "/events";
           const external = Boolean(it.join_or_register_url);
           return (
             <li key={it.id} className="group flex items-start gap-3 rounded-xl p-2 transition-colors hover:bg-nal-parchment/60">

@@ -17,8 +17,8 @@ export interface NavGroup {
 // --- Flat public header (matches the reference design exactly) ---
 export const PUBLIC_PRIMARY: NavLink[] = [
   { label: "Courses", href: "/courses" },
-  { label: "Live Classes", href: "/#events" },
-  { label: "Events", href: "/#events" },
+  { label: "Live Classes", href: "/events" },
+  { label: "Events", href: "/events" },
   { label: "Schools", href: "/schools" },
   { label: "Educators", href: "/educators" },
 ];
@@ -48,9 +48,9 @@ export const PUBLIC_NAV: NavGroup[] = [
   {
     label: "Live",
     items: [
-      { label: "Live Classes", href: "/#events" },
+      { label: "Live Classes", href: "/events" },
       { label: "Workshops", href: "/#events" },
-      { label: "Events", href: "/#events" },
+      { label: "Events", href: "/events" },
       { label: "Recordings", href: "/#recordings" },
     ],
   },
@@ -89,7 +89,7 @@ export const STUDENT_NAV: NavGroup[] = [
       { label: "Upcoming Classes", href: "/dashboard" },
       { label: "Recordings", href: "/#recordings" },
       { label: "Workshops", href: "/#events" },
-      { label: "Events", href: "/#events" },
+      { label: "Events", href: "/events" },
     ],
   },
   {

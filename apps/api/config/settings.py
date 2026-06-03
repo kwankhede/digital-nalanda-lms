@@ -214,6 +214,15 @@ CACHES = {
 CORS_ALLOWED_ORIGINS = env.list(
     "CORS_ALLOWED_ORIGINS", default=["http://localhost:3000"]
 )
+# In local dev the Next.js server may run on any port (3000/3001/3002…), so
+# allow any localhost/127.0.0.1 origin. Production stays restricted to the
+# explicit CORS_ALLOWED_ORIGINS above.
+if DEBUG:
+    CORS_ALLOWED_ORIGIN_REGEXES = [
+        r"^http://localhost:\d+$",
+        r"^http://127\.0\.0\.1:\d+$",
+    ]
+
 
 # Public site URL — used to build certificate verification links / QR codes.
 FRONTEND_URL = env("FRONTEND_URL", default="http://localhost:3000")
