@@ -20,6 +20,7 @@ urlpatterns = [
     path("api/", include("notifications.urls")),
     path("api/", include("announcements.urls")),
     path("api/", include("assignments.urls")),
+    path("api/", include("versioning.urls")),
 ]
 
 # Serve uploaded/generated media in development.

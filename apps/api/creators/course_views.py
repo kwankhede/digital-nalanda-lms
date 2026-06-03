@@ -228,6 +228,13 @@ class _CourseTransition(APIView):
             course.status = Course.Status.ARCHIVED
             course.is_published = False
         course.save()
+        if a == "publish":
+            try:
+                from versioning.services import create_version
+                create_version(course, user=request.user,
+                               label="Published", published=True)
+            except Exception:
+                pass
         log_action(request.user, f"course_{a}", "Course", course.id,
                    note=course.rejected_reason if a == "reject" else "")
         if course.created_by_id and a in ("publish", "approve", "reject"):
