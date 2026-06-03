@@ -25,7 +25,7 @@ export const markAllRead = () =>
   authFetch("/api/notifications/read-all/", { method: "POST" });
 
 // --- Announcements ---
-export interface Announcement { id: number; title: string; content: string; audience: string; }
+export interface Announcement { id: number; title: string; content: string; audience: string; start_date?: string; }
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 export async function getActiveAnnouncements(token?: string): Promise<Announcement[]> {
   try {
