@@ -14,7 +14,7 @@ class LessonSerializer(serializers.ModelSerializer):
         model = Lesson
         fields = [
             "id", "title", "slug", "lesson_type", "youtube_video_id",
-            "content", "order", "duration_minutes", "is_preview",
+            "content", "blocks", "order", "duration_minutes", "is_preview",
         ]
 
 

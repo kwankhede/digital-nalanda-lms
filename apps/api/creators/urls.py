@@ -1,6 +1,10 @@
 from django.urls import path
 
 from .course_views import (
+    CurriculumView,
+    CurriculumReorderView,
+    DuplicateModuleView,
+    DuplicateLessonView,
     AdminApproveCourseView,
     AdminArchiveCourseView,
     AdminCourseReviewDetailView,
@@ -40,6 +44,10 @@ urlpatterns = [
     path("creator/courses/", CreatorCourseListCreateView.as_view(), name="creator-courses"),
     path("creator/courses/<int:pk>/", CreatorCourseDetailView.as_view(), name="creator-course-detail"),
     path("creator/courses/<int:pk>/submit/", SubmitCourseView.as_view(), name="creator-course-submit"),
+    path("creator/courses/<int:pk>/curriculum/", CurriculumView.as_view(), name="creator-curriculum"),
+    path("creator/courses/<int:pk>/reorder/", CurriculumReorderView.as_view(), name="creator-reorder"),
+    path("creator/modules/<int:pk>/duplicate/", DuplicateModuleView.as_view(), name="creator-module-duplicate"),
+    path("creator/lessons/<int:pk>/duplicate/", DuplicateLessonView.as_view(), name="creator-lesson-duplicate"),
     path("creator/courses/<int:pk>/modules/", CreatorModuleCreateView.as_view(), name="creator-module-create"),
     path("creator/modules/<int:pk>/", CreatorModuleDetailView.as_view(), name="creator-module-detail"),
     path("creator/modules/<int:pk>/lessons/", CreatorLessonCreateView.as_view(), name="creator-lesson-create"),

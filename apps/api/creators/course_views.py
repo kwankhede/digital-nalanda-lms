@@ -251,3 +251,101 @@ class AdminUnpublishCourseView(_CourseTransition):
 
 class AdminArchiveCourseView(_CourseTransition):
     action = "archive"
+
+
+# ---------------- Visual curriculum builder ----------------
+
+from .course_serializers import CurriculumModuleSerializer  # noqa: E402
+
+
+def _editable_or_admin(user, course):
+    return _can_edit(user, course)
+
+
+class CurriculumView(APIView):
+    """GET /api/creator/courses/<id>/curriculum/ — full nested tree (owner/admin)."""
+
+    permission_classes = [IsCourseCreator]
+
+    def get(self, request, pk):
+        course = get_object_or_404(Course, pk=pk)
+        is_admin = request.user.is_staff or getattr(request.user, "role", None) in (
+            "admin", "content_manager", "super_admin"
+        )
+        if not is_admin and course.created_by_id != request.user.id:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        modules = course.modules.prefetch_related("lessons").all()
+        return Response({
+            "course": {"id": course.id, "title": course.title, "status": course.status},
+            "modules": CurriculumModuleSerializer(modules, many=True).data,
+        })
+
+
+class CurriculumReorderView(APIView):
+    """
+    POST /api/creator/courses/<id>/reorder/
+    Body: {"modules": [{"id": <m>, "lessons": [<l>, <l>...]}, ...]}
+    Persists module order, lesson order, and moves lessons between modules.
+    """
+
+    permission_classes = [IsCourseCreator]
+
+    def post(self, request, pk):
+        course = get_object_or_404(Course, pk=pk)
+        if not _can_edit(request.user, course):
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        module_ids = {m.id for m in course.modules.all()}
+        for m_index, m in enumerate(request.data.get("modules", [])):
+            mid = m.get("id")
+            if mid not in module_ids:
+                continue
+            Module.objects.filter(id=mid).update(order=m_index)
+            for l_index, lid in enumerate(m.get("lessons", [])):
+                # Move (set module) + order; scoped to this course's lessons.
+                Lesson.objects.filter(id=lid, module__course=course).update(
+                    module_id=mid, order=l_index
+                )
+        return Response({"detail": "Order saved."})
+
+
+class DuplicateModuleView(APIView):
+    permission_classes = [IsCourseCreator]
+
+    def post(self, request, pk):
+        module = get_object_or_404(Module, pk=pk)
+        if not _can_edit(request.user, module.course):
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        lessons = list(module.lessons.all())
+        new_module = Module.objects.create(
+            course=module.course, title=f"{module.title} (copy)",
+            order=module.course.modules.count(),
+        )
+        for l in lessons:
+            Lesson.objects.create(
+                module=new_module, title=l.title,
+                slug=f"{l.slug}-copy-{new_module.id}", lesson_type=l.lesson_type,
+                youtube_video_id=l.youtube_video_id, content=l.content,
+                resource_url=l.resource_url, order=l.order,
+                duration_minutes=l.duration_minutes, is_preview=l.is_preview,
+                is_published=l.is_published,
+            )
+        return Response(CurriculumModuleSerializer(new_module).data, status=status.HTTP_201_CREATED)
+
+
+class DuplicateLessonView(APIView):
+    permission_classes = [IsCourseCreator]
+
+    def post(self, request, pk):
+        lesson = get_object_or_404(Lesson, pk=pk)
+        if not _can_edit(request.user, lesson.module.course):
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        new = Lesson.objects.create(
+            module=lesson.module, title=f"{lesson.title} (copy)",
+            slug=f"{lesson.slug}-copy", lesson_type=lesson.lesson_type,
+            youtube_video_id=lesson.youtube_video_id, content=lesson.content,
+            resource_url=lesson.resource_url, order=lesson.module.lessons.count(),
+            duration_minutes=lesson.duration_minutes, is_preview=lesson.is_preview,
+            is_published=lesson.is_published,
+        )
+        from .course_serializers import CreatorLessonSerializer
+        return Response(CreatorLessonSerializer(new).data, status=status.HTTP_201_CREATED)

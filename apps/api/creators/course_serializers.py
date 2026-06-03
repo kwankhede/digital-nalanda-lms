@@ -30,8 +30,8 @@ class CreatorLessonSerializer(serializers.ModelSerializer):
         model = Lesson
         fields = [
             "id", "module", "title", "slug", "lesson_type",
-            "youtube_video_id", "content", "order", "duration_minutes",
-            "is_preview", "is_published",
+            "youtube_video_id", "content", "resource_url", "live_session",
+            "blocks", "order", "duration_minutes", "is_preview", "is_published",
         ]
         read_only_fields = ["module"]
 
@@ -48,3 +48,21 @@ class AdminCourseReviewSerializer(serializers.ModelSerializer):
             "rejected_reason", "submitted_at", "approved_at", "published_at",
         ]
         read_only_fields = ["status", "created_by", "submitted_at", "approved_at", "published_at"]
+
+
+class CurriculumLessonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lesson
+        fields = [
+            "id", "title", "slug", "lesson_type", "youtube_video_id",
+            "content", "resource_url", "live_session", "blocks", "order",
+            "duration_minutes", "is_preview", "is_published",
+        ]
+
+
+class CurriculumModuleSerializer(serializers.ModelSerializer):
+    lessons = CurriculumLessonSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Module
+        fields = ["id", "title", "order", "lessons"]

@@ -220,3 +220,16 @@ class SessionAttendanceListView(generics.ListAPIView):
             if session.mentor_id != user.id:
                 return SessionAttendance.objects.none()
         return session.attendance.select_related("student")
+
+
+from django.http import HttpResponse  # noqa: E402
+from .calendar import build_ics  # noqa: E402
+
+
+def session_calendar_ics(request, slug):
+    """GET /api/live-sessions/<slug>/calendar.ics — public ICS download."""
+    session = get_object_or_404(LiveSession, slug=slug)
+    ics = build_ics(session)
+    resp = HttpResponse(ics, content_type="text/calendar; charset=utf-8")
+    resp["Content-Disposition"] = f'attachment; filename="{slug}.ics"'
+    return resp

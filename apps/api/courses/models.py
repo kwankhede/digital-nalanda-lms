@@ -127,6 +127,8 @@ class Lesson(MigrationMeta):
         TEXT = "text", "Text"
         PDF = "pdf", "PDF"
         QUIZ = "quiz", "Quiz"
+        ASSIGNMENT = "assignment", "Assignment"
+        LIVE_CLASS = "live_class", "Live Class"
 
     module = models.ForeignKey(
         Module, related_name="lessons", on_delete=models.CASCADE
@@ -138,6 +140,14 @@ class Lesson(MigrationMeta):
     )
     youtube_video_id = models.CharField(max_length=40, blank=True)
     content = models.TextField(blank=True)
+    resource_url = models.URLField(blank=True)
+    live_session = models.ForeignKey(
+        "live_sessions.LiveSession", related_name="lesson_links",
+        on_delete=models.SET_NULL, null=True, blank=True,
+    )
+    # Notion-style content blocks: list of {id, type, data}. Flexible JSON so
+    # new block types (and future SCORM/AI/interactive) need no schema change.
+    blocks = models.JSONField(default=list, blank=True)
     order = models.PositiveIntegerField(default=0)
     duration_minutes = models.PositiveIntegerField(default=0)
     is_preview = models.BooleanField(default=False)

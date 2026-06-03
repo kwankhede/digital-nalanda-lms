@@ -1,6 +1,7 @@
 from django.urls import path
 
 from .views import (
+    session_calendar_ics,
     AdminEventDetailView,
     AdminEventListCreateView,
     AdminLiveSessionDetailView,
@@ -24,6 +25,7 @@ urlpatterns = [
     path("live-sessions/", LiveSessionListView.as_view(), name="live-session-list"),
     path("live-sessions/upcoming/", UpcomingLiveSessionsView.as_view(), name="live-session-upcoming"),
     path("live-sessions/recordings/", RecordingsView.as_view(), name="live-session-recordings"),
+    path("live-sessions/<slug:slug>/calendar.ics", session_calendar_ics, name="live-session-ics"),
     path("live-sessions/<slug:slug>/", LiveSessionDetailView.as_view(), name="live-session-detail"),
     path("live-sessions/<slug:slug>/join/", JoinSessionView.as_view(), name="live-session-join"),
     path("live-sessions/<slug:slug>/attendance/", SessionAttendanceListView.as_view(), name="live-session-attendance"),
