@@ -1,12 +1,16 @@
 from django.db import models
+from django.utils.text import slugify
 
 
 class School(models.Model):
     name = models.CharField(max_length=120, unique=True)
-    slug = models.SlugField(max_length=140, unique=True)
-    description = models.CharField(max_length=300, blank=True)
+    slug = models.SlugField(max_length=140, unique=True, blank=True)
+    tagline = models.CharField(max_length=160, blank=True)  # short headline
+    description = models.CharField(max_length=300, blank=True)  # card blurb
+    long_description = models.TextField(blank=True)  # detail-page body
     icon = models.CharField(max_length=10, blank=True)  # emoji
-    image_url = models.URLField(blank=True)
+    image_url = models.URLField(blank=True)            # card illustration
+    hero_image_url = models.URLField(blank=True)       # detail banner
     course_count = models.PositiveIntegerField(default=0)
     order = models.PositiveIntegerField(default=0)
     is_featured = models.BooleanField(default=False)
@@ -14,6 +18,15 @@ class School(models.Model):
 
     class Meta:
         ordering = ["order", "name"]
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base = slugify(self.name) or "school"
+            slug, i = base, 2
+            while School.objects.exclude(pk=self.pk).filter(slug=slug).exists():
+                slug = f"{base}-{i}"; i += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name

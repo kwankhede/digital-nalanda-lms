@@ -11,11 +11,15 @@ from .views import (
     NewsletterSubscribeView,
     SchoolDetailView,
     SchoolListView,
+    AdminSchoolListCreateView,
+    AdminSchoolDetailView,
 )
 
 urlpatterns = [
     path("schools/", SchoolListView.as_view(), name="school-list"),
     path("schools/<slug:slug>/", SchoolDetailView.as_view(), name="school-detail"),
+    path("admin/schools/", AdminSchoolListCreateView.as_view(), name="admin-school-list-create"),
+    path("admin/schools/<int:pk>/", AdminSchoolDetailView.as_view(), name="admin-school-detail"),
     path("learning-paths/", LearningPathListView.as_view(), name="learning-path-list"),
     path("educators/featured/", FeaturedEducatorsView.as_view(), name="educators-featured"),
     path("community-libraries/", CommunityLibraryListView.as_view(), name="community-library-list"),

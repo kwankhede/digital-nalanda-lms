@@ -5,6 +5,7 @@ import type { NavGroup } from "@/lib/nav";
 import { PUBLIC_PRIMARY, PUBLIC_RESOURCES } from "@/lib/nav";
 import { useAuth } from "@/lib/auth";
 import NavDropdown from "./NavDropdown";
+import SchoolsNavDropdown from "./SchoolsNavDropdown";
 import NotificationBell from "./NotificationBell";
 import ProfileMenu from "./ProfileMenu";
 
@@ -50,15 +51,19 @@ export default function DesktopNav({ groups }: { groups: NavGroup[] }) {
   // matching the reference header exactly.
   return (
     <div className="hidden items-center gap-6 md:flex">
-      {PUBLIC_PRIMARY.map((l) => (
-        <Link
-          key={l.label}
-          href={l.href}
-          className="nav-underline text-sm font-medium text-nal-navy hover:text-nal-saffron"
-        >
-          {l.label}
-        </Link>
-      ))}
+      {PUBLIC_PRIMARY.map((l) =>
+        l.label === "Schools" ? (
+          <SchoolsNavDropdown key="schools" />
+        ) : (
+          <Link
+            key={l.label}
+            href={l.href}
+            className="nav-underline text-sm font-medium text-nal-navy hover:text-nal-saffron"
+          >
+            {l.label}
+          </Link>
+        ),
+      )}
       <NavDropdown group={PUBLIC_RESOURCES} />
 
       <SearchButton />

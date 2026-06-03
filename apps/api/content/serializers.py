@@ -4,9 +4,29 @@ from .models import CommunityLibrary, Educator, ImpactMetric, LearningPath, News
 
 
 class SchoolSerializer(serializers.ModelSerializer):
+    """Card/list payload (homepage + /schools grid + nav)."""
     class Meta:
         model = School
-        fields = ["id", "name", "slug", "description", "icon", "image_url", "course_count"]
+        fields = ["id", "name", "slug", "tagline", "description", "icon",
+                  "image_url", "course_count", "is_featured"]
+
+
+class SchoolDetailSerializer(serializers.ModelSerializer):
+    """Full payload for the school detail page."""
+    class Meta:
+        model = School
+        fields = ["id", "name", "slug", "tagline", "description", "long_description",
+                  "icon", "image_url", "hero_image_url", "course_count", "is_featured"]
+
+
+class SchoolWriteSerializer(serializers.ModelSerializer):
+    """Admin create/update. Slug is auto-generated from name when omitted."""
+    class Meta:
+        model = School
+        fields = ["id", "name", "slug", "tagline", "description", "long_description",
+                  "icon", "image_url", "hero_image_url", "course_count",
+                  "order", "is_featured", "is_published"]
+        extra_kwargs = {"slug": {"required": False}}
 
 
 class LearningPathSerializer(serializers.ModelSerializer):

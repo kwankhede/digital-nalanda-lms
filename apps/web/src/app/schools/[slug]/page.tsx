@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import {
-  getSchools,
+  getSchool,
   getEducators,
   getFeaturedCourses,
   getLearningPaths,
@@ -17,8 +17,7 @@ export async function generateMetadata({
 }: {
   params: { slug: string };
 }): Promise<Metadata> {
-  const schools = await getSchools().catch(() => []);
-  const school = schools.find((s) => s.slug === params.slug);
+  const school = await getSchool(params.slug).catch(() => null);
   if (!school) return { title: "School | Digital Nalanda" };
   return {
     title: `${school.name} | Digital Nalanda`,
@@ -31,8 +30,7 @@ export default async function SchoolDetailPage({
 }: {
   params: { slug: string };
 }) {
-  const schools = await getSchools().catch(() => []);
-  const school = schools.find((s) => s.slug === params.slug);
+  const school = await getSchool(params.slug).catch(() => null);
   if (!school) notFound();
 
   // Aggregate related content from existing public APIs (best-effort links).
@@ -62,6 +60,7 @@ export default async function SchoolDetailPage({
             </div>
             <div>
               <h1 className="text-4xl font-extrabold">{school.name}</h1>
+              {school.tagline && <p className="text-nal-gold">{school.tagline}</p>}
               <p className="text-white/70">{school.course_count} courses</p>
             </div>
           </div>
@@ -70,6 +69,14 @@ export default async function SchoolDetailPage({
       </section>
 
       <div className="mx-auto max-w-5xl space-y-14 px-4 py-12">
+        {school.long_description && (
+          <section>
+            <h2 className="text-2xl font-extrabold text-brand-navy">About this school</h2>
+            <p className="mt-3 whitespace-pre-line leading-relaxed text-gray-600">
+              {school.long_description}
+            </p>
+          </section>
+        )}
         {/* Educators */}
         {educators.length > 0 && (
           <section>

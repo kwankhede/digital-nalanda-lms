@@ -1,5 +1,6 @@
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny
+from adminpanel.permissions import IsStaffOrAdmin
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -11,6 +12,8 @@ from .serializers import (
     LearningPathSerializer,
     NewsletterSerializer,
     SchoolSerializer,
+    SchoolDetailSerializer,
+    SchoolWriteSerializer,
 )
 
 
@@ -24,9 +27,26 @@ class SchoolListView(generics.ListAPIView):
 
 class SchoolDetailView(generics.RetrieveAPIView):
     queryset = School.objects.filter(is_published=True)
-    serializer_class = SchoolSerializer
+    serializer_class = SchoolDetailSerializer
     permission_classes = [AllowAny]
     lookup_field = "slug"
+
+
+# ---------------- Admin school management (create without code) ----------------
+
+class AdminSchoolListCreateView(generics.ListCreateAPIView):
+    """GET all (incl. unpublished) / POST create a school. Admin only."""
+    queryset = School.objects.all()
+    serializer_class = SchoolWriteSerializer
+    permission_classes = [IsStaffOrAdmin]
+    pagination_class = None
+
+
+class AdminSchoolDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """GET / PUT / PATCH / DELETE a single school. Admin only."""
+    queryset = School.objects.all()
+    serializer_class = SchoolWriteSerializer
+    permission_classes = [IsStaffOrAdmin]
 
 
 class LearningPathListView(generics.ListAPIView):

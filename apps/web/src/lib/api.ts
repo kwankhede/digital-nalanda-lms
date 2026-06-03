@@ -53,17 +53,26 @@ interface Paginated<T> {
 
 // Server components fetch fresh data on each request.
 export async function getCourses(): Promise<CourseListItem[]> {
-  const res = await fetch(`${API_URL}/api/courses/`, { cache: "no-store" });
-  if (!res.ok) throw new Error("Failed to load courses");
-  const data: Paginated<CourseListItem> = await res.json();
-  return data.results;
+  // Degrade gracefully: if the API is unreachable or errors, return [] so the
+  // page renders its empty state instead of crashing.
+  try {
+    const res = await fetch(`${API_URL}/api/courses/`, { cache: "no-store" });
+    if (!res.ok) return [];
+    const data: Paginated<CourseListItem> = await res.json();
+    return data.results;
+  } catch {
+    return [];
+  }
 }
 
 export async function getCourse(slug: string): Promise<CourseDetail | null> {
-  const res = await fetch(`${API_URL}/api/courses/${slug}/`, { cache: "no-store" });
-  if (res.status === 404) return null;
-  if (!res.ok) throw new Error("Failed to load course");
-  return res.json();
+  try {
+    const res = await fetch(`${API_URL}/api/courses/${slug}/`, { cache: "no-store" });
+    if (!res.ok) return null;
+    return res.json();
+  } catch {
+    return null;
+  }
 }
 
 // --- Public certificate verification ---
@@ -138,10 +147,16 @@ export interface SchoolDTO {
   id?: number;
   name: string;
   slug: string;
+  tagline?: string;
   description: string;
   icon: string;
   image_url?: string;
   course_count: number;
+  is_featured?: boolean;
+}
+export interface SchoolDetailDTO extends SchoolDTO {
+  long_description?: string;
+  hero_image_url?: string;
 }
 export interface PathDTO {
   id?: number;
@@ -170,13 +185,24 @@ export interface ImpactStat {
 }
 
 async function getList<T>(path: string): Promise<T[]> {
-  const res = await fetch(`${API_URL}${path}`, { cache: "no-store" });
-  if (!res.ok) throw new Error(`Request failed: ${path}`);
-  return res.json();
+  // List endpoints degrade to [] on failure; callers render empty/fallback UI.
+  try {
+    const res = await fetch(`${API_URL}${path}`, { cache: "no-store" });
+    if (!res.ok) return [];
+    return res.json();
+  } catch {
+    return [];
+  }
 }
 
 // DB-driven (no static fallback). Components handle loading/error/empty.
 export const getSchools = () => getList<SchoolDTO>("/api/schools/");
+export async function getSchool(slug: string): Promise<SchoolDetailDTO | null> {
+  const res = await fetch(`${API_URL}/api/schools/${slug}/`, { cache: "no-store" });
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error("Failed to load school");
+  return res.json();
+}
 export const getLearningPaths = () => getList<PathDTO>("/api/learning-paths/");
 export const getEducators = () => getList<EducatorDTO>("/api/educators/featured/");
 export const getCommunityLibraries = () => getList<LibraryDTO>("/api/community-libraries/");
@@ -217,8 +243,11 @@ export const getStories = () => getList<StoryListItem>("/api/stories/");
 export const getFeaturedStories = () => getList<StoryListItem>("/api/stories/featured/");
 
 export async function getStory(slug: string): Promise<StoryDetail | null> {
-  const res = await fetch(`${API_URL}/api/stories/${slug}/`, { cache: "no-store" });
-  if (res.status === 404) return null;
-  if (!res.ok) throw new Error("Failed to load story");
-  return res.json();
+  try {
+    const res = await fetch(`${API_URL}/api/stories/${slug}/`, { cache: "no-store" });
+    if (!res.ok) return null;
+    return res.json();
+  } catch {
+    return null;
+  }
 }

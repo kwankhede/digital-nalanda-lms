@@ -12,9 +12,14 @@ from .models import (
 
 @admin.register(School)
 class SchoolAdmin(admin.ModelAdmin):
-    list_display = ("name", "course_count", "order", "is_published")
-    list_editable = ("course_count", "order", "is_published")
+    list_display = ("name", "course_count", "order", "is_featured", "is_published")
+    list_editable = ("course_count", "order", "is_featured", "is_published")
+    list_filter = ("is_published", "is_featured")
+    search_fields = ("name", "description", "tagline")
     prepopulated_fields = {"slug": ("name",)}
+    fields = ("name", "slug", "tagline", "description", "long_description",
+              "icon", "image_url", "hero_image_url", "course_count",
+              "order", "is_featured", "is_published")
 
 
 @admin.register(LearningPath)
