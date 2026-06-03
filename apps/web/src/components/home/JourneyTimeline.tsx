@@ -55,7 +55,7 @@ export default function JourneyTimeline() {
             {MILESTONES.map((m, i) => (
               <li
                 key={m.year}
-                className="relative flex items-center gap-4 md:flex-col md:gap-3 md:text-center"
+                className="group relative flex items-center gap-4 md:flex-col md:gap-3 md:text-center"
                 style={{
                   transition: "opacity .6s ease-out, transform .6s ease-out",
                   transitionDelay: `${i * 110}ms`,
@@ -63,12 +63,12 @@ export default function JourneyTimeline() {
                   transform: inView ? "none" : "scale(.85)",
                 }}
               >
-                <span className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-2 border-nal-saffron bg-nal-cream text-nal-teal">
+                <span className="relative z-10 flex h-16 w-16 shrink-0 items-center justify-center rounded-full border-2 border-nal-saffron bg-nal-cream text-nal-navy shadow-soft transition-all duration-300 group-hover:-translate-y-1 group-hover:bg-nal-saffron group-hover:text-white group-hover:shadow-lift">
                   {m.icon}
                 </span>
                 <div>
-                  <p className="font-display text-lg font-bold text-nal-saffron">{m.year}</p>
-                  <p className="text-sm text-nal-navy">{m.label}</p>
+                  <p className="font-display text-2xl font-bold text-nal-saffron">{m.year}</p>
+                  <p className="mt-0.5 text-sm font-medium text-nal-navy">{m.label}</p>
                 </div>
                 {/* vertical connector on mobile */}
                 {i < MILESTONES.length - 1 && (

@@ -38,3 +38,8 @@ export const submitCounselling = (data: { category: string; subject: string; mes
 export const getCounsellingQueue = () => authFetch("/api/counselling/manage/").then((r) => j<Counselling[]>(r));
 export const replyCounselling = (id: number, body: { action: string; mentor_reply?: string }) =>
   authFetch(`/api/counselling/${id}/reply/`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }).then((r) => j<Counselling>(r));
+
+// Public course AI summary (no auth) — available on every published course page.
+const PUBLIC_API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+export const getCoursePublicSummary = (slug: string) =>
+  fetch(`${PUBLIC_API}/api/courses/${slug}/ai-summary/`, { cache: "no-store" }).then((r) => j<CourseSummary>(r));

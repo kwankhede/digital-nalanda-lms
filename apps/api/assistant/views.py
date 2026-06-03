@@ -1,7 +1,10 @@
 from rest_framework import generics, status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.throttling import ScopedRateThrottle
+from django.core.cache import cache
 
 from creators.permissions import IsAdminRole  # admins/content_manager/super_admin
 
@@ -37,6 +40,32 @@ class AILessonSummaryView(APIView):
             return Response(status=status.HTTP_403_FORBIDDEN)
         return Response(ai.lesson_summary(
             request.data.get("title", ""), request.data.get("content", "")))
+
+
+# ---------- Public AI course summary (any visitor) ----------
+
+class PublicCourseSummaryView(APIView):
+    """AI summary of a published course, available to everyone (read-only).
+
+    Throttled and cached per course so a public, AI-backed endpoint can't be
+    abused to run up Gemini cost.
+    """
+
+    permission_classes = [AllowAny]
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "ai"
+
+    def get(self, request, slug):
+        from courses.models import Course
+        cache_key = f"course_ai_summary:{slug}"
+        cached = cache.get(cache_key)
+        if cached is not None:
+            return Response(cached)
+        course = get_object_or_404(Course, slug=slug, status="published")
+        text = course.description or course.short_description or ""
+        data = ai.course_summary(course.title, text)
+        cache.set(cache_key, data, 60 * 60 * 6)  # 6 hours
+        return Response(data)
 
 
 # ---------- Nalanda chatbot (logged-in users) ----------

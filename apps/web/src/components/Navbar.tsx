@@ -28,7 +28,7 @@ export default function Navbar() {
       <header
         className={`sticky top-0 z-40 border-b transition-shadow duration-300 ${
           scrolled
-            ? "border-nal-parchment bg-nal-cream/95 shadow-soft backdrop-blur"
+            ? "border-nal-border bg-nal-cream/95 shadow-soft backdrop-blur"
             : "border-transparent bg-nal-cream/80 backdrop-blur"
         }`}
       >

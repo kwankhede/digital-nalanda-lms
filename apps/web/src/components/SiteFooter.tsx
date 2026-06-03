@@ -70,6 +70,7 @@ function FooterLink({ link }: { link: FLink }) {
 export default function SiteFooter() {
   return (
     <footer className="relative overflow-hidden border-t border-white/10 bg-nal-navy text-white">
+      <div className="absolute inset-x-0 top-0 z-10 h-1 bg-gradient-to-r from-nal-saffron via-nal-gold to-nal-terracotta" />
       {/* subtle static line-art decoration */}
       <svg
         aria-hidden="true"
@@ -107,6 +108,9 @@ export default function SiteFooter() {
           <p className="mt-4 max-w-xs text-sm text-white/70">
             A global learning ecosystem inspired by wisdom, rooted in justice,
             and driven by technology.
+          </p>
+          <p className="mt-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-nal-gold">
+            <span className="h-1.5 w-1.5 rounded-full bg-nal-saffron" /> 100% free, forever
           </p>
           <div className="mt-5 flex gap-3">
             {SOCIALS.map((s) => (

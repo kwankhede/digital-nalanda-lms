@@ -23,7 +23,7 @@ export default function LatestAnnouncements() {
   const items = (data && data.length > 0 ? data : FALLBACK).slice(0, 3);
 
   return (
-    <div className="flex h-full flex-col rounded-2xl border border-nal-parchment bg-white p-6 shadow-soft">
+    <div className="flex h-full flex-col rounded-2xl border border-nal-border bg-white p-6 shadow-soft">
       <div className="flex items-center justify-between">
         <h3 className="font-display text-xl font-bold text-nal-navy">Latest Announcements</h3>
         <a href="/notifications" className="text-xs font-semibold text-nal-saffron hover:underline">

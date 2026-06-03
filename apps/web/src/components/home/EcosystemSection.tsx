@@ -22,15 +22,16 @@ const ITEMS: EcoItem[] = [
 
 function CardInner({ item }: { item: EcoItem }) {
   return (
-    <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-nal-parchment bg-white shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-nal-saffron/50 hover:shadow-lift">
-      <div className="relative h-44 w-full overflow-hidden bg-nal-parchment/40">
+    <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-nal-border bg-white shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-nal-saffron/50 hover:shadow-lift">
+      <div className="relative aspect-[5/4] w-full overflow-hidden bg-nal-cream isolate">
         <Image
           src={item.img}
           alt={item.title}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
+          className="object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-[1.03]"
         />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-gradient-to-b from-transparent to-white" />
       </div>
       <div className="flex flex-1 flex-col p-6">
         <h3 className="font-display text-xl font-bold text-nal-navy">{item.title}</h3>

@@ -5,7 +5,7 @@ import { getSchools, type SchoolDTO } from "@/lib/api";
 import { useApi } from "@/lib/useApi";
 import { toSlug } from "@/lib/homeData";
 import SectionHeading from "./SectionHeading";
-import { CardSkeleton, ErrorState } from "./SectionState";
+import { CardSkeleton } from "./SectionState";
 import FadeInSection from "@/components/anim/FadeInSection";
 
 // Reference schools — shown only when the API returns nothing.
@@ -19,8 +19,8 @@ const FALLBACK: SchoolDTO[] = [
 ];
 
 export default function SchoolsGrid() {
-  const { data, loading, error } = useApi(getSchools);
-  const schools = data && data.length > 0 ? data : !loading ? FALLBACK : [];
+  const { data, loading } = useApi(getSchools);
+  const schools = data && data.length > 0 ? data : FALLBACK;
   const shown = schools.slice(0, 6);
 
   return (
@@ -33,33 +33,34 @@ export default function SchoolsGrid() {
 
       {loading ? (
         <CardSkeleton count={6} />
-      ) : error && (!data || data.length === 0) ? (
-        <ErrorState message={error} />
       ) : (
         <>
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mx-auto mt-10 grid max-w-4xl gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {shown.map((s, i) => (
               <FadeInSection key={s.slug} delayMs={i * 60}>
                 <Link
                   href={`/schools/${s.slug}`}
-                  className="group block overflow-hidden rounded-2xl border border-nal-parchment bg-white shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-lift"
+                  className="group block overflow-hidden rounded-2xl border border-nal-border bg-white shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-lift"
                 >
-                  <div className="flex h-40 items-center justify-center overflow-hidden bg-nal-parchment/40">
+                  <div className="relative isolate flex aspect-[5/4] items-center justify-center overflow-hidden bg-nal-cream">
                     {s.image_url ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={s.image_url}
-                        alt={s.name}
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
+                      <>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={s.image_url}
+                          alt={s.name}
+                          className="h-full w-full object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-[1.03]"
+                        />
+                        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-gradient-to-b from-transparent to-white" />
+                      </>
                     ) : (
                       <span className="text-5xl transition-transform duration-500 group-hover:scale-110">
                         {s.icon || "🎓"}
                       </span>
                     )}
                   </div>
-                  <div className="p-5 text-center">
-                    <h3 className="font-display text-lg font-bold text-nal-navy">{s.name}</h3>
+                  <div className="p-4 text-center">
+                    <h3 className="font-display text-base font-bold text-nal-navy">{s.name}</h3>
                     {s.course_count > 0 && (
                       <p className="mt-1 text-xs font-semibold text-nal-saffron">
                         {s.course_count} courses

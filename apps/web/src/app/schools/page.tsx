@@ -14,34 +14,65 @@ export default async function SchoolsPage() {
   const schools = await getSchools().catch(() => []);
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-12">
-      <h1 className="text-3xl font-extrabold text-brand-navy">Our Schools</h1>
-      <p className="mt-2 text-gray-500">
-        Ten schools spanning the arts, sciences, law, and social thought.
-      </p>
+    <div className="parchment min-h-screen">
+      <div className="mx-auto max-w-6xl px-4 py-14">
+        <p className="text-sm font-semibold uppercase tracking-wide text-nal-saffron">
+          Schools of Digital Nalanda
+        </p>
+        <h1 className="mt-1 font-display text-4xl font-bold tracking-tight text-nal-navy">
+          Our Schools
+        </h1>
+        <p className="mt-3 max-w-2xl text-nal-slate">
+          Schools spanning the arts, sciences, law, and social thought — a full
+          university, free for every learner.
+        </p>
 
-      {schools.length === 0 ? (
-        <p className="mt-8 text-gray-500">Schools will appear here soon.</p>
-      ) : (
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {schools.map((s) => (
-            <Link
-              key={s.slug}
-              href={`/schools/${s.slug}`}
-              className="rounded-xl border border-gray-100 p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-            >
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-50 text-2xl">
-                {s.icon}
-              </div>
-              <h2 className="mt-4 font-bold text-brand-navy">{s.name}</h2>
-              <p className="mt-1 text-sm text-gray-500">{s.description}</p>
-              <p className="mt-3 text-xs font-semibold text-brand-blue">
-                {s.course_count} courses
-              </p>
-            </Link>
-          ))}
-        </div>
-      )}
+        {schools.length === 0 ? (
+          <p className="mt-10 text-nal-slate">Schools will appear here soon.</p>
+        ) : (
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {schools.map((s) => (
+              <Link
+                key={s.slug}
+                href={`/schools/${s.slug}`}
+                className="group flex flex-col rounded-2xl border border-nal-border bg-white p-6 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-nal-saffron/60 hover:shadow-lift"
+              >
+                {s.image_url ? (
+                  <div className="relative mb-4 aspect-[5/4] w-full overflow-hidden rounded-xl bg-nal-cream isolate">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={s.image_url}
+                      alt={s.name}
+                      className="h-full w-full object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-[1.03]"
+                    />
+                  </div>
+                ) : (
+                  <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-nal-parchment text-3xl transition-colors group-hover:bg-nal-saffron/15">
+                    {s.icon || "🎓"}
+                  </div>
+                )}
+                <h2 className="mt-4 font-display text-xl font-bold text-nal-navy">
+                  {s.name}
+                </h2>
+                <p className="mt-1 flex-1 text-sm text-nal-slate">{s.description}</p>
+                <div className="mt-4 flex items-center justify-between">
+                  {s.course_count > 0 ? (
+                    <span className="text-xs font-semibold text-nal-saffron">
+                      {s.course_count} courses
+                    </span>
+                  ) : (
+                    <span />
+                  )}
+                  <span className="inline-flex items-center gap-1 text-sm font-semibold text-nal-navy transition group-hover:text-nal-saffron">
+                    Explore
+                    <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

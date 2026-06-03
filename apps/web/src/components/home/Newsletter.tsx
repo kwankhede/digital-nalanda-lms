@@ -24,7 +24,7 @@ export default function Newsletter() {
 
   return (
     <section className="mx-auto max-w-6xl px-4 py-14">
-      <div className="flex flex-col items-center gap-6 rounded-2xl border border-nal-parchment bg-white px-6 py-10 shadow-soft md:flex-row md:justify-between md:px-10">
+      <div className="flex flex-col items-center gap-6 rounded-2xl border border-nal-border bg-white px-6 py-10 shadow-soft md:flex-row md:justify-between md:px-10">
         <div className="flex items-start gap-4">
           <span className="hidden h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-nal-saffron/15 text-nal-saffron sm:flex">
             <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -50,7 +50,7 @@ export default function Newsletter() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
               aria-label="Email address"
-              className="flex-1 rounded-md border border-nal-parchment bg-nal-cream px-4 py-3 text-nal-navy outline-none transition focus:border-nal-saffron focus:ring-2 focus:ring-nal-saffron/30"
+              className="flex-1 rounded-md border border-nal-border bg-nal-cream px-4 py-3 text-nal-navy outline-none transition focus:border-nal-saffron focus:ring-2 focus:ring-nal-saffron/30"
             />
             <button
               type="submit"

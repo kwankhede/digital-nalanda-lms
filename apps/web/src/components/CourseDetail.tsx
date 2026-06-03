@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/lib/auth";
 import BlockRenderer from "@/components/blocks/BlockRenderer";
+import CourseAISummary from "@/components/CourseAISummary";
 import type { CourseDetail as Course } from "@/lib/api";
 import {
   completeLesson,
@@ -210,6 +211,9 @@ export default function CourseDetail({ course }: { course: Course }) {
           </p>
         </section>
       )}
+
+      {/* AI-generated course summary — available to every visitor */}
+      <CourseAISummary slug={course.slug} />
 
       <section ref={contentRef} className="mt-10 scroll-mt-6">
         <h2 className="text-lg font-bold text-brand-navy">Course Content</h2>

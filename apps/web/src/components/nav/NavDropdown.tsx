@@ -45,7 +45,7 @@ export default function NavDropdown({ group }: { group: NavGroup }) {
       {open && (
         <div
           id={id}
-          className="absolute left-0 top-full z-50 w-56 rounded-lg border border-nal-parchment bg-white p-2 shadow-lg"
+          className="absolute left-0 top-full z-50 w-56 rounded-lg border border-nal-border bg-white p-2 shadow-lg"
         >
           {group.items.map((item) => (
             <Link

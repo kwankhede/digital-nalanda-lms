@@ -2,47 +2,45 @@
 
 import { getEducators } from "@/lib/api";
 import { useApi } from "@/lib/useApi";
+import { EDUCATORS } from "@/lib/homeData";
 import SectionHeading from "./SectionHeading";
-import { CardSkeleton, EmptyState, ErrorState } from "./SectionState";
+import FadeInSection from "@/components/anim/FadeInSection";
+import { CardSkeleton } from "./SectionState";
 
 export default function Educators() {
-  const { data, loading, error } = useApi(getEducators);
+  const { data, loading } = useApi(getEducators);
+  const educators = data && data.length > 0 ? data : EDUCATORS;
 
   return (
-    <section className="bg-gray-50">
-      <div className="mx-auto max-w-6xl px-4 py-16">
-        <SectionHeading
-          center
-          eyebrow="20+ educators & mentors"
-          title="Learn From Dedicated Educators"
-          subtitle="Experienced teachers and mentors who guide every learner personally."
-        />
-        {loading ? (
-          <CardSkeleton count={6} />
-        ) : error ? (
-          <ErrorState message={error} />
-        ) : !data || data.length === 0 ? (
-          <EmptyState message="Educator profiles are coming soon." />
-        ) : (
-          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {data.map((e) => (
-              <div
-                key={e.id ?? e.name}
-                className="flex items-center gap-4 rounded-xl border border-gray-100 bg-white p-5 shadow-sm"
-              >
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-brand-navy text-xl font-bold text-white">
+    <section id="educators" className="mx-auto max-w-6xl px-4 py-16 md:py-20">
+      <SectionHeading
+        center
+        eyebrow="20+ educators · 300+ mentors"
+        title="Learn from dedicated educators"
+        subtitle="Experienced teachers and mentors who guide every learner personally."
+      />
+      {loading ? (
+        <CardSkeleton count={6} />
+      ) : (
+        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {educators.slice(0, 6).map((e, i) => (
+            <FadeInSection key={(e as { id?: number }).id ?? e.name} delayMs={i * 60}>
+              <div className="group flex h-full items-center gap-4 rounded-2xl border border-nal-border bg-white p-5 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-nal-saffron/50 hover:shadow-lift">
+                <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-nal-navy text-2xl font-bold text-white transition-colors group-hover:bg-nal-saffron">
                   {e.name.charAt(0)}
                 </div>
-                <div>
-                  <p className="font-bold text-brand-navy">{e.name}</p>
-                  <p className="text-sm text-gray-500">{e.expertise}</p>
-                  <p className="text-xs font-semibold text-brand-blue">{e.school}</p>
+                <div className="min-w-0">
+                  <p className="font-display text-lg font-bold text-nal-navy">{e.name}</p>
+                  <p className="text-sm text-nal-slate">{e.expertise}</p>
+                  <span className="mt-1.5 inline-block rounded-full bg-nal-parchment px-2.5 py-0.5 text-xs font-semibold text-nal-saffron">
+                    {e.school}
+                  </span>
                 </div>
               </div>
-            ))}
-          </div>
-        )}
-      </div>
+            </FadeInSection>
+          ))}
+        </div>
+      )}
     </section>
   );
 }

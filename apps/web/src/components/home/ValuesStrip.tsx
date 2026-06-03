@@ -31,15 +31,16 @@ export default function ValuesStrip() {
     <section className="mx-auto max-w-6xl px-4 py-16">
       <div className="grid gap-6 md:grid-cols-[1.5fr_1fr]">
         {/* Values */}
-        <FadeInSection className="rounded-2xl border border-nal-parchment bg-white p-8 shadow-soft">
+        <FadeInSection className="relative overflow-hidden rounded-2xl border border-nal-border bg-white p-8 shadow-soft md:p-10">
+          <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-nal-saffron via-nal-gold to-nal-terracotta" />
           <div className="grid gap-8 sm:grid-cols-3">
             {VALUES.map((v) => (
               <div key={v.title} className="group">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-nal-parchment text-nal-terracotta transition-transform duration-300 group-hover:scale-105">
+                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-nal-navy text-white shadow-soft transition-all duration-300 group-hover:-translate-y-1 group-hover:bg-nal-saffron group-hover:shadow-lift">
                   {v.icon}
                 </div>
-                <h3 className="mt-4 font-display text-xl font-bold text-nal-navy">{v.title}</h3>
-                <p className="mt-1 text-sm text-nal-slate">{v.line}</p>
+                <h3 className="mt-5 font-display text-2xl font-bold text-nal-navy">{v.title}</h3>
+                <p className="mt-1.5 text-sm text-nal-slate">{v.line}</p>
               </div>
             ))}
           </div>

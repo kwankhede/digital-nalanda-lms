@@ -2,6 +2,7 @@
 
 Never run in production. Passwords are intentionally simple and public.
 """
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 
@@ -24,7 +25,21 @@ DEMO = [
 class Command(BaseCommand):
     help = "Create demo users for every role (LOCAL DEV ONLY)."
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "--force", action="store_true",
+            help="Override the production safety guard (NOT recommended).",
+        )
+
     def handle(self, *args, **options):
+        if not settings.DEBUG and not options.get("force"):
+            self.stderr.write(self.style.ERROR(
+                "Refusing to seed demo users with DEBUG=False (production). "
+                "These accounts use a public password. Use `createsuperuser` "
+                "instead, or pass --force only if you fully understand the risk."
+            ))
+            return
+
         for email, role, is_staff, is_super, name in DEMO:
             user, created = User.objects.get_or_create(
                 email=email,

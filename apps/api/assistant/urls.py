@@ -1,13 +1,14 @@
 from django.urls import path
 
 from .views import (
-    AICourseSummaryView, AILessonSummaryView, ChatView,
+    AICourseSummaryView, AILessonSummaryView, ChatView, PublicCourseSummaryView,
     CounsellingDetailView, CounsellingListCreateView,
     CounsellingManageListView, CounsellingReplyView,
 )
 
 urlpatterns = [
     path("assistant/ai/course-summary/", AICourseSummaryView.as_view(), name="ai-course-summary"),
+    path("courses/<slug:slug>/ai-summary/", PublicCourseSummaryView.as_view(), name="public-course-summary"),
     path("assistant/ai/lesson-summary/", AILessonSummaryView.as_view(), name="ai-lesson-summary"),
     path("assistant/chat/", ChatView.as_view(), name="assistant-chat"),
     path("counselling/", CounsellingListCreateView.as_view(), name="counselling-list"),

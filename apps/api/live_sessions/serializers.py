@@ -28,6 +28,27 @@ class LiveSessionSerializer(serializers.ModelSerializer):
         return _person_name(obj.mentor)
 
 
+class PublicLiveSessionSerializer(serializers.ModelSerializer):
+    """Public read serializer — NEVER exposes zoom_join_url / zoom_password.
+    The join URL is only returned to authenticated users via JoinSessionView."""
+
+    course_title = serializers.CharField(source="course.title", read_only=True, default=None)
+    mentor_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = LiveSession
+        fields = [
+            "id", "title", "slug", "description", "course", "course_title",
+            "mentor", "mentor_name", "start_time", "end_time", "status",
+            "is_featured", "recording_url", "recording_thumbnail_url",
+            "recording_title", "recording_duration_minutes",
+            "is_recording_public", "created_at", "updated_at",
+        ]
+
+    def get_mentor_name(self, obj):
+        return _person_name(obj.mentor)
+
+
 class LiveSessionWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = LiveSession
@@ -95,7 +116,7 @@ class HomeItemSerializer(serializers.Serializer):
                 "start_time": obj.start_time,
                 "end_time": obj.end_time,
                 "thumbnail_url": obj.recording_thumbnail_url or "",
-                "join_or_register_url": obj.zoom_join_url,
+                "join_or_register_url": "",  # join only via authenticated endpoint
                 "status": obj.status,
                 "speaker_or_mentor": _person_name(obj.mentor),
             }

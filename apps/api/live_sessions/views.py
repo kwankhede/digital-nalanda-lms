@@ -16,6 +16,7 @@ from .serializers import (
     HomeRecordingSerializer,
     LiveSessionSerializer,
     LiveSessionWriteSerializer,
+    PublicLiveSessionSerializer,
     SessionAttendanceSerializer,
 )
 
@@ -30,7 +31,7 @@ def _visible_sessions():
 # ---------------- Live sessions (public reads) ----------------
 
 class LiveSessionListView(generics.ListAPIView):
-    serializer_class = LiveSessionSerializer
+    serializer_class = PublicLiveSessionSerializer
     permission_classes = [AllowAny]
     pagination_class = None
 
@@ -43,7 +44,7 @@ class LiveSessionListView(generics.ListAPIView):
 
 
 class UpcomingLiveSessionsView(generics.ListAPIView):
-    serializer_class = LiveSessionSerializer
+    serializer_class = PublicLiveSessionSerializer
     permission_classes = [AllowAny]
     pagination_class = None
 
@@ -72,7 +73,7 @@ class RecordingsView(generics.ListAPIView):
 
 class LiveSessionDetailView(generics.RetrieveAPIView):
     queryset = LiveSession.objects.select_related("course", "mentor")
-    serializer_class = LiveSessionSerializer
+    serializer_class = PublicLiveSessionSerializer
     permission_classes = [AllowAny]
     lookup_field = "slug"
 

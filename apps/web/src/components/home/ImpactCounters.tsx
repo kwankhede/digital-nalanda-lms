@@ -39,7 +39,7 @@ export default function ImpactCounters() {
 
   return (
     <section className="mx-auto -mt-6 max-w-6xl px-4 pb-4">
-      <div className="rounded-2xl border border-nal-parchment bg-white p-6 shadow-soft md:p-8">
+      <div className="rounded-2xl border border-nal-border bg-white p-6 shadow-soft md:p-8">
         <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-6">
           {loading
             ? Array.from({ length: 6 }).map((_, i) => (

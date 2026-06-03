@@ -7,21 +7,22 @@ const config: Config = {
       colors: {
         // Legacy brand tokens (kept so existing components don't break).
         brand: {
-          navy: "#0b1f4d",
-          blue: "#1d4ed8",
-          orange: "#f97316",
+          navy: "#062447",
+          blue: "#173a5e",
+          orange: "#e68a1f",
         },
         // New editorial "Nalanda" palette — warm, premium, mission-driven.
         nal: {
-          cream: "#fbf6ec",
-          parchment: "#f2e9d8",
-          navy: "#16314d",
-          ink: "#0e2236",
-          saffron: "#e8901f",
+          cream: "#fbf7f4",
+          parchment: "#f7f1e8",
+          navy: "#062447",
+          ink: "#173a5e",
+          saffron: "#e68a1f",
+          gold: "#f3b04c",
           terracotta: "#c0402f",
-          gold: "#f2a52c",
           teal: "#2f6d75",
-          slate: "#5b6b7b",
+          slate: "#5f6e7a",
+          border: "#e8ddd1",
         },
       },
       fontFamily: {

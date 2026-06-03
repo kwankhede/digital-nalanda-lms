@@ -41,7 +41,7 @@ export default function UpcomingLiveClasses({ items }: { items: HomeUpcomingItem
   const shown = (real.length > 0 ? real : sampleClasses()).slice(0, 3);
 
   return (
-    <div className="flex h-full flex-col rounded-2xl border border-nal-parchment bg-white p-6 shadow-soft">
+    <div className="flex h-full flex-col rounded-2xl border border-nal-border bg-white p-6 shadow-soft">
       <div className="flex items-center justify-between">
         <h3 className="font-display text-xl font-bold text-nal-navy">Upcoming Live Classes</h3>
         <Link href="/#events" className="text-xs font-semibold text-nal-saffron hover:underline">
@@ -55,8 +55,8 @@ export default function UpcomingLiveClasses({ items }: { items: HomeUpcomingItem
           const arrowHref = it.join_or_register_url || "/#events";
           const external = Boolean(it.join_or_register_url);
           return (
-            <li key={it.id} className="group flex items-start gap-3">
-              <div className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-xl bg-nal-navy text-white">
+            <li key={it.id} className="group flex items-start gap-3 rounded-xl p-2 transition-colors hover:bg-nal-parchment/60">
+              <div className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-xl bg-nal-navy text-white transition-colors group-hover:bg-nal-saffron">
                 <span className="text-base font-extrabold leading-none">{b.day}</span>
                 <span className="text-[10px] uppercase tracking-wide">{b.month}</span>
               </div>
@@ -71,7 +71,7 @@ export default function UpcomingLiveClasses({ items }: { items: HomeUpcomingItem
                 href={arrowHref}
                 {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                 aria-label={external ? "Join" : "View live classes"}
-                className="mt-1 flex h-8 w-8 items-center justify-center rounded-md border border-nal-parchment text-nal-saffron transition group-hover:border-nal-saffron group-hover:bg-nal-saffron group-hover:text-white"
+                className="mt-1 flex h-8 w-8 items-center justify-center rounded-md border border-nal-border text-nal-saffron transition group-hover:border-nal-saffron group-hover:bg-nal-saffron group-hover:text-white"
               >
                 →
               </a>
