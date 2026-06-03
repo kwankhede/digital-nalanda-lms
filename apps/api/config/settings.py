@@ -198,6 +198,7 @@ REST_FRAMEWORK = {
         "login": "10/min",
         "register": "5/min",
         "ai": "10/min",
+        "chat": "30/min",
     },
 }
 

@@ -80,16 +80,29 @@ export default function MobileDrawer({
               </button>
               {expanded === g.label && (
                 <div className="ml-3 border-l border-gray-100 pl-3">
-                  {g.items.map((item) => (
-                    <Link
-                      key={item.label}
-                      href={item.href}
-                      onClick={onClose}
-                      className="block rounded-md px-3 py-2 text-sm text-gray-600 hover:bg-gray-50"
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
+                  {g.items.map((item) =>
+                    item.external ? (
+                      <a
+                        key={item.label}
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={onClose}
+                        className="block rounded-md px-3 py-2 text-sm text-gray-600 hover:bg-gray-50"
+                      >
+                        {item.label}
+                      </a>
+                    ) : (
+                      <Link
+                        key={item.label}
+                        href={item.href}
+                        onClick={onClose}
+                        className="block rounded-md px-3 py-2 text-sm text-gray-600 hover:bg-gray-50"
+                      >
+                        {item.label}
+                      </Link>
+                    ),
+                  )}
                 </div>
               )}
             </div>

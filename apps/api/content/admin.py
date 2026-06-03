@@ -31,9 +31,13 @@ class LearningPathAdmin(admin.ModelAdmin):
 
 @admin.register(Educator)
 class EducatorAdmin(admin.ModelAdmin):
-    list_display = ("name", "expertise", "school", "is_featured", "order")
+    list_display = ("name", "title", "school", "is_featured", "order")
     list_editable = ("is_featured", "order")
-    search_fields = ("name", "expertise")
+    list_filter = ("school", "is_featured")
+    search_fields = ("name", "expertise", "school", "bio")
+    prepopulated_fields = {"slug": ("name",)}
+    fields = ("name", "slug", "title", "expertise", "school", "bio", "long_bio",
+              "photo_url", "linkedin_url", "website_url", "is_featured", "order")
 
 
 @admin.register(CommunityLibrary)

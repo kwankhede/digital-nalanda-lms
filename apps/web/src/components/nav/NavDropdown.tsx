@@ -47,16 +47,29 @@ export default function NavDropdown({ group }: { group: NavGroup }) {
           id={id}
           className="absolute left-0 top-full z-50 w-56 rounded-lg border border-nal-border bg-white p-2 shadow-lg"
         >
-          {group.items.map((item) => (
-            <Link
-              key={item.label}
-              href={item.href}
-              className="block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-nal-parchment hover:text-nal-saffron"
-              onClick={() => setOpen(false)}
-            >
-              {item.label}
-            </Link>
-          ))}
+          {group.items.map((item) =>
+            item.external ? (
+              <a
+                key={item.label}
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-nal-parchment hover:text-nal-saffron"
+                onClick={() => setOpen(false)}
+              >
+                {item.label}
+              </a>
+            ) : (
+              <Link
+                key={item.label}
+                href={item.href}
+                className="block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-nal-parchment hover:text-nal-saffron"
+                onClick={() => setOpen(false)}
+              >
+                {item.label}
+              </Link>
+            ),
+          )}
         </div>
       )}
     </div>

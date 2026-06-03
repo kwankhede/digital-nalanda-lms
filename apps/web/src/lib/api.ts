@@ -169,8 +169,18 @@ export interface PathDTO {
 export interface EducatorDTO {
   id?: number;
   name: string;
+  slug?: string;
+  title?: string;
   expertise: string;
   school: string;
+  bio?: string;
+  photo_url?: string;
+  is_featured?: boolean;
+}
+export interface EducatorDetailDTO extends EducatorDTO {
+  long_bio?: string;
+  linkedin_url?: string;
+  website_url?: string;
 }
 export interface LibraryDTO {
   id?: number;
@@ -205,6 +215,16 @@ export async function getSchool(slug: string): Promise<SchoolDetailDTO | null> {
 }
 export const getLearningPaths = () => getList<PathDTO>("/api/learning-paths/");
 export const getEducators = () => getList<EducatorDTO>("/api/educators/featured/");
+export const getAllEducators = () => getList<EducatorDTO>("/api/educators/");
+export async function getEducator(slug: string): Promise<EducatorDetailDTO | null> {
+  try {
+    const res = await fetch(`${API_URL}/api/educators/${slug}/`, { cache: "no-store" });
+    if (!res.ok) return null;
+    return res.json();
+  } catch {
+    return null;
+  }
+}
 export const getCommunityLibraries = () => getList<LibraryDTO>("/api/community-libraries/");
 export const getImpact = () => getList<ImpactStat>("/api/home/impact/");
 export const getFeaturedCourses = () => getList<CourseListItem>("/api/courses/featured/");

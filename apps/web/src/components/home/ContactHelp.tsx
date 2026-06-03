@@ -1,5 +1,6 @@
 import Link from "next/link";
 import SectionHeading from "./SectionHeading";
+import OpenChatButton from "./OpenChatButton";
 
 const S = { fill: "none", stroke: "currentColor", strokeWidth: 1.8, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
 
@@ -8,8 +9,8 @@ const CHANNELS = [
     title: "Ask the Nalanda Assistant",
     desc: "Get instant answers about courses, schools and how to start learning.",
     cta: "Open chat",
-    href: "/chatbot",
-    external: false,
+    href: "#",
+    chat: true,
     icon: (<svg className="h-6 w-6" viewBox="0 0 24 24" {...S}><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /><path d="M8 9h8M8 13h5" /></svg>),
   },
   {
@@ -50,7 +51,11 @@ export default function ContactHelp() {
             </span>
             <h3 className="mt-5 font-display text-lg font-bold text-nal-navy">{ch.title}</h3>
             <p className="mt-2 flex-1 text-sm text-nal-slate">{ch.desc}</p>
-            {ch.external ? (
+            {ch.chat ? (
+              <OpenChatButton className="mt-5 text-sm font-semibold text-nal-saffron hover:underline">
+                {ch.cta} →
+              </OpenChatButton>
+            ) : ch.external ? (
               <a href={ch.href} className="mt-5 text-sm font-semibold text-nal-saffron hover:underline">
                 {ch.cta}
               </a>

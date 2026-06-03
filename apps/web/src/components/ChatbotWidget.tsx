@@ -17,8 +17,12 @@ export default function ChatbotWidget() {
   }, [open, user]);
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [msgs]);
 
-  // Only logged-in users get the assistant.
-  if (!user) return null;
+  // Allow other components (e.g. the homepage "Need help?" card) to open the bot.
+  useEffect(() => {
+    const openChat = () => setOpen(true);
+    window.addEventListener("open-nalanda-chat", openChat);
+    return () => window.removeEventListener("open-nalanda-chat", openChat);
+  }, []);
 
   async function send(e: React.FormEvent) {
     e.preventDefault();

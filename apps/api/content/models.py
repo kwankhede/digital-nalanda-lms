@@ -52,14 +52,29 @@ class LearningPath(models.Model):
 
 class Educator(models.Model):
     name = models.CharField(max_length=150)
+    slug = models.SlugField(max_length=170, unique=True, blank=True)
+    title = models.CharField(max_length=150, blank=True)   # e.g. "Senior Mentor"
     expertise = models.CharField(max_length=200, blank=True)
     school = models.CharField(max_length=120, blank=True)
+    bio = models.CharField(max_length=300, blank=True)      # short card description
+    long_bio = models.TextField(blank=True)                 # profile-page body
     photo_url = models.URLField(blank=True)
+    linkedin_url = models.URLField(blank=True)
+    website_url = models.URLField(blank=True)
     is_featured = models.BooleanField(default=True)
     order = models.PositiveIntegerField(default=0)
 
     class Meta:
         ordering = ["order", "name"]
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base = slugify(self.name) or "mentor"
+            slug, i = base, 2
+            while Educator.objects.exclude(pk=self.pk).filter(slug=slug).exists():
+                slug = f"{base}-{i}"; i += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name

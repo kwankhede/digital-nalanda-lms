@@ -36,9 +36,29 @@ class LearningPathSerializer(serializers.ModelSerializer):
 
 
 class EducatorSerializer(serializers.ModelSerializer):
+    """Card/list payload."""
     class Meta:
         model = Educator
-        fields = ["id", "name", "expertise", "school", "photo_url"]
+        fields = ["id", "name", "slug", "title", "expertise", "school", "bio",
+                  "photo_url", "is_featured"]
+
+
+class EducatorDetailSerializer(serializers.ModelSerializer):
+    """Full profile payload for the mentor detail page."""
+    class Meta:
+        model = Educator
+        fields = ["id", "name", "slug", "title", "expertise", "school", "bio",
+                  "long_bio", "photo_url", "linkedin_url", "website_url"]
+
+
+class EducatorWriteSerializer(serializers.ModelSerializer):
+    """Admin/creator create + edit. Slug auto-generated from name when omitted."""
+    class Meta:
+        model = Educator
+        fields = ["id", "name", "slug", "title", "expertise", "school", "bio",
+                  "long_bio", "photo_url", "linkedin_url", "website_url",
+                  "is_featured", "order"]
+        extra_kwargs = {"slug": {"required": False}}
 
 
 class CommunityLibrarySerializer(serializers.ModelSerializer):

@@ -49,6 +49,9 @@ export default function CreatorDashboard() {
           <Link href="/creator/assignments" className="rounded-md border border-gray-200 px-5 py-2 font-semibold text-brand-navy">
             Assignments
           </Link>
+          <Link href="/creator/educators" className="rounded-md border border-gray-200 px-5 py-2 font-semibold text-brand-navy">
+            Mentors
+          </Link>
           <Link href="/creator/courses/new" className="rounded-md bg-brand-orange px-5 py-2 font-semibold text-white">
             + New Course
           </Link>

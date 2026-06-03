@@ -71,9 +71,15 @@ class PublicCourseSummaryView(APIView):
 # ---------- Nalanda chatbot (logged-in users) ----------
 
 class ChatView(APIView):
-    permission_classes = [IsAuthenticated]
+    # Open to everyone — visitors can ask the assistant before signing up.
+    # History is only stored for logged-in users; throttled to limit abuse.
+    permission_classes = [AllowAny]
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "chat"
 
     def get(self, request):
+        if not request.user.is_authenticated:
+            return Response([])
         msgs = ChatMessage.objects.filter(user=request.user)[:100]
         return Response(ChatMessageSerializer(msgs, many=True).data)
 
@@ -81,9 +87,10 @@ class ChatView(APIView):
         text = (request.data.get("message") or "").strip()
         if not text:
             return Response({"detail": "Message required."}, status=400)
-        ChatMessage.objects.create(user=request.user, role="user", text=text)
         reply = bot.answer(text)
-        ChatMessage.objects.create(user=request.user, role="bot", text=reply)
+        if request.user.is_authenticated:
+            ChatMessage.objects.create(user=request.user, role="user", text=text)
+            ChatMessage.objects.create(user=request.user, role="bot", text=reply)
         return Response({"reply": reply})
 
 

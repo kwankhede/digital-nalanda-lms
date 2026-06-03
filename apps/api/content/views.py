@@ -1,6 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny
 from adminpanel.permissions import IsStaffOrAdmin
+from .permissions import CanManageContent
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -8,6 +9,8 @@ from .models import CommunityLibrary, Educator, ImpactMetric, LearningPath, News
 from .serializers import (
     CommunityLibrarySerializer,
     EducatorSerializer,
+    EducatorDetailSerializer,
+    EducatorWriteSerializer,
     ImpactMetricSerializer,
     LearningPathSerializer,
     NewsletterSerializer,
@@ -54,6 +57,41 @@ class LearningPathListView(generics.ListAPIView):
     serializer_class = LearningPathSerializer
     permission_classes = [AllowAny]
     pagination_class = None
+
+
+class EducatorListView(generics.ListAPIView):
+    """All educators (the /educators page). Optional ?school=<name> filter."""
+    serializer_class = EducatorSerializer
+    permission_classes = [AllowAny]
+    pagination_class = None
+
+    def get_queryset(self):
+        qs = Educator.objects.all()
+        school = self.request.query_params.get("school")
+        return qs.filter(school__iexact=school) if school else qs
+
+
+class EducatorDetailView(generics.RetrieveAPIView):
+    """Public mentor profile by slug."""
+    queryset = Educator.objects.all()
+    serializer_class = EducatorDetailSerializer
+    permission_classes = [AllowAny]
+    lookup_field = "slug"
+
+
+class AdminEducatorListCreateView(generics.ListCreateAPIView):
+    """List all / create an educator. Admin, content-manager or creator."""
+    queryset = Educator.objects.all()
+    serializer_class = EducatorWriteSerializer
+    permission_classes = [CanManageContent]
+    pagination_class = None
+
+
+class AdminEducatorDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Edit / delete an educator profile (photo, bio, links, etc.)."""
+    queryset = Educator.objects.all()
+    serializer_class = EducatorWriteSerializer
+    permission_classes = [CanManageContent]
 
 
 class FeaturedEducatorsView(generics.ListAPIView):

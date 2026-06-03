@@ -5,6 +5,7 @@
 export interface NavLink {
   label: string;
   href: string;
+  external?: boolean;
 }
 
 export interface NavGroup {
@@ -19,16 +20,15 @@ export const PUBLIC_PRIMARY: NavLink[] = [
   { label: "Live Classes", href: "/#events" },
   { label: "Events", href: "/#events" },
   { label: "Schools", href: "/schools" },
-  { label: "Libraries", href: "/#ecosystem" },
-  { label: "Educators", href: "/#ecosystem" },
+  { label: "Educators", href: "/educators" },
 ];
 
 export const PUBLIC_RESOURCES: NavGroup = {
   label: "Resources",
   items: [
-    { label: "Blog", href: "#" },
+    { label: "Blog", href: "https://nalanda-academy.org/nalanda-blog/", external: true },
     { label: "Study Materials", href: "#" },
-    { label: "Stories", href: "/stories" },
+    { label: "Stories", href: "https://nalanda-academy.org/nalanda-blog/", external: true },
     { label: "Impact", href: "/#impact" },
     { label: "FAQ", href: "#" },
     { label: "Help Center", href: "#" },
