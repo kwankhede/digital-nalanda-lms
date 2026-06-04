@@ -145,15 +145,30 @@ class HomeRecordingsView(APIView):
 
 class HomeUpcomingView(APIView):
     """
-    GET /api/home/upcoming/ — live sessions + events in the next 30 days,
-    chronological, max 10, excluding cancelled.
+    GET /api/home/upcoming/ — upcoming live sessions + events, chronological,
+    excluding cancelled.
+
+    Defaults are tuned for the homepage card (max 10, next 30 days). The
+    dedicated Live Classes & Events page passes larger values:
+      ?limit=100&days=365
+    Both are clamped so the endpoint can't be abused.
     """
 
     permission_classes = [AllowAny]
 
     def get(self, request):
+        def _int_param(name, default, max_value):
+            try:
+                val = int(request.query_params.get(name, default))
+            except (TypeError, ValueError):
+                val = default
+            return max(1, min(val, max_value))
+
+        limit = _int_param("limit", 10, 100)
+        days = _int_param("days", 30, 365)
+
         now = timezone.now()
-        horizon = now + timedelta(days=30)
+        horizon = now + timedelta(days=days)
 
         sessions = list(
             LiveSession.objects.exclude(status=LiveSession.Status.CANCELLED)
@@ -164,7 +179,7 @@ class HomeUpcomingView(APIView):
             Event.objects.exclude(status=Event.Status.CANCELLED)
             .filter(start_time__gte=now, start_time__lte=horizon)
         )
-        combined = sorted(sessions + events, key=lambda o: o.start_time)[:10]
+        combined = sorted(sessions + events, key=lambda o: o.start_time)[:limit]
         return Response(HomeItemSerializer(combined, many=True).data)
 
 

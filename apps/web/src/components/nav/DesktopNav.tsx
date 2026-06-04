@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import type { NavGroup } from "@/lib/nav";
-import { PUBLIC_PRIMARY, PUBLIC_RESOURCES } from "@/lib/nav";
+import { PUBLIC_PRIMARY, PUBLIC_RESOURCES, DONATE_LINK } from "@/lib/nav";
 import { useAuth } from "@/lib/auth";
 import NavDropdown from "./NavDropdown";
 import SchoolsNavDropdown from "./SchoolsNavDropdown";
@@ -42,6 +42,14 @@ export default function DesktopNav({ groups }: { groups: NavGroup[] }) {
         </Link>
         <SearchButton />
         <NotificationBell />
+        <a
+          href={DONATE_LINK.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="rounded-md bg-nal-saffron px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
+        >
+          Donate
+        </a>
         <ProfileMenu />
       </div>
     );
@@ -79,6 +87,14 @@ export default function DesktopNav({ groups }: { groups: NavGroup[] }) {
       >
         Sign Up
       </Link>
+      <a
+        href={DONATE_LINK.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="rounded-md bg-nal-saffron px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
+      >
+        Donate
+      </a>
     </div>
   );
 }

@@ -131,9 +131,15 @@ export async function getHomeRecordings(): Promise<HomeRecording[]> {
   }
 }
 
-export async function getHomeUpcoming(): Promise<HomeUpcomingItem[]> {
+export async function getHomeUpcoming(
+  opts?: { limit?: number; days?: number },
+): Promise<HomeUpcomingItem[]> {
   try {
-    const res = await fetch(`${API_URL}/api/home/upcoming/`, { cache: "no-store" });
+    const qs = new URLSearchParams();
+    if (opts?.limit) qs.set("limit", String(opts.limit));
+    if (opts?.days) qs.set("days", String(opts.days));
+    const suffix = qs.toString() ? `?${qs.toString()}` : "";
+    const res = await fetch(`${API_URL}/api/home/upcoming/${suffix}`, { cache: "no-store" });
     if (!res.ok) return [];
     return res.json();
   } catch {

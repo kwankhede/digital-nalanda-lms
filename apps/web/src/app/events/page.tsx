@@ -24,24 +24,24 @@ function Row({ it }: { it: HomeUpcomingItem }) {
   const d = fmt(it.start_time);
   const external = Boolean(it.join_or_register_url);
   return (
-    <li className="group flex items-start gap-4 rounded-2xl border border-nal-border bg-white p-5 shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lift">
-      <div className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-xl bg-nal-navy text-white transition-colors group-hover:bg-nal-saffron">
-        <span className="text-lg font-extrabold leading-none">{d.day}</span>
-        <span className="text-[10px] uppercase tracking-wide">{d.month}</span>
+    <li className="group flex items-start gap-3 rounded-xl border border-nal-border bg-white p-3 shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lift">
+      <div className="flex h-11 w-11 shrink-0 flex-col items-center justify-center rounded-lg bg-nal-navy text-white transition-colors group-hover:bg-nal-saffron">
+        <span className="text-sm font-extrabold leading-none">{d.day}</span>
+        <span className="text-[9px] uppercase tracking-wide">{d.month}</span>
       </div>
       <div className="min-w-0 flex-1">
-        <h3 className="font-display text-base font-bold text-nal-navy">{it.title}</h3>
-        <p className="mt-1 text-xs text-nal-slate">
+        <h3 className="font-display text-sm font-bold leading-snug text-nal-navy">{it.title}</h3>
+        <p className="mt-0.5 text-[11px] text-nal-slate">
           {d.full} · {d.time}{it.speaker_or_mentor ? ` · ${it.speaker_or_mentor}` : ""}
         </p>
-        {it.description && <p className="mt-2 text-sm text-nal-slate">{it.description}</p>}
+        {it.description && <p className="mt-1 line-clamp-2 text-xs text-nal-slate">{it.description}</p>}
       </div>
       {external && (
         <a
           href={it.join_or_register_url}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-1 shrink-0 rounded-lg bg-nal-saffron px-3 py-1.5 text-xs font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-soft"
+          className="mt-0.5 shrink-0 rounded-md bg-nal-saffron px-2.5 py-1 text-[11px] font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-soft"
         >
           {it.type === "live_session" ? "Join" : "Register"}
         </a>
@@ -63,7 +63,7 @@ function Column({ title, subtitle, items }: { title: string; subtitle: string; i
           Nothing scheduled right now — check back soon.
         </p>
       ) : (
-        <ul className="mt-5 space-y-4">
+        <ul className="mt-4 space-y-2.5">
           {items.map((it) => <Row key={it.id} it={it} />)}
         </ul>
       )}
@@ -72,7 +72,7 @@ function Column({ title, subtitle, items }: { title: string; subtitle: string; i
 }
 
 export default async function EventsPage() {
-  const fetched = await getHomeUpcoming();
+  const fetched = await getHomeUpcoming({ limit: 100, days: 365 });
   const items = (fetched.length > 0 ? fetched : sampleUpcoming()).sort(
     (a, b) => +new Date(a.start_time) - +new Date(b.start_time),
   );

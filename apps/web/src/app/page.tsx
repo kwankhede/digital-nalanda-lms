@@ -7,7 +7,6 @@ import SchoolsGrid from "@/components/home/SchoolsGrid";
 import ValuesStrip from "@/components/home/ValuesStrip";
 import Educators from "@/components/home/Educators";
 import SuccessStories from "@/components/home/SuccessStories";
-import CommunityLibraries from "@/components/home/CommunityLibraries";
 import RecordingsCarousel from "@/components/home/RecordingsCarousel";
 import UpcomingLiveClasses from "@/components/home/UpcomingLiveClasses";
 import LatestAnnouncements from "@/components/home/LatestAnnouncements";
@@ -43,10 +42,9 @@ export default async function HomePage() {
       <EcosystemSection />
       <ValuesStrip />
 
-      {/* People & proof: educators → success stories → libraries → recordings */}
+      {/* People & proof: educators → success stories → recordings */}
       <Educators />
       <SuccessStories />
-      <CommunityLibraries />
       <RecordingsCarousel recordings={recordings} />
 
       <ContactHelp />

@@ -9,8 +9,7 @@ const COLUMNS: { heading: string; links: FLink[] }[] = [
     heading: "Explore",
     links: [
       { label: "Courses", href: "/courses" },
-      { label: "Live Classes", href: "/#events" },
-      { label: "Events", href: "/#events" },
+      { label: "Live Classes", href: "/events" },
       { label: "Schools", href: "/schools" },
       { label: "Educators", href: "/educators" },
     ],
@@ -111,6 +110,16 @@ export default function SiteFooter() {
           <p className="mt-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-nal-gold">
             <span className="h-1.5 w-1.5 rounded-full bg-nal-saffron" /> 100% free, forever
           </p>
+          <div className="mt-5">
+            <a
+              href={SUPPORT_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-lg bg-nal-saffron px-5 py-2.5 text-sm font-semibold text-white shadow-soft transition hover:-translate-y-0.5 hover:opacity-95"
+            >
+              ♥ Donate to Nalanda Academy
+            </a>
+          </div>
           <div className="mt-5 flex gap-3">
             {SOCIALS.map((s) => (
               <a

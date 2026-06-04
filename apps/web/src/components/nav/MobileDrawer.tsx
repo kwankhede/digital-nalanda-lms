@@ -114,9 +114,15 @@ export default function MobileDrawer({
             </Link>
           )}
 
-          <Link href={DONATE_LINK.href} onClick={onClose} className="mt-2 block rounded-md bg-brand-orange px-3 py-2 text-center font-semibold text-white">
+          <a
+            href={DONATE_LINK.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={onClose}
+            className="mt-2 block rounded-md bg-nal-saffron px-3 py-2 text-center font-semibold text-white"
+          >
             Donate
-          </Link>
+          </a>
 
           {user ? (
             <button

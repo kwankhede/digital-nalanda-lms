@@ -18,7 +18,6 @@ export interface NavGroup {
 export const PUBLIC_PRIMARY: NavLink[] = [
   { label: "Courses", href: "/courses" },
   { label: "Live Classes", href: "/events" },
-  { label: "Events", href: "/events" },
   { label: "Schools", href: "/schools" },
   { label: "Educators", href: "/educators" },
 ];
@@ -50,7 +49,6 @@ export const PUBLIC_NAV: NavGroup[] = [
     items: [
       { label: "Live Classes", href: "/events" },
       { label: "Workshops", href: "/#events" },
-      { label: "Events", href: "/events" },
       { label: "Recordings", href: "/#recordings" },
     ],
   },
@@ -87,9 +85,9 @@ export const STUDENT_NAV: NavGroup[] = [
     label: "Live",
     items: [
       { label: "Upcoming Classes", href: "/dashboard" },
+      { label: "Live Classes", href: "/events" },
       { label: "Recordings", href: "/#recordings" },
       { label: "Workshops", href: "/#events" },
-      { label: "Events", href: "/events" },
     ],
   },
   {
@@ -119,4 +117,8 @@ export const BOTTOM_NAV = [
   { label: "Profile", href: "/dashboard", icon: "👤" },
 ];
 
-export const DONATE_LINK = { label: "Donate", href: "/#support" };
+export const DONATE_LINK = {
+  label: "Donate",
+  href: "https://nalanda-academy.org/support-us/",
+  external: true,
+};
