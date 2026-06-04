@@ -59,6 +59,9 @@ export default function DesktopNav({ groups }: { groups: NavGroup[] }) {
   // matching the reference header exactly.
   return (
     <div className="hidden items-center gap-6 md:flex">
+      <Link href="/" className="nav-underline text-sm font-medium text-nal-navy hover:text-nal-saffron">
+        Home
+      </Link>
       {PUBLIC_PRIMARY.map((l) =>
         l.label === "Schools" ? (
           <SchoolsNavDropdown key="schools" />

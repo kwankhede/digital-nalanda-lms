@@ -232,6 +232,23 @@ export async function getEducator(slug: string): Promise<EducatorDetailDTO | nul
   }
 }
 export const getCommunityLibraries = () => getList<LibraryDTO>("/api/community-libraries/");
+
+export interface StudyMaterialDTO {
+  id: number;
+  title: string;
+  description: string;
+  category: string;
+  resource_type: string;
+  url: string;
+}
+export const getStudyMaterials = () => getList<StudyMaterialDTO>("/api/study-materials/");
+
+export interface TickerDTO {
+  id: number;
+  text: string;
+  link: string;
+}
+export const getTicker = () => getList<TickerDTO>("/api/ticker/");
 export const getImpact = () => getList<ImpactStat>("/api/home/impact/");
 export const getFeaturedCourses = () => getList<CourseListItem>("/api/courses/featured/");
 

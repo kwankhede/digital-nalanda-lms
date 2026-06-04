@@ -17,6 +17,12 @@ from .views import (
     SchoolListView,
     AdminSchoolListCreateView,
     AdminSchoolDetailView,
+    StudyMaterialListView,
+    AdminStudyMaterialListCreateView,
+    AdminStudyMaterialDetailView,
+    TickerListView,
+    AdminTickerListCreateView,
+    AdminTickerDetailView,
 )
 
 urlpatterns = [
@@ -30,6 +36,12 @@ urlpatterns = [
     path("educators/<slug:slug>/", EducatorDetailView.as_view(), name="educator-detail"),
     path("admin/educators/", AdminEducatorListCreateView.as_view(), name="admin-educator-list-create"),
     path("admin/educators/<int:pk>/", AdminEducatorDetailView.as_view(), name="admin-educator-detail"),
+    path("ticker/", TickerListView.as_view(), name="ticker-list"),
+    path("admin/ticker/", AdminTickerListCreateView.as_view(), name="admin-ticker-list-create"),
+    path("admin/ticker/<int:pk>/", AdminTickerDetailView.as_view(), name="admin-ticker-detail"),
+    path("study-materials/", StudyMaterialListView.as_view(), name="study-material-list"),
+    path("admin/study-materials/", AdminStudyMaterialListCreateView.as_view(), name="admin-study-material-list-create"),
+    path("admin/study-materials/<int:pk>/", AdminStudyMaterialDetailView.as_view(), name="admin-study-material-detail"),
     path("community-libraries/", CommunityLibraryListView.as_view(), name="community-library-list"),
     path("home/impact/", ImpactView.as_view(), name="home-impact"),
     path("newsletter/subscribe/", NewsletterSubscribeView.as_view(), name="newsletter-subscribe"),

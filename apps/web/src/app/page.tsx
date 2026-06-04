@@ -1,5 +1,6 @@
 import { getHomeUpcoming, getHomeRecordings } from "@/lib/api";
 import Hero from "@/components/home/Hero";
+import NoticeTicker from "@/components/home/NoticeTicker";
 import ImpactCounters from "@/components/home/ImpactCounters";
 import EcosystemSection from "@/components/home/EcosystemSection";
 import JourneyTimeline from "@/components/home/JourneyTimeline";
@@ -25,6 +26,7 @@ export default async function HomePage() {
   return (
     <div>
       <Hero />
+      <NoticeTicker />
       <ImpactCounters />
 
       {/* Live classes · announcements · join the mission */}

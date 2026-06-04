@@ -5,7 +5,7 @@ from .permissions import CanManageContent
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import CommunityLibrary, Educator, ImpactMetric, LearningPath, NewsletterSubscriber, School
+from .models import CommunityLibrary, Educator, ImpactMetric, LearningPath, NewsletterSubscriber, School, StudyMaterial, TickerItem
 from .serializers import (
     CommunityLibrarySerializer,
     EducatorSerializer,
@@ -17,6 +17,10 @@ from .serializers import (
     SchoolSerializer,
     SchoolDetailSerializer,
     SchoolWriteSerializer,
+    StudyMaterialSerializer,
+    StudyMaterialWriteSerializer,
+    TickerItemSerializer,
+    TickerItemWriteSerializer,
 )
 
 
@@ -127,6 +131,52 @@ class NewsletterSubscribeView(APIView):
             {"detail": "Subscribed", "email": email},
             status=status.HTTP_201_CREATED,
         )
+
+
+
+class StudyMaterialListView(generics.ListAPIView):
+    """Public: published study materials (the /study-materials page)."""
+    queryset = StudyMaterial.objects.filter(is_published=True)
+    serializer_class = StudyMaterialSerializer
+    permission_classes = [AllowAny]
+    pagination_class = None
+
+
+class AdminStudyMaterialListCreateView(generics.ListCreateAPIView):
+    """List all / create a study material. Admin, content-manager or creator."""
+    queryset = StudyMaterial.objects.all()
+    serializer_class = StudyMaterialWriteSerializer
+    permission_classes = [CanManageContent]
+    pagination_class = None
+
+
+class AdminStudyMaterialDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Edit / delete a study material."""
+    queryset = StudyMaterial.objects.all()
+    serializer_class = StudyMaterialWriteSerializer
+    permission_classes = [CanManageContent]
+
+
+
+class TickerListView(generics.ListAPIView):
+    """Public: active ticker notices."""
+    queryset = TickerItem.objects.filter(is_active=True)
+    serializer_class = TickerItemSerializer
+    permission_classes = [AllowAny]
+    pagination_class = None
+
+
+class AdminTickerListCreateView(generics.ListCreateAPIView):
+    queryset = TickerItem.objects.all()
+    serializer_class = TickerItemWriteSerializer
+    permission_classes = [CanManageContent]
+    pagination_class = None
+
+
+class AdminTickerDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = TickerItem.objects.all()
+    serializer_class = TickerItemWriteSerializer
+    permission_classes = [CanManageContent]
 
 
 from .models import Story  # noqa: E402

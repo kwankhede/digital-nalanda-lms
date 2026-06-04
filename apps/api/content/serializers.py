@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import CommunityLibrary, Educator, ImpactMetric, LearningPath, NewsletterSubscriber, School
+from .models import CommunityLibrary, Educator, ImpactMetric, LearningPath, NewsletterSubscriber, School, StudyMaterial, TickerItem
 
 
 class SchoolSerializer(serializers.ModelSerializer):
@@ -80,6 +80,37 @@ class ImpactMetricSerializer(serializers.ModelSerializer):
     class Meta:
         model = ImpactMetric
         fields = ["id", "value", "suffix", "label"]
+
+
+class StudyMaterialSerializer(serializers.ModelSerializer):
+    """Public list payload (published materials)."""
+    class Meta:
+        model = StudyMaterial
+        fields = ["id", "title", "description", "category", "resource_type", "url"]
+
+
+class StudyMaterialWriteSerializer(serializers.ModelSerializer):
+    """Admin create + edit."""
+    class Meta:
+        model = StudyMaterial
+        fields = ["id", "title", "description", "category", "resource_type",
+                  "url", "is_published", "order", "created_at", "updated_at"]
+        read_only_fields = ["created_at", "updated_at"]
+
+
+class TickerItemSerializer(serializers.ModelSerializer):
+    """Public payload for the notice ticker."""
+    class Meta:
+        model = TickerItem
+        fields = ["id", "text", "link"]
+
+
+class TickerItemWriteSerializer(serializers.ModelSerializer):
+    """Admin create + edit."""
+    class Meta:
+        model = TickerItem
+        fields = ["id", "text", "link", "is_active", "order", "created_at", "updated_at"]
+        read_only_fields = ["created_at", "updated_at"]
 
 
 from .models import Story, StoryMedia  # noqa: E402

@@ -5,18 +5,17 @@ import { useState } from "react";
 export default function VideoModal({
   videoId,
   label = "Watch Introduction",
+  triggerClassName = "inline-flex items-center gap-2 rounded-md border border-white/30 px-6 py-3 font-semibold text-white hover:bg-white/10",
 }: {
   videoId: string;
   label?: string;
+  triggerClassName?: string;
 }) {
   const [open, setOpen] = useState(false);
 
   return (
     <>
-      <button
-        onClick={() => setOpen(true)}
-        className="inline-flex items-center gap-2 rounded-md border border-white/30 px-6 py-3 font-semibold text-white hover:bg-white/10"
-      >
+      <button onClick={() => setOpen(true)} className={triggerClassName}>
         <span aria-hidden>▶</span> {label}
       </button>
 

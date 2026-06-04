@@ -38,7 +38,7 @@ export default function ImpactCounters() {
   const stats = data && data.length > 0 ? data : FALLBACK;
 
   return (
-    <section className="mx-auto -mt-6 max-w-6xl px-4 pb-4">
+    <section className="mx-auto mt-10 max-w-6xl px-4 pb-4">
       <div className="rounded-2xl border border-nal-border bg-white p-6 shadow-soft md:p-8">
         <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-6">
           {loading

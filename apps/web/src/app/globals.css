@@ -93,6 +93,43 @@ body {
   transform: scaleX(1);
 }
 
+/* A glowing pulse that travels along the timeline after it draws. */
+@keyframes timeline-travel {
+  0% { left: 0%; opacity: 0; }
+  8% { opacity: 1; }
+  92% { opacity: 1; }
+  100% { left: 100%; opacity: 0; }
+}
+.timeline-travel {
+  animation: timeline-travel 4s ease-in-out 1.1s infinite;
+}
+
+/* Soft ring pulse used to "light up" each milestone node as it appears. */
+@keyframes node-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(230, 138, 31, 0.45); }
+  70% { box-shadow: 0 0 0 12px rgba(230, 138, 31, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(230, 138, 31, 0); }
+}
+.node-pulse {
+  animation: node-pulse 2.2s ease-out 1 both;
+}
+
+/* Continuous notice ticker (marquee). Track is duplicated, so -50% loops
+   seamlessly. Pauses on hover/focus for readability. */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: inline-flex;
+  width: max-content;
+  animation: marquee 45s linear infinite;
+}
+.marquee-wrap:hover .marquee-track,
+.marquee-wrap:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+
 /* Respect users who prefer reduced motion: disable all the above motion. */
 @media (prefers-reduced-motion: reduce) {
   *,

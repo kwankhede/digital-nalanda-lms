@@ -81,3 +81,25 @@ class StoryAdmin(admin.ModelAdmin):
     search_fields = ("title", "student_name", "institution")
     prepopulated_fields = {"slug": ("title",)}
     inlines = [StoryMediaInline]
+
+
+from .models import StudyMaterial  # noqa: E402
+
+
+@admin.register(StudyMaterial)
+class StudyMaterialAdmin(admin.ModelAdmin):
+    list_display = ("title", "category", "resource_type", "is_published", "order")
+    list_editable = ("category", "resource_type", "is_published", "order")
+    list_filter = ("is_published", "resource_type", "category")
+    search_fields = ("title", "description", "category")
+
+
+from .models import TickerItem  # noqa: E402
+
+
+@admin.register(TickerItem)
+class TickerItemAdmin(admin.ModelAdmin):
+    list_display = ("text", "is_active", "order", "updated_at")
+    list_editable = ("is_active", "order")
+    list_filter = ("is_active",)
+    search_fields = ("text",)

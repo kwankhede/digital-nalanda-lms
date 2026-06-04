@@ -26,11 +26,11 @@ export const PUBLIC_RESOURCES: NavGroup = {
   label: "Resources",
   items: [
     { label: "Blog", href: "https://nalanda-academy.org/nalanda-blog/", external: true },
-    { label: "Study Materials", href: "#" },
+    { label: "Study Materials", href: "/study-materials" },
     { label: "Stories", href: "https://nalanda-academy.org/nalanda-blog/", external: true },
     { label: "Impact", href: "/#impact" },
-    { label: "FAQ", href: "#" },
-    { label: "Help Center", href: "#" },
+    { label: "FAQ", href: "/faq" },
+    { label: "Help Center", href: "/#contact" },
   ],
 };
 

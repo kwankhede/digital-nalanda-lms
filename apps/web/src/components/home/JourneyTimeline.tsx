@@ -50,6 +50,13 @@ export default function JourneyTimeline() {
           <div
             className={`timeline-line pointer-events-none absolute left-0 right-0 top-7 hidden h-0.5 bg-nal-saffron md:block ${inView ? "is-visible" : ""}`}
           />
+          {/* glowing pulse that travels along the line once it has drawn */}
+          {inView && (
+            <span
+              aria-hidden="true"
+              className="timeline-travel pointer-events-none absolute top-7 z-10 hidden h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-nal-saffron shadow-[0_0_12px_4px_rgba(230,138,31,0.7)] md:block"
+            />
+          )}
 
           <ol className="grid gap-10 md:grid-cols-6 md:gap-4">
             {MILESTONES.map((m, i) => (
@@ -57,16 +64,26 @@ export default function JourneyTimeline() {
                 key={m.year}
                 className="group relative flex items-center gap-4 md:flex-col md:gap-3 md:text-center"
                 style={{
-                  transition: "opacity .6s ease-out, transform .6s ease-out",
-                  transitionDelay: `${i * 110}ms`,
+                  transition: "opacity .6s cubic-bezier(.34,1.56,.64,1), transform .6s cubic-bezier(.34,1.56,.64,1)",
+                  transitionDelay: `${i * 150}ms`,
                   opacity: inView ? 1 : 0,
-                  transform: inView ? "none" : "scale(.85)",
+                  transform: inView ? "none" : "translateY(14px) scale(.8)",
                 }}
               >
-                <span className="relative z-10 flex h-16 w-16 shrink-0 items-center justify-center rounded-full border-2 border-nal-saffron bg-nal-cream text-nal-navy shadow-soft transition-all duration-300 group-hover:-translate-y-1 group-hover:bg-nal-saffron group-hover:text-white group-hover:shadow-lift">
+                <span
+                  className={`relative z-10 flex h-16 w-16 shrink-0 items-center justify-center rounded-full border-2 border-nal-saffron bg-nal-cream text-nal-navy shadow-soft transition-all duration-300 group-hover:-translate-y-1 group-hover:bg-nal-saffron group-hover:text-white group-hover:shadow-lift ${inView ? "node-pulse" : ""}`}
+                  style={{ animationDelay: `${i * 150 + 200}ms` }}
+                >
                   {m.icon}
                 </span>
-                <div>
+                <div
+                  style={{
+                    transition: "opacity .5s ease-out, transform .5s ease-out",
+                    transitionDelay: `${i * 150 + 180}ms`,
+                    opacity: inView ? 1 : 0,
+                    transform: inView ? "none" : "translateY(8px)",
+                  }}
+                >
                   <p className="font-display text-2xl font-bold text-nal-saffron">{m.year}</p>
                   <p className="mt-0.5 text-sm font-medium text-nal-navy">{m.label}</p>
                 </div>

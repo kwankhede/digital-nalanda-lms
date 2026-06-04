@@ -196,3 +196,53 @@ class StoryMedia(models.Model):
 
     def __str__(self):
         return f"{self.story.title} — {self.media_type}"
+
+
+class StudyMaterial(models.Model):
+    """Downloadable / linkable study resources, fully admin-managed."""
+
+    class ResourceType(models.TextChoices):
+        PDF = "pdf", "PDF"
+        DOCUMENT = "doc", "Document"
+        SLIDES = "slides", "Slides"
+        VIDEO = "video", "Video"
+        LINK = "link", "Link"
+        OTHER = "other", "Other"
+
+    title = models.CharField(max_length=200)
+    description = models.CharField(max_length=300, blank=True)
+    category = models.CharField(
+        max_length=120, blank=True,
+        help_text="Group materials under a heading, e.g. 'Mathematics' or 'UPSC'.",
+    )
+    resource_type = models.CharField(
+        max_length=10, choices=ResourceType.choices, default=ResourceType.PDF,
+    )
+    url = models.URLField(help_text="Link to the file or resource (PDF, Drive, YouTube, etc.).")
+    is_published = models.BooleanField(default=True)
+    order = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["category", "order", "title"]
+
+    def __str__(self):
+        return self.title
+
+
+class TickerItem(models.Model):
+    """A scrolling notice (exam/application announcements) shown below the hero."""
+
+    text = models.CharField(max_length=300)
+    link = models.URLField(blank=True, help_text="Optional link opened when the notice is clicked.")
+    is_active = models.BooleanField(default=True)
+    order = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["order", "-created_at"]
+
+    def __str__(self):
+        return self.text[:60]

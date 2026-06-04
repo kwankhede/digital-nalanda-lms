@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import VideoModal from "@/components/home/VideoModal";
 
 export default function Hero() {
   return (
@@ -33,12 +34,11 @@ export default function Hero() {
             >
               Explore Courses →
             </Link>
-            <Link
-              href="/#ecosystem"
-              className="rounded-md border border-nal-navy/25 bg-white px-7 py-3 text-base font-semibold text-nal-navy transition hover:border-nal-navy/50 hover:bg-nal-parchment"
-            >
-              Explore Libraries
-            </Link>
+            <VideoModal
+              videoId="I9q-7GPQr1Y"
+              label="How to use this platform"
+              triggerClassName="inline-flex items-center gap-2 rounded-md border border-nal-navy/25 bg-white px-7 py-3 text-base font-semibold text-nal-navy transition hover:border-nal-navy/50 hover:bg-nal-parchment"
+            />
           </div>
         </div>
 

@@ -18,11 +18,11 @@ const COLUMNS: { heading: string; links: FLink[] }[] = [
     heading: "Resources",
     links: [
       { label: "Blog", href: "https://nalanda-academy.org/nalanda-blog/", external: true },
-      { label: "Study Materials", href: "#" },
+      { label: "Study Materials", href: "/study-materials" },
       { label: "Stories", href: "https://nalanda-academy.org/nalanda-blog/", external: true },
       { label: "Impact", href: "/#impact" },
-      { label: "FAQ", href: "#" },
-      { label: "Help Center", href: "#" },
+      { label: "FAQ", href: "/faq" },
+      { label: "Help Center", href: "/#contact" },
     ],
   },
   {
@@ -38,9 +38,9 @@ const COLUMNS: { heading: string; links: FLink[] }[] = [
   {
     heading: "Legal",
     links: [
-      { label: "Privacy Policy", href: "#" },
-      { label: "Terms of Use", href: "#" },
-      { label: "Code of Conduct", href: "#" },
+      { label: "Privacy Policy", href: "https://nalanda-academy.org/", external: true },
+      { label: "Terms of Use", href: "https://nalanda-academy.org/", external: true },
+      { label: "Code of Conduct", href: "https://nalanda-academy.org/", external: true },
     ],
   },
 ];

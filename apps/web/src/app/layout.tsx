@@ -7,7 +7,7 @@ import ChatbotWidget from "@/components/ChatbotWidget";
 import AnnouncementBanner from "@/components/AnnouncementBanner";
 
 export const metadata: Metadata = {
-  title: "Digital Nalanda LMS",
+  title: "Digital Nalanda",
   description: "Free quality education for everyone, everywhere.",
 };
 
