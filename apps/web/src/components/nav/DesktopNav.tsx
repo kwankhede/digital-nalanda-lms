@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import type { NavGroup } from "@/lib/nav";
-import { PUBLIC_PRIMARY, PUBLIC_RESOURCES, DONATE_LINK } from "@/lib/nav";
+import { PUBLIC_PRIMARY, PUBLIC_RESOURCES, DONATE_LINK, navForRole } from "@/lib/nav";
 import { useAuth } from "@/lib/auth";
 import NavDropdown from "./NavDropdown";
 import SchoolsNavDropdown from "./SchoolsNavDropdown";
@@ -27,19 +27,23 @@ function SearchButton() {
 export default function DesktopNav({ groups }: { groups: NavGroup[] }) {
   const { user } = useAuth();
 
-  // Logged-in students keep the grouped menu + profile tools.
+  // Logged-in users get a flat, role-relevant set of links + profile tools.
   if (user) {
+    const links = navForRole(user);
     return (
       <div className="hidden items-center gap-6 md:flex">
         <Link href="/" className="nav-underline text-sm font-medium text-nal-navy hover:text-nal-saffron">
           Home
         </Link>
-        {groups.map((g) => (
-          <NavDropdown key={g.label} group={g} />
+        {links.map((l) => (
+          <Link
+            key={l.label}
+            href={l.href}
+            className="nav-underline text-sm font-medium text-nal-navy hover:text-nal-saffron"
+          >
+            {l.label}
+          </Link>
         ))}
-        <Link href="/dashboard" className="nav-underline text-sm font-medium text-nal-navy hover:text-nal-saffron">
-          Dashboard
-        </Link>
         <SearchButton />
         <NotificationBell />
         <a

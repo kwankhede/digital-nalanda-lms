@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import type { NavGroup } from "@/lib/nav";
-import { DONATE_LINK } from "@/lib/nav";
+import { DONATE_LINK, navForRole } from "@/lib/nav";
 import { useAuth } from "@/lib/auth";
 import { useNavSchools } from "@/lib/useNavSchools";
 
@@ -68,45 +68,56 @@ export default function MobileDrawer({
             </div>
           )}
 
-          {groups.map((g) => (
-            <div key={g.label}>
-              <button
-                onClick={() => setExpanded((e) => (e === g.label ? null : g.label))}
-                aria-expanded={expanded === g.label}
-                className="flex w-full items-center justify-between rounded-md px-3 py-2 font-medium text-brand-navy hover:bg-gray-50"
-              >
-                {g.label}
-                <span aria-hidden>{expanded === g.label ? "−" : "+"}</span>
-              </button>
-              {expanded === g.label && (
-                <div className="ml-3 border-l border-gray-100 pl-3">
-                  {g.items.map((item) =>
-                    item.external ? (
-                      <a
-                        key={item.label}
-                        href={item.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={onClose}
-                        className="block rounded-md px-3 py-2 text-sm text-gray-600 hover:bg-gray-50"
-                      >
-                        {item.label}
-                      </a>
-                    ) : (
-                      <Link
-                        key={item.label}
-                        href={item.href}
-                        onClick={onClose}
-                        className="block rounded-md px-3 py-2 text-sm text-gray-600 hover:bg-gray-50"
-                      >
-                        {item.label}
-                      </Link>
-                    ),
+          {user
+            ? navForRole(user).map((l) => (
+                <Link
+                  key={l.label}
+                  href={l.href}
+                  onClick={onClose}
+                  className="block rounded-md px-3 py-2 font-medium text-brand-navy hover:bg-gray-50"
+                >
+                  {l.label}
+                </Link>
+              ))
+            : groups.map((g) => (
+                <div key={g.label}>
+                  <button
+                    onClick={() => setExpanded((e) => (e === g.label ? null : g.label))}
+                    aria-expanded={expanded === g.label}
+                    className="flex w-full items-center justify-between rounded-md px-3 py-2 font-medium text-brand-navy hover:bg-gray-50"
+                  >
+                    {g.label}
+                    <span aria-hidden>{expanded === g.label ? "−" : "+"}</span>
+                  </button>
+                  {expanded === g.label && (
+                    <div className="ml-3 border-l border-gray-100 pl-3">
+                      {g.items.map((item) =>
+                        item.external ? (
+                          <a
+                            key={item.label}
+                            href={item.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={onClose}
+                            className="block rounded-md px-3 py-2 text-sm text-gray-600 hover:bg-gray-50"
+                          >
+                            {item.label}
+                          </a>
+                        ) : (
+                          <Link
+                            key={item.label}
+                            href={item.href}
+                            onClick={onClose}
+                            className="block rounded-md px-3 py-2 text-sm text-gray-600 hover:bg-gray-50"
+                          >
+                            {item.label}
+                          </Link>
+                        ),
+                      )}
+                    </div>
                   )}
                 </div>
-              )}
-            </div>
-          ))}
+              ))}
 
           {user && (
             <Link href="/dashboard" onClick={onClose} className="block rounded-md px-3 py-2 font-medium text-brand-navy hover:bg-gray-50">

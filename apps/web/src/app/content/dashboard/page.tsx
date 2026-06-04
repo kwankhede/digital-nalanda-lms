@@ -5,9 +5,9 @@ import DashboardShell from "@/components/dashboard/DashboardShell";
 import type { Profile } from "@/lib/auth";
 
 const allow = (u?: Profile | null) =>
-  !!u && (["mentor", "admin", "super_admin"].includes(u.role) || !!u.is_staff);
+  !!u && (!!u.is_staff || ["content_manager", "admin", "super_admin"].includes(u.role));
 
-export default function MentorDashboard() {
+export default function ContentDashboard() {
   return (
     <RequireRole allow={allow}>
       <DashboardShell />

@@ -49,13 +49,31 @@ export default function ProfileMenu() {
               Creator Dashboard
             </Link>
           )}
-          {(user.is_staff || ["admin", "content_manager", "super_admin"].includes(user.role)) && (
+          {(user.is_staff || ["admin", "super_admin"].includes(user.role)) && (
             <Link
-              href="/admin"
+              href="/admin/dashboard"
               onClick={() => setOpen(false)}
               className="block rounded-md px-3 py-2 text-sm font-semibold text-brand-blue hover:bg-gray-50"
             >
               Admin Dashboard
+            </Link>
+          )}
+          {user.role === "content_manager" && (
+            <Link
+              href="/content/dashboard"
+              onClick={() => setOpen(false)}
+              className="block rounded-md px-3 py-2 text-sm font-semibold text-brand-blue hover:bg-gray-50"
+            >
+              Content Dashboard
+            </Link>
+          )}
+          {user.role === "event_manager" && (
+            <Link
+              href="/events/dashboard"
+              onClick={() => setOpen(false)}
+              className="block rounded-md px-3 py-2 text-sm font-semibold text-brand-blue hover:bg-gray-50"
+            >
+              Events Dashboard
             </Link>
           )}
           {PROFILE_MENU.map((item) => (

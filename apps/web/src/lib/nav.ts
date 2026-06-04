@@ -101,6 +101,67 @@ export const STUDENT_NAV: NavGroup[] = [
   },
 ];
 
+// --- Role-aware primary nav for logged-in users ---
+// Surfaces a small, role-relevant set of flat links. Every href is a real
+// route in the app so nothing 404s. The profile menu + notifications stay.
+type RoleUser = { role?: string; is_superuser?: boolean; is_staff?: boolean };
+
+const ROLE_NAV: Record<string, NavLink[]> = {
+  student: [
+    { label: "Dashboard", href: "/dashboard" },
+    { label: "Courses", href: "/courses" },
+    { label: "Live Classes", href: "/events" },
+    { label: "Certificates", href: "/dashboard" },
+    { label: "Counselling", href: "/dashboard/counselling" },
+  ],
+  course_creator: [
+    { label: "Dashboard", href: "/creator/dashboard" },
+    { label: "My Courses", href: "/creator/courses" },
+    { label: "Create Course", href: "/creator/courses/new" },
+    { label: "Assignments", href: "/creator/assignments" },
+    { label: "Live Classes", href: "/events" },
+  ],
+  mentor: [
+    { label: "Dashboard", href: "/mentor/dashboard" },
+    { label: "Counselling", href: "/admin/counselling" },
+    { label: "Courses", href: "/courses" },
+    { label: "Live Classes", href: "/events" },
+  ],
+  content_manager: [
+    { label: "Dashboard", href: "/content/dashboard" },
+    { label: "Schools", href: "/admin/schools" },
+    { label: "Study Materials", href: "/admin/study-materials" },
+    { label: "Educators", href: "/creator/educators" },
+    { label: "Courses", href: "/courses" },
+  ],
+  event_manager: [
+    { label: "Dashboard", href: "/events/dashboard" },
+    { label: "Live Classes & Events", href: "/events" },
+    { label: "Courses", href: "/courses" },
+  ],
+  admin: [
+    { label: "Dashboard", href: "/admin/dashboard" },
+    { label: "Courses", href: "/courses" },
+    { label: "Review", href: "/admin/course-reviews" },
+    { label: "Users", href: "/admin/users" },
+    { label: "Live Classes", href: "/events" },
+  ],
+};
+
+// volunteer shares the student set.
+ROLE_NAV.volunteer = ROLE_NAV.student;
+
+export function navForRole(user: RoleUser | null | undefined): NavLink[] {
+  if (!user) return [];
+  if (user.is_superuser) return ROLE_NAV.admin;
+  const role = user.role ?? "";
+  if (ROLE_NAV[role]) return ROLE_NAV[role];
+  // Staff with no specific (mapped) role fall back to the admin set.
+  if (user.is_staff) return ROLE_NAV.admin;
+  // Everyone else (incl. teacher_applicant, library_coordinator) → student set.
+  return ROLE_NAV.student;
+}
+
 export const PROFILE_MENU: NavLink[] = [
   { label: "My Profile", href: "/dashboard" },
   { label: "My Certificates", href: "/dashboard" },

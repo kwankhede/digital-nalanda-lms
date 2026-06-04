@@ -31,9 +31,11 @@ export function getDefaultDashboardForRole(user?: Profile | null): string {
   switch (r) {
     case "super_admin":
     case "admin":
+      return "/admin/dashboard";
     case "content_manager":
+      return "/content/dashboard";
     case "event_manager":
-      return "/admin";
+      return "/events/dashboard";
     case "course_creator":
       return "/creator/dashboard";
     case "mentor":
