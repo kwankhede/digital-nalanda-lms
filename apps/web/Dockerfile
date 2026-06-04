@@ -1,14 +1,22 @@
-# Next.js web image (development-friendly)
+# Next.js web image — production build + start.
 FROM node:20-alpine
 
 WORKDIR /app
 
-COPY package.json ./
-RUN npm install
+COPY package.json package-lock.json* ./
+RUN npm ci
 
 COPY . .
 
-EXPOSE 3000
+# NEXT_PUBLIC_* must be present at build time (baked into the client bundle).
+# DigitalOcean passes the build-time env var as a build arg of the same name.
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 
-# Dev default. For production use `npm run build` then `npm start`.
-CMD ["npm", "run", "dev"]
+RUN npm run build
+
+ENV PORT=8080
+EXPOSE 8080
+
+# `next start` honours $PORT.
+CMD ["npm", "start"]

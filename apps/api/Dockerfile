@@ -1,4 +1,4 @@
-# Django API image
+# Django API image — production-ready (gunicorn + whitenoise static).
 FROM python:3.12-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -16,7 +16,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-EXPOSE 8000
+# Collect static at build time so WhiteNoise can serve hashed/compressed assets.
+# DEBUG=True only for this build step so the insecure-key guard doesn't trip
+# (collectstatic never touches the database).
+RUN DJANGO_DEBUG=True python manage.py collectstatic --noinput
 
-# Dev default. For production, run migrate + collectstatic and use gunicorn.
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+EXPOSE 8080
+
+# Migrate on start (idempotent), then serve with gunicorn on $PORT (default 8080).
+CMD ["sh", "-c", "python manage.py migrate --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8080} --workers 3 --timeout 60"]

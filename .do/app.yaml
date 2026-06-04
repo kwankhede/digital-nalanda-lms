@@ -1,0 +1,71 @@
+# DigitalOcean App Platform spec — Digital Nalanda STAGING.
+# Deploy: cloud.digitalocean.com/apps/new → it auto-reads this file, OR
+#   doctl apps create --spec .do/app.yaml
+#
+# One app, one public domain, path-routed:
+#   /api, /admin, /static  -> Django API (gunicorn)
+#   everything else (/)     -> Next.js web
+# Same origin => no CORS needed. The frontend calls /api on its own domain.
+#
+# AFTER first create you must, in the DO UI:
+#   1. Replace DJANGO_SECRET_KEY with a strong value (Settings → api → env).
+#   2. (Optional) set GEMINI_API_KEY.
+#   3. (Recommended next) enable Spaces for durable media/certificates
+#      (USE_SPACES=True + SPACES_* vars) — see docs/DIGITALOCEAN_STAGING.md.
+name: digital-nalanda-staging
+region: blr
+
+databases:
+  - name: db
+    engine: PG
+    version: "16"
+    production: false   # staging dev database
+
+ingress:
+  rules:
+    - match: { path: { prefix: /api } }
+      component: { name: api }
+    - match: { path: { prefix: /admin } }
+      component: { name: api }
+    - match: { path: { prefix: /static } }
+      component: { name: api }
+    - match: { path: { prefix: / } }
+      component: { name: web }
+
+services:
+  - name: api
+    dockerfile_path: apps/api/Dockerfile
+    source_dir: apps/api
+    github:
+      repo: kwankhede/digital-nalanda-lms
+      branch: main
+      deploy_on_push: true
+    http_port: 8080
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    health_check:
+      http_path: /api/courses/
+    envs:
+      - { key: DJANGO_DEBUG, value: "False" }
+      - { key: DJANGO_SECRET_KEY, value: "REPLACE_WITH_STRONG_SECRET", type: SECRET }
+      - { key: DJANGO_ALLOWED_HOSTS, value: "${APP_DOMAIN}" }
+      - { key: DATABASE_URL, value: "${db.DATABASE_URL}" }
+      - { key: CSRF_TRUSTED_ORIGINS, value: "${APP_URL}" }
+      - { key: CORS_ALLOWED_ORIGINS, value: "${APP_URL}" }
+      - { key: FRONTEND_URL, value: "${APP_URL}" }
+      - { key: USE_SPACES, value: "False" }
+      - { key: GEMINI_API_KEY, value: "", type: SECRET }
+
+  - name: web
+    dockerfile_path: apps/web/Dockerfile
+    source_dir: apps/web
+    github:
+      repo: kwankhede/digital-nalanda-lms
+      branch: main
+      deploy_on_push: true
+    http_port: 8080
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    envs:
+      # Same-origin: the browser calls /api on this app's own domain.
+      - { key: NEXT_PUBLIC_API_URL, value: "${APP_URL}", scope: BUILD_TIME }
