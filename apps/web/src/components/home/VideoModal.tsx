@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function VideoModal({
   videoId,
@@ -13,6 +13,21 @@ export default function VideoModal({
 }) {
   const [open, setOpen] = useState(false);
 
+  // Close on Escape + lock background scroll while open.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [open]);
+
   return (
     <>
       <button onClick={() => setOpen(true)} className={triggerClassName}>
@@ -21,30 +36,37 @@ export default function VideoModal({
 
       {open && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm sm:p-6"
           onClick={() => setOpen(false)}
           role="dialog"
           aria-modal="true"
+          aria-label="Video player"
         >
           <div
-            className="w-full max-w-3xl max-h-[90vh]"
+            className="relative w-full max-w-4xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="aspect-video max-h-[75vh] w-full overflow-hidden rounded-lg">
+            {/* Close button — floating top-right, always visible above the frame */}
+            <button
+              onClick={() => setOpen(false)}
+              aria-label="Close video"
+              className="tap-target absolute -top-2 right-0 z-10 flex h-10 w-10 -translate-y-full items-center justify-center rounded-full bg-white text-nal-navy shadow-lg transition hover:bg-nal-parchment sm:-right-2 sm:-top-3"
+            >
+              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+                <path d="M6 6l12 12M18 6 6 18" />
+              </svg>
+            </button>
+
+            {/* 16:9 video frame */}
+            <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-black shadow-2xl ring-1 ring-white/10">
               <iframe
-                className="h-full w-full"
-                src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
-                title="Introduction"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                className="absolute inset-0 h-full w-full"
+                src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`}
+                title={label}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
               />
             </div>
-            <button
-              onClick={() => setOpen(false)}
-              className="mt-3 rounded-md bg-white px-4 py-2 text-sm font-medium text-brand-navy"
-            >
-              Close
-            </button>
           </div>
         </div>
       )}
