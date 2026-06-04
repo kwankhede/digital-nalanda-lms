@@ -15,6 +15,7 @@ from .course_serializers import (
     CreatorModuleSerializer,
 )
 from .models import log_action
+from core.email import send_email
 from .permissions import IsAdminRole, IsCourseCreator
 
 EDITABLE = {Course.Status.DRAFT, Course.Status.REJECTED}
@@ -247,7 +248,36 @@ class _CourseTransition(APIView):
                        f"/creator/courses/{course.id}/edit")
             except Exception:
                 pass
-        return Response(AdminCourseReviewSerializer(course).data)
+
+        data = AdminCourseReviewSerializer(course).data
+        owner_email = getattr(course.created_by, "email", None) if course.created_by_id else None
+        if owner_email:
+            if a == "approve":
+                send_email(
+                    f"Your course '{course.title}' was approved",
+                    owner_email,
+                    f"Great news! Your course '{course.title}' has been approved.\n\n"
+                    "— Digital Nalanda",
+                )
+            elif a == "reject":
+                reason = (course.rejected_reason or "").strip()
+                detail = f"\n\nReason: {reason}" if reason else ""
+                send_email(
+                    f"Your course '{course.title}' needs changes",
+                    owner_email,
+                    f"Your course '{course.title}' was reviewed and needs a few changes "
+                    f"before it can be approved.{detail}\n\n"
+                    "You can edit and resubmit it from your Creator Dashboard."
+                    "\n\n— Digital Nalanda",
+                )
+            elif a == "publish":
+                send_email(
+                    f"Your course '{course.title}' is now live",
+                    owner_email,
+                    f"Your course '{course.title}' is now live and available to learners. "
+                    "Congratulations!\n\n— Digital Nalanda",
+                )
+        return Response(data)
 
 
 class AdminApproveCourseView(_CourseTransition):

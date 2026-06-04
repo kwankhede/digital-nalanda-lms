@@ -202,6 +202,7 @@ REST_FRAMEWORK = {
         "register": "5/min",
         "ai": "10/min",
         "chat": "30/min",
+        "password_reset": "5/min",
     },
 }
 
@@ -229,6 +230,18 @@ if DEBUG:
 
 # Public site URL — used to build certificate verification links / QR codes.
 FRONTEND_URL = env("FRONTEND_URL", default="http://localhost:3000")
+
+# --- Email (transactional) ---
+# Default backend prints emails to the log so the feature works without SMTP.
+# Production: set DJANGO_EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+# plus EMAIL_HOST / EMAIL_PORT / EMAIL_HOST_USER / EMAIL_HOST_PASSWORD.
+EMAIL_BACKEND = env("DJANGO_EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend")
+EMAIL_HOST = env("EMAIL_HOST", default="")
+EMAIL_PORT = env.int("EMAIL_PORT", default=587)
+EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="")
+EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=True)
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="Digital Nalanda <no-reply@digitalnalanda.org>")
 
 # Google Gemini (optional) — AI assistant falls back to templates if unset.
 GEMINI_API_KEY = env("GEMINI_API_KEY", default="")

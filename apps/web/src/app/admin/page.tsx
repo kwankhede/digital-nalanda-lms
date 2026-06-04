@@ -132,6 +132,9 @@ export default function AdminDashboard() {
           <a href="/admin/ticker" className="flex items-center justify-between rounded-lg border border-gray-100 px-4 py-3 text-sm font-medium text-brand-navy shadow-sm hover:bg-gray-50">
             Notice Ticker <span className="text-gray-400">→</span>
           </a>
+          <a href="/admin/users" className="flex items-center justify-between rounded-lg border border-gray-100 px-4 py-3 text-sm font-medium text-brand-navy shadow-sm hover:bg-gray-50">
+            Users &amp; Roles <span className="text-gray-400">→</span>
+          </a>
         </div>
       </section>
 

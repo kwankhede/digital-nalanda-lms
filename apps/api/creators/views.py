@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 from .models import AuditLog, CourseCreatorApplication, log_action
 from .permissions import IsAdminRole
 from .serializers import AuditLogSerializer, CreatorApplicationSerializer
+from core.email import send_email
 
 
 class ApplyCreatorView(APIView):
@@ -90,7 +91,28 @@ class _ReviewBase(APIView):
                 app.user.save(update_fields=["role"])
             log_action(request.user, "application_rejected", "CourseCreatorApplication", app.id,
                        note=app.admin_notes)
-        return Response(CreatorApplicationSerializer(app).data)
+
+        data = CreatorApplicationSerializer(app).data
+        if self.target == "approved":
+            send_email(
+                "Your teacher application is approved",
+                app.user.email,
+                "Good news! Your teacher application has been approved. "
+                "You now have access to your Creator Dashboard, where you can "
+                "start building and publishing courses.\n\n— Digital Nalanda",
+            )
+        else:
+            note = (app.admin_notes or "").strip()
+            reason = f"\n\nNote from the review team: {note}" if note else ""
+            send_email(
+                "Update on your teacher application",
+                app.user.email,
+                "Thank you for applying to teach on Digital Nalanda. After review, "
+                "we're unable to approve your application at this time."
+                f"{reason}\n\nYou're welcome to apply again in the future."
+                "\n\n— Digital Nalanda",
+            )
+        return Response(data)
 
 
 class AdminApproveApplicationView(_ReviewBase):

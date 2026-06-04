@@ -11,6 +11,7 @@ from creators.permissions import IsAdminRole  # admins/content_manager/super_adm
 from . import ai, bot
 from .models import ChatMessage, CounsellingRequest
 from .serializers import ChatMessageSerializer, CounsellingSerializer
+from core.email import send_email
 
 CREATOR_ROLES = {"course_creator", "admin", "content_manager", "super_admin"}
 MENTOR_ADMIN = {"mentor", "admin", "content_manager", "super_admin"}
@@ -165,4 +166,15 @@ class CounsellingReplyView(APIView):
                        req.subject, "/dashboard/counselling")
             except Exception:
                 pass
-        return Response(CounsellingSerializer(req).data)
+
+        data = CounsellingSerializer(req).data
+        if action == "reply":
+            send_email(
+                "You have a reply to your counselling request",
+                getattr(req.student, "email", None),
+                f"A mentor has replied to your counselling request "
+                f"\"{req.subject}\".\n\n"
+                "You can read the reply under Dashboard -> Counselling."
+                "\n\n— Digital Nalanda",
+            )
+        return Response(data)

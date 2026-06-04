@@ -52,3 +52,25 @@ class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         attrs["email"] = attrs.get("email", "").lower().strip()
         return super().validate(attrs)
+
+
+class PasswordResetRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    uid = serializers.CharField()
+    token = serializers.CharField()
+    new_password = serializers.CharField(write_only=True, min_length=8)
+
+
+class AdminUserSerializer(serializers.ModelSerializer):
+    """Read-only user representation for admin user management."""
+
+    class Meta:
+        model = User
+        fields = [
+            "id", "email", "full_name", "role", "is_active",
+            "is_staff", "is_superuser", "date_joined", "last_login",
+        ]
+        read_only_fields = fields

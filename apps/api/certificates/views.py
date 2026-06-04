@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, status
@@ -8,6 +9,7 @@ from rest_framework.views import APIView
 from courses.models import Course
 
 from .models import Certificate
+from core.email import send_email
 from .serializers import CertificateSerializer, CertificateVerifySerializer
 from .services import NotEligible, get_pdf_bytes, issue_certificate
 
@@ -23,7 +25,18 @@ class GenerateCertificateView(APIView):
             certificate = issue_certificate(request.user, course)
         except NotEligible as exc:
             return Response({"detail": str(exc)}, status=status.HTTP_400_BAD_REQUEST)
-        return Response(CertificateSerializer(certificate).data)
+
+        data = CertificateSerializer(certificate).data
+        verify_url = f"{settings.FRONTEND_URL}/verify/{certificate.verification_code}"
+        send_email(
+            f"Your certificate for '{course.title}' is ready",
+            request.user.email,
+            f"Congratulations on completing '{course.title}'! "
+            "Your certificate is ready.\n\n"
+            f"You can view and verify it here: {verify_url}"
+            "\n\n— Digital Nalanda",
+        )
+        return Response(data)
 
 
 class MyCertificatesView(generics.ListAPIView):
