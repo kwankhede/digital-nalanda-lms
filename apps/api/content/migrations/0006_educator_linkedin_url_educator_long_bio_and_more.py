@@ -55,7 +55,7 @@ class Migration(migrations.Migration):
         migrations.AddField(model_name='educator', name='website_url',
                             field=models.URLField(blank=True)),
         migrations.AddField(model_name='educator', name='slug',
-                            field=models.SlugField(blank=True, default='', max_length=170)),
+                            field=models.SlugField(blank=True, default='', max_length=170, db_index=False)),
         migrations.RunPython(backfill_slugs, noop),
         migrations.AlterField(model_name='educator', name='slug',
                               field=models.SlugField(blank=True, max_length=170, unique=True)),
