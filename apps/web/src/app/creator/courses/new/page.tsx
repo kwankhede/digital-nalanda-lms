@@ -3,8 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createCreatorCourse } from "@/lib/creator";
+import RequireRole from "@/components/RequireRole";
+import { isCreator } from "@/lib/roles";
 
-export default function NewCoursePage() {
+function NewCourseForm() {
   const router = useRouter();
   const [form, setForm] = useState({ title: "", short_description: "", level: "beginner", language: "English", description: "" });
   const [err, setErr] = useState("");
@@ -39,5 +41,13 @@ export default function NewCoursePage() {
         <button type="submit" className="rounded-md bg-brand-orange px-6 py-2 font-semibold text-white">Create Draft</button>
       </form>
     </div>
+  );
+}
+
+export default function NewCoursePage() {
+  return (
+    <RequireRole allow={isCreator}>
+      <NewCourseForm />
+    </RequireRole>
   );
 }

@@ -45,7 +45,7 @@ class AdminSchoolListCreateView(generics.ListCreateAPIView):
     """GET all (incl. unpublished) / POST create a school. Admin only."""
     queryset = School.objects.all()
     serializer_class = SchoolWriteSerializer
-    permission_classes = [IsStaffOrAdmin]
+    permission_classes = [CanManageContent]
     pagination_class = None
 
 
@@ -53,7 +53,7 @@ class AdminSchoolDetailView(generics.RetrieveUpdateDestroyAPIView):
     """GET / PUT / PATCH / DELETE a single school. Admin only."""
     queryset = School.objects.all()
     serializer_class = SchoolWriteSerializer
-    permission_classes = [IsStaffOrAdmin]
+    permission_classes = [CanManageContent]
 
 
 class LearningPathListView(generics.ListAPIView):

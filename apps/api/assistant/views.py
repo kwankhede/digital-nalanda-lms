@@ -24,6 +24,8 @@ def _is(user, roles):
 
 class AICourseSummaryView(APIView):
     permission_classes = [IsAuthenticated]
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "ai"
 
     def post(self, request):
         if not _is(request.user, CREATOR_ROLES):
@@ -34,6 +36,8 @@ class AICourseSummaryView(APIView):
 
 class AILessonSummaryView(APIView):
     permission_classes = [IsAuthenticated]
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "ai"
 
     def post(self, request):
         if not _is(request.user, CREATOR_ROLES):

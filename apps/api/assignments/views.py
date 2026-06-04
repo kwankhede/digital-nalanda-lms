@@ -46,9 +46,20 @@ class CourseAssignmentsView(generics.ListCreateAPIView):
 
 
 class AssignmentDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Assignment.objects.select_related("course")
     serializer_class = AssignmentSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        # Prevent IDOR: admins see all; course owners see their own; students
+        # see only published assignments in courses they are enrolled in.
+        u = self.request.user
+        base = Assignment.objects.select_related("course")
+        if _is(u, {"admin", "content_manager", "super_admin"}):
+            return base
+        own = base.filter(course__created_by=u)
+        course_ids = Enrollment.objects.filter(student=u).values_list("course_id", flat=True)
+        enrolled = base.filter(is_published=True, course_id__in=course_ids)
+        return (own | enrolled).distinct()
 
     def update(self, request, *a, **k):
         if not _can_manage_course(request.user, self.get_object().course):
@@ -105,7 +116,9 @@ class AssignmentSubmissionsView(generics.ListAPIView):
     def get_queryset(self):
         assignment = get_object_or_404(Assignment, pk=self.kwargs["pk"])
         u = self.request.user
-        if not (_is(u, GRADER_ROLES) and (_can_manage_course(u, assignment.course) or _is(u, {"mentor"}))):
+        # Only the course's owner/admin can see its submissions (no blanket
+        # "any mentor sees every course" access — that was an IDOR).
+        if not _can_manage_course(u, assignment.course):
             return Submission.objects.none()
         return assignment.submissions.select_related("student")
 
@@ -116,7 +129,7 @@ class GradeSubmissionView(APIView):
     def post(self, request, pk):
         sub = get_object_or_404(Submission.objects.select_related("assignment__course", "student"), pk=pk)
         u = request.user
-        if not (_is(u, GRADER_ROLES) and (_can_manage_course(u, sub.assignment.course) or _is(u, {"mentor"}))):
+        if not _can_manage_course(u, sub.assignment.course):
             return Response(status=status.HTTP_403_FORBIDDEN)
         sub.score = request.data.get("score", sub.score)
         sub.feedback = request.data.get("feedback", sub.feedback)

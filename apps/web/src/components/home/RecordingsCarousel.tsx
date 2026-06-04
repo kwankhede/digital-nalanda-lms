@@ -9,6 +9,30 @@ function fmtDate(iso: string) {
   });
 }
 
+// Sample recordings shown only when the API returns none, so the carousel is
+// never empty. Latest first. They auto-replace once real recordings exist.
+function sampleRecordings(): HomeRecording[] {
+  const daysAgo = (n: number) => {
+    const d = new Date();
+    d.setDate(d.getDate() - n);
+    return d.toISOString();
+  };
+  const vid = "I9q-7GPQr1Y";
+  const base = {
+    slug: "",
+    recording_url: `https://www.youtube.com/watch?v=${vid}`,
+    recording_thumbnail_url: `https://img.youtube.com/vi/${vid}/hqdefault.jpg`,
+    course_title: null as string | null,
+  };
+  return [
+    { ...base, id: -1, title: "Mastering Quadratic Equations", recording_title: "Mastering Quadratic Equations", recording_duration_minutes: 58, start_time: daysAgo(2), mentor_name: "Prof. Anant Kumar" },
+    { ...base, id: -2, title: "The Indian Constitution Explained", recording_title: "The Indian Constitution Explained", recording_duration_minutes: 64, start_time: daysAgo(6), mentor_name: "Adv. Meera Krishnan" },
+    { ...base, id: -3, title: "Introduction to Python Programming", recording_title: "Introduction to Python Programming", recording_duration_minutes: 72, start_time: daysAgo(11), mentor_name: "Meera Joshi" },
+    { ...base, id: -4, title: "Editorial Analysis & Current Affairs", recording_title: "Editorial Analysis & Current Affairs", recording_duration_minutes: 45, start_time: daysAgo(16), mentor_name: "Fatima Ansari" },
+    { ...base, id: -5, title: "Foundations of Spoken English", recording_title: "Foundations of Spoken English", recording_duration_minutes: 50, start_time: daysAgo(23), mentor_name: "Ven. Tenzin Dorje" },
+  ];
+}
+
 export default function RecordingsCarousel({
   recordings,
 }: {
@@ -16,19 +40,10 @@ export default function RecordingsCarousel({
 }) {
   const scroller = useRef<HTMLDivElement>(null);
 
-  // Empty state: hide-ish with an elegant message.
-  if (!recordings || recordings.length === 0) {
-    return (
-      <section className="mx-auto max-w-6xl px-4 py-12">
-        <h2 className="font-display text-2xl font-bold text-nal-navy md:text-3xl">
-          Recent Online Class Recordings
-        </h2>
-        <p className="mt-3 text-nal-slate">
-          Recordings from our live classes will appear here soon.
-        </p>
-      </section>
-    );
-  }
+  // Use real recordings when available, otherwise show samples. Always latest first.
+  const shown = (recordings && recordings.length > 0 ? recordings : sampleRecordings())
+    .slice()
+    .sort((a, b) => +new Date(b.start_time) - +new Date(a.start_time));
 
   function scroll(dir: 1 | -1) {
     scroller.current?.scrollBy({ left: dir * 320, behavior: "smooth" });
@@ -62,7 +77,7 @@ export default function RecordingsCarousel({
         ref={scroller}
         className="mt-6 flex snap-x gap-5 overflow-x-auto pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
-        {recordings.map((r) => (
+        {shown.map((r) => (
           <article
             key={r.id}
             className="group w-72 shrink-0 snap-start overflow-hidden rounded-2xl border border-nal-border bg-white shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-lift"
