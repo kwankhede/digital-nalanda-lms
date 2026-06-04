@@ -5,6 +5,7 @@ import Footer from "@/components/SiteFooter";
 import { AuthProvider } from "@/lib/auth";
 import ChatbotWidget from "@/components/ChatbotWidget";
 import AnnouncementBanner from "@/components/AnnouncementBanner";
+import EmailVerifyBanner from "@/components/EmailVerifyBanner";
 
 export const metadata: Metadata = {
   title: "Digital Nalanda",
@@ -29,6 +30,7 @@ export default function RootLayout({
       <body className="min-h-screen flex flex-col bg-nal-cream text-nal-navy">
         <AuthProvider>
           <AnnouncementBanner />
+          <EmailVerifyBanner />
           <Navbar />
           <main className="flex-1 pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0">{children}</main>
           <Footer />

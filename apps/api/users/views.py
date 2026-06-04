@@ -1,4 +1,6 @@
 from django.contrib.auth import get_user_model
+from django.core import signing
+from django.core.cache import cache
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
@@ -35,6 +37,44 @@ def _build_reset_link(user):
     return f"{settings.FRONTEND_URL}/reset-password?uid={uid}&token={token}"
 
 
+EMAIL_VERIFY_SALT = "dn-email-verify"
+EMAIL_VERIFY_MAX_AGE = 3 * 24 * 3600  # 3 days
+
+
+def _build_verify_link(user):
+    token = signing.dumps({"uid": user.pk}, salt=EMAIL_VERIFY_SALT)
+    return f"{settings.FRONTEND_URL}/verify-email?token={token}"
+
+
+def _send_verification(user):
+    link = _build_verify_link(user)
+    send_email(
+        "Verify your Digital Nalanda email",
+        user.email,
+        (
+            f"Hi {user.full_name or 'there'},\n\n"
+            "Please confirm your email address for Digital Nalanda by opening "
+            f"the link below:\n{link}\n\n"
+            "This link expires in 3 days. If you didn't create an account, "
+            "you can ignore this email.\n\n— Digital Nalanda"
+        ),
+    )
+
+
+# Login lockout (cache-based). Locks an email after repeated failures.
+LOGIN_MAX_FAILS = 5
+LOGIN_LOCK_SECONDS = 15 * 60  # 15 minutes
+
+
+def _fail_key(email):
+    return f"loginfail:{email}"
+
+
+def _lock_key(email):
+    return f"loginlock:{email}"
+
+
+
 class RegisterView(generics.CreateAPIView):
     """POST /api/auth/register/ — create account and return JWT tokens."""
 
@@ -62,6 +102,8 @@ class RegisterView(generics.CreateAPIView):
             ),
         )
 
+        _send_verification(user)
+
         refresh = RefreshToken.for_user(user)
         return Response(
             {
@@ -74,12 +116,38 @@ class RegisterView(generics.CreateAPIView):
 
 
 class LoginView(TokenObtainPairView):
-    """POST /api/auth/login/ — email + password, returns access/refresh."""
+    """POST /api/auth/login/ — email + password, returns access/refresh.
+
+    Adds account lockout: after %d failed attempts an email is locked for
+    %d minutes (cache-based; use Redis in production for cross-worker locks).
+    """ % (LOGIN_MAX_FAILS, LOGIN_LOCK_SECONDS // 60)
 
     permission_classes = [AllowAny]
     serializer_class = EmailTokenObtainPairSerializer
     throttle_classes = [ScopedRateThrottle]
     throttle_scope = "login"
+
+    def post(self, request, *args, **kwargs):
+        email = (request.data.get("email") or "").strip().lower()
+        if email and cache.get(_lock_key(email)):
+            return Response(
+                {"detail": "Too many failed attempts. Please try again in a "
+                           "few minutes, or reset your password."},
+                status=status.HTTP_429_TOO_MANY_REQUESTS,
+            )
+        try:
+            resp = super().post(request, *args, **kwargs)
+        except Exception:
+            if email:
+                n = (cache.get(_fail_key(email)) or 0) + 1
+                cache.set(_fail_key(email), n, LOGIN_LOCK_SECONDS)
+                if n >= LOGIN_MAX_FAILS:
+                    cache.set(_lock_key(email), True, LOGIN_LOCK_SECONDS)
+            raise
+        if email and resp.status_code == 200:
+            cache.delete(_fail_key(email))
+            cache.delete(_lock_key(email))
+        return resp
 
 
 class LogoutView(APIView):
@@ -329,3 +397,44 @@ class AdminUserSendPasswordResetView(APIView):
             {"detail": "Password reset email sent."},
             status=status.HTTP_200_OK,
         )
+
+
+
+# --- Email verification -----------------------------------------------------
+
+class VerifyEmailView(APIView):
+    """POST /api/auth/verify-email/ — confirm an email from a signed token."""
+
+    permission_classes = [AllowAny]
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "email_verify"
+
+    def post(self, request):
+        token = request.data.get("token", "")
+        try:
+            data = signing.loads(token, salt=EMAIL_VERIFY_SALT, max_age=EMAIL_VERIFY_MAX_AGE)
+            user = User.objects.get(pk=data["uid"])
+        except (signing.BadSignature, signing.SignatureExpired, KeyError, TypeError, User.DoesNotExist):
+            return Response(
+                {"detail": "This verification link is invalid or has expired."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        if not user.email_verified:
+            user.email_verified = True
+            user.save(update_fields=["email_verified"])
+        return Response({"detail": "Email verified. Thank you!"}, status=status.HTTP_200_OK)
+
+
+class ResendVerificationView(APIView):
+    """POST /api/auth/verify-email/resend/ — resend the verification email."""
+
+    permission_classes = [IsAuthenticated]
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "email_verify"
+
+    def post(self, request):
+        user = request.user
+        if user.email_verified:
+            return Response({"detail": "Your email is already verified."}, status=status.HTTP_200_OK)
+        _send_verification(user)
+        return Response({"detail": "Verification email sent."}, status=status.HTTP_200_OK)

@@ -30,6 +30,7 @@ export interface Profile {
   role: string;
   is_staff?: boolean;
   is_superuser?: boolean;
+  email_verified?: boolean;
 }
 
 interface AuthContextValue {

@@ -203,6 +203,7 @@ REST_FRAMEWORK = {
         "ai": "10/min",
         "chat": "30/min",
         "password_reset": "5/min",
+        "email_verify": "5/min",
     },
 }
 

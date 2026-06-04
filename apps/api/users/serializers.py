@@ -9,8 +9,9 @@ PROFILE_FIELDS = [
     "id", "email", "full_name", "phone", "gender", "date_of_birth",
     "city", "district", "state", "education_level", "profession",
     "category", "preferred_language", "role", "is_staff", "is_superuser",
+    "email_verified",
 ]
-READ_ONLY = ["id", "email", "role", "is_staff", "is_superuser"]
+READ_ONLY = ["id", "email", "role", "is_staff", "is_superuser", "email_verified"]
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -71,6 +72,6 @@ class AdminUserSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             "id", "email", "full_name", "role", "is_active",
-            "is_staff", "is_superuser", "date_joined", "last_login",
+            "is_staff", "is_superuser", "email_verified", "date_joined", "last_login",
         ]
         read_only_fields = fields
