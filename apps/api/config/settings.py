@@ -162,15 +162,18 @@ if USE_SPACES:
     MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/"
 
 # --- Production security hardening (active only when DEBUG=False) ---
+# HTTPS-only behaviours are gated behind DJANGO_SECURE_SSL (default True) so a
+# plain-HTTP staging box (e.g. http://<ip>:8080) can disable them without
+# weakening real production, which keeps the default.
 if not DEBUG:
-    # We sit behind Nginx/DO load balancer terminating TLS.
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-    SECURE_SSL_REDIRECT = True
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-    SECURE_HSTS_SECONDS = 31536000  # 1 year
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
+    _SSL = env.bool("DJANGO_SECURE_SSL", default=True)
+    SECURE_SSL_REDIRECT = _SSL
+    SESSION_COOKIE_SECURE = _SSL
+    CSRF_COOKIE_SECURE = _SSL
+    SECURE_HSTS_SECONDS = 31536000 if _SSL else 0  # 1 year (only with TLS)
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = _SSL
+    SECURE_HSTS_PRELOAD = _SSL
     SECURE_CONTENT_TYPE_NOSNIFF = True
     SECURE_REFERRER_POLICY = "same-origin"
     X_FRAME_OPTIONS = "DENY"

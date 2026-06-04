@@ -24,4 +24,5 @@ RUN DJANGO_DEBUG=True python manage.py collectstatic --noinput
 EXPOSE 8080
 
 # Migrate on start (idempotent), then serve with gunicorn on $PORT (default 8080).
-CMD ["sh", "-c", "python manage.py migrate --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8080} --workers 3 --timeout 60"]
+# 2 workers keeps memory comfortably within the 512 MB basic-xxs instance.
+CMD ["sh", "-c", "python manage.py migrate --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8080} --workers 2 --timeout 60"]
