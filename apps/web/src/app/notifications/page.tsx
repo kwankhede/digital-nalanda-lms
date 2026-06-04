@@ -46,9 +46,9 @@ export default function NotificationsPage() {
         {items.map((n) => (
           <Link key={n.id} href={n.link || "#"} onClick={() => { if (!n.is_read) markRead(n.id); }}
             className={`block rounded-lg border p-4 ${n.is_read ? "border-gray-100 bg-white" : "border-blue-100 bg-blue-50/40"}`}>
-            <div className="flex items-center justify-between">
-              <p className="font-semibold text-brand-navy">{!n.is_read && "• "}{n.title}</p>
-              <span className="rounded bg-gray-100 px-2 py-0.5 text-xs capitalize">{n.type.replace("_", " ")}</span>
+            <div className="flex items-start justify-between gap-2">
+              <p className="min-w-0 break-words font-semibold text-brand-navy">{!n.is_read && "• "}{n.title}</p>
+              <span className="shrink-0 rounded bg-gray-100 px-2 py-0.5 text-xs capitalize">{n.type.replace("_", " ")}</span>
             </div>
             {n.message && <p className="mt-1 text-sm text-gray-600">{n.message}</p>}
             <p className="mt-1 text-xs text-gray-400">{new Date(n.created_at).toLocaleString()}</p>

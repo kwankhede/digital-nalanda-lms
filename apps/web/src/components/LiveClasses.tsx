@@ -29,8 +29,8 @@ function SessionCard({
 }) {
   return (
     <div className="rounded-lg border border-gray-100 p-4 shadow-sm">
-      <div className="flex items-start justify-between gap-3">
-        <div>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0">
           <p className="font-semibold text-brand-navy">{s.title}</p>
           <p className="mt-0.5 text-xs text-gray-400">
             {fmtDate(s.start_time)} · {fmtTime(s.start_time)}

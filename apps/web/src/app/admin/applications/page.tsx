@@ -33,17 +33,17 @@ export default function AdminApplicationsPage() {
         {apps.map((a) => (
           <div key={a.id} className="rounded-xl border border-gray-100 p-5 shadow-sm">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="font-bold text-brand-navy">{a.full_name} <span className="ml-2 rounded bg-gray-100 px-2 py-0.5 text-xs capitalize">{a.status}</span></p>
-                <p className="text-xs text-gray-400">{a.email} · {a.expertise_area}</p>
+              <div className="min-w-0">
+                <p className="font-bold text-brand-navy break-words">{a.full_name} <span className="ml-2 rounded bg-gray-100 px-2 py-0.5 text-xs capitalize">{a.status}</span></p>
+                <p className="text-xs text-gray-400 break-words">{a.email} · {a.expertise_area}</p>
               </div>
             </div>
             {a.bio && <p className="mt-2 text-sm text-gray-600">{a.bio}</p>}
             {a.status === "pending" && (
               <div className="mt-3 flex flex-col gap-2 sm:flex-row">
-                <input placeholder="Admin notes" value={notes[a.id!] ?? ""} onChange={(e) => setNotes({ ...notes, [a.id!]: e.target.value })} className="flex-1 rounded-md border border-gray-200 px-3 py-1.5 text-sm" />
-                <button onClick={() => act(a.id!, true)} className="rounded-md bg-green-600 px-4 py-1.5 text-sm font-medium text-white">Approve</button>
-                <button onClick={() => act(a.id!, false)} className="rounded-md bg-red-600 px-4 py-1.5 text-sm font-medium text-white">Reject</button>
+                <input placeholder="Admin notes" value={notes[a.id!] ?? ""} onChange={(e) => setNotes({ ...notes, [a.id!]: e.target.value })} className="min-h-[44px] flex-1 rounded-md border border-gray-200 px-3 py-1.5 text-base sm:text-sm" />
+                <button onClick={() => act(a.id!, true)} className="min-h-[44px] rounded-md bg-green-600 px-4 py-1.5 text-sm font-medium text-white">Approve</button>
+                <button onClick={() => act(a.id!, false)} className="min-h-[44px] rounded-md bg-red-600 px-4 py-1.5 text-sm font-medium text-white">Reject</button>
               </div>
             )}
           </div>

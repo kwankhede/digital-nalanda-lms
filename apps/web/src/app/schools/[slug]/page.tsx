@@ -55,11 +55,11 @@ export default async function SchoolDetailPage({
             ← All schools
           </Link>
           <div className="mt-4 flex items-center gap-4">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/10 text-4xl">
+            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-white/10 text-4xl">
               {school.icon}
             </div>
-            <div>
-              <h1 className="text-4xl font-extrabold">{school.name}</h1>
+            <div className="min-w-0">
+              <h1 className="text-3xl font-extrabold md:text-4xl">{school.name}</h1>
               {school.tagline && <p className="text-nal-gold">{school.tagline}</p>}
               <p className="text-white/70">{school.course_count} courses</p>
             </div>
@@ -149,8 +149,8 @@ export default async function SchoolDetailPage({
             <h2 className="text-2xl font-extrabold text-brand-navy">Upcoming Classes &amp; Events</h2>
             <div className="mt-5 space-y-3">
               {upcoming.slice(0, 5).map((it) => (
-                <div key={it.id} className="flex items-center justify-between rounded-xl border border-gray-100 p-4 shadow-sm">
-                  <div>
+                <div key={it.id} className="flex flex-col gap-3 rounded-xl border border-gray-100 p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+                  <div className="min-w-0">
                     <p className="font-semibold text-brand-navy">{it.title}</p>
                     <p className="text-xs text-gray-400">
                       {new Date(it.start_time).toLocaleString()}
@@ -158,7 +158,7 @@ export default async function SchoolDetailPage({
                     </p>
                   </div>
                   {it.join_or_register_url && (
-                    <a href={it.join_or_register_url} target="_blank" rel="noopener noreferrer" className="rounded-md bg-brand-orange px-4 py-1.5 text-sm font-semibold text-white hover:opacity-90">
+                    <a href={it.join_or_register_url} target="_blank" rel="noopener noreferrer" className="shrink-0 self-start rounded-md bg-brand-orange px-4 py-1.5 text-sm font-semibold text-white hover:opacity-90 sm:self-auto">
                       {it.type === "live_session" ? "Join" : "Register"}
                     </a>
                   )}

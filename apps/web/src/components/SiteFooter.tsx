@@ -93,8 +93,8 @@ export default function SiteFooter() {
         <rect x="76" y="80" width="22" height="14" />
       </svg>
 
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 md:grid-cols-[1.6fr_repeat(4,1fr)]">
-        <div>
+      <div className="mx-auto grid max-w-6xl grid-cols-2 gap-8 px-4 py-14 sm:gap-10 md:grid-cols-[1.6fr_repeat(4,1fr)]">
+        <div className="col-span-2 md:col-span-1">
           <span className="inline-flex rounded-lg bg-white/95 px-3 py-2 shadow-soft">
             <Image
               src="/images/brand/digital-nalanda-logo.png"

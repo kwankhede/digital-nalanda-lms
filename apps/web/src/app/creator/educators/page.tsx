@@ -145,7 +145,7 @@ function Manager() {
         ) : (
           <div className="mt-4 divide-y divide-nal-border rounded-2xl border border-nal-border bg-white shadow-soft">
             {list.map((e) => (
-              <div key={e.id} className="flex items-center gap-4 p-4">
+              <div key={e.id} className="flex flex-wrap items-center gap-3 p-4 sm:gap-4">
                 {e.photo_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={e.photo_url} alt={e.name} className="h-12 w-12 shrink-0 rounded-full object-cover ring-2 ring-nal-parchment" />
@@ -153,13 +153,15 @@ function Manager() {
                   <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-nal-navy text-lg font-bold text-white">{e.name.charAt(0)}</span>
                 )}
                 <div className="min-w-0 flex-1">
-                  <p className="truncate font-semibold text-nal-navy">
+                  <p className="break-words font-semibold text-nal-navy">
                     {e.name} {e.is_featured && <span className="ml-1 rounded-full bg-nal-saffron/15 px-2 py-0.5 text-xs font-medium text-nal-saffron">featured</span>}
                   </p>
-                  <p className="truncate text-xs text-nal-slate">{e.expertise}{e.school ? ` · ${e.school}` : ""}</p>
+                  <p className="break-words text-xs text-nal-slate">{e.expertise}{e.school ? ` · ${e.school}` : ""}</p>
                 </div>
-                <button onClick={() => startEdit(e)} className="rounded-md border border-nal-border px-3 py-1.5 text-sm font-medium text-nal-navy hover:bg-nal-parchment">Edit</button>
-                <button onClick={() => remove(e.id)} className="rounded-md border border-red-200 px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50">Delete</button>
+                <div className="flex shrink-0 gap-2">
+                  <button onClick={() => startEdit(e)} className="rounded-md border border-nal-border px-3 py-1.5 text-sm font-medium text-nal-navy hover:bg-nal-parchment">Edit</button>
+                  <button onClick={() => remove(e.id)} className="rounded-md border border-red-200 px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50">Delete</button>
+                </div>
               </div>
             ))}
           </div>

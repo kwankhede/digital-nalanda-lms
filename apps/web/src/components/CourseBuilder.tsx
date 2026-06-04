@@ -170,9 +170,9 @@ export default function CourseBuilder({ courseId, isAdmin = false }: { courseId:
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-10">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-2xl font-extrabold text-brand-navy">Course Builder</h1>
+          <h1 className="text-xl font-extrabold text-brand-navy md:text-2xl">Course Builder</h1>
           <p className="text-sm text-gray-500">Status: <span className="font-semibold capitalize">{course.status}</span></p>
         </div>
         <div className="flex items-center gap-3">
@@ -193,10 +193,10 @@ export default function CourseBuilder({ courseId, isAdmin = false }: { courseId:
       {err && <p className="mt-3 rounded-md bg-red-50 px-3 py-2 text-sm text-red-600">{err}</p>}
 
       {/* Tabs */}
-      <div className="mt-6 flex gap-1 border-b border-gray-200">
+      <div className="mt-6 flex gap-1 overflow-x-auto border-b border-gray-200">
         {TABS.map((t) => (
           <button key={t} onClick={() => setTab(t)}
-            className={`px-4 py-2 text-sm font-medium ${tab === t ? "border-b-2 border-brand-orange text-brand-navy" : "text-gray-500 hover:text-brand-navy"}`}>
+            className={`whitespace-nowrap px-4 py-2 text-sm font-medium ${tab === t ? "border-b-2 border-brand-orange text-brand-navy" : "text-gray-500 hover:text-brand-navy"}`}>
             {t}
           </button>
         ))}
@@ -206,11 +206,11 @@ export default function CourseBuilder({ courseId, isAdmin = false }: { courseId:
       {tab === "Basic Info" && (
         <div className="mt-6 space-y-4">
           <label className="block text-xs font-semibold uppercase text-gray-400">Title</label>
-          <input disabled={!editable} value={course.title} onChange={(e) => editBasic({ title: e.target.value })} className="w-full rounded-md border border-gray-200 px-3 py-2 disabled:bg-gray-50" />
+          <input disabled={!editable} value={course.title} onChange={(e) => editBasic({ title: e.target.value })} className="w-full rounded-md border border-gray-200 px-3 py-2 text-base disabled:bg-gray-50" />
           <label className="block text-xs font-semibold uppercase text-gray-400">Short description</label>
-          <input disabled={!editable} value={course.short_description} onChange={(e) => editBasic({ short_description: e.target.value })} className="w-full rounded-md border border-gray-200 px-3 py-2 disabled:bg-gray-50" />
+          <input disabled={!editable} value={course.short_description} onChange={(e) => editBasic({ short_description: e.target.value })} className="w-full rounded-md border border-gray-200 px-3 py-2 text-base disabled:bg-gray-50" />
           <label className="block text-xs font-semibold uppercase text-gray-400">Full description</label>
-          <textarea disabled={!editable} value={course.description} onChange={(e) => editBasic({ description: e.target.value })} rows={6} className="w-full rounded-md border border-gray-200 px-3 py-2 disabled:bg-gray-50" />
+          <textarea disabled={!editable} value={course.description} onChange={(e) => editBasic({ description: e.target.value })} rows={6} className="w-full rounded-md border border-gray-200 px-3 py-2 text-base disabled:bg-gray-50" />
           {editable && (
             <button onClick={generateAI} disabled={aiBusy} className="rounded-md border border-brand-blue px-4 py-2 text-sm font-semibold text-brand-blue hover:bg-blue-50 disabled:opacity-60">
               {aiBusy ? "Generating…" : "✨ Generate description with AI"}
@@ -236,17 +236,19 @@ export default function CourseBuilder({ courseId, isAdmin = false }: { courseId:
           <div className="mt-4 space-y-3">
             {cur.modules.map((m, mi) => (
               <div key={m.id} className="rounded-xl border border-gray-100">
-                <div className="flex items-center gap-2 border-b border-gray-100 p-3">
-                  <input disabled={!editable} value={m.title} onChange={(e) => setCur({ ...cur, modules: cur.modules.map((x) => x.id === m.id ? { ...x, title: e.target.value } : x) })} onBlur={(e) => editable && onModuleTitle(m, e.target.value)} className="flex-1 rounded-md border border-transparent px-2 py-1 font-bold text-brand-navy hover:border-gray-200 disabled:bg-transparent" />
-                  <span className="text-xs text-gray-400">{m.lessons.length} lessons</span>
-                  {editable && (
-                    <div className="flex gap-1 text-gray-400">
-                      <button onClick={() => moveModule(mi, -1)} title="Move up">↑</button>
-                      <button onClick={() => moveModule(mi, 1)} title="Move down">↓</button>
-                      <button onClick={() => onDupModule(m)} title="Duplicate">⧉</button>
-                      <button onClick={() => onDeleteModule(m)} title="Delete" className="text-red-500">🗑</button>
-                    </div>
-                  )}
+                <div className="flex flex-col gap-2 border-b border-gray-100 p-3 sm:flex-row sm:items-center">
+                  <input disabled={!editable} value={m.title} onChange={(e) => setCur({ ...cur, modules: cur.modules.map((x) => x.id === m.id ? { ...x, title: e.target.value } : x) })} onBlur={(e) => editable && onModuleTitle(m, e.target.value)} className="w-full flex-1 rounded-md border border-transparent px-2 py-1 text-base font-bold text-brand-navy hover:border-gray-200 disabled:bg-transparent sm:w-auto" />
+                  <div className="flex items-center justify-between gap-2 sm:justify-start">
+                    <span className="text-xs text-gray-400">{m.lessons.length} lessons</span>
+                    {editable && (
+                      <div className="flex flex-wrap gap-1 text-gray-400">
+                        <button onClick={() => moveModule(mi, -1)} title="Move up" className="tap-target inline-flex items-center justify-center rounded hover:bg-gray-100">↑</button>
+                        <button onClick={() => moveModule(mi, 1)} title="Move down" className="tap-target inline-flex items-center justify-center rounded hover:bg-gray-100">↓</button>
+                        <button onClick={() => onDupModule(m)} title="Duplicate" className="tap-target inline-flex items-center justify-center rounded hover:bg-gray-100">⧉</button>
+                        <button onClick={() => onDeleteModule(m)} title="Delete" className="tap-target inline-flex items-center justify-center rounded text-red-500 hover:bg-red-50">🗑</button>
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div className="divide-y divide-gray-50">
                   {m.lessons.map((l, li) => (
@@ -268,19 +270,19 @@ export default function CourseBuilder({ courseId, isAdmin = false }: { courseId:
       {/* Preview */}
       {tab === "Preview" && (
         <div className="mt-6">
-          <div className="mb-4 flex gap-2">
+          <div className="mb-4 flex flex-wrap items-center gap-2">
             {(["desktop", "tablet", "mobile"] as const).map((dv) => (
               <button key={dv} onClick={() => setDevice(dv)}
-                className={`rounded-md border px-3 py-1 text-sm capitalize ${device === dv ? "border-brand-blue bg-blue-50 text-brand-blue" : "border-gray-200 text-gray-500"}`}>
+                className={`rounded-md border px-3 py-1.5 text-sm capitalize ${device === dv ? "border-brand-blue bg-blue-50 text-brand-blue" : "border-gray-200 text-gray-500"}`}>
                 {dv}
               </button>
             ))}
-            <span className="ml-auto text-xs text-gray-400">Exactly what students see</span>
+            <span className="text-xs text-gray-400 sm:ml-auto">Exactly what students see</span>
           </div>
-          <div className="mx-auto rounded-xl border border-gray-200 bg-white p-6 transition-all"
+          <div className="mx-auto w-full overflow-x-auto rounded-xl border border-gray-200 bg-white p-4 transition-all sm:p-6"
             style={{ maxWidth: device === "desktop" ? "100%" : device === "tablet" ? "768px" : "390px" }}>
-            <h2 className="text-2xl font-extrabold text-brand-navy">{course.title}</h2>
-            <p className="mt-1 text-gray-500">{course.short_description}</p>
+            <h2 className="break-words text-xl font-extrabold text-brand-navy md:text-2xl">{course.title}</h2>
+            <p className="mt-1 break-words text-gray-500">{course.short_description}</p>
             <p className="mt-3 whitespace-pre-line text-gray-700">{course.description}</p>
             <div className="mt-6 space-y-4">
               {cur.modules.map((m) => (
@@ -341,34 +343,34 @@ function LessonRow({
   return (
     <div className="px-3 py-2">
       <div className="flex items-center gap-2">
-        <button onClick={() => setOpen((v) => !v)} className="flex-1 text-left text-sm">
+        <button onClick={() => setOpen((v) => !v)} className="min-w-0 flex-1 break-words text-left text-sm">
           <span className="text-gray-400">{open ? "▾" : "▸"}</span> {l.title}
           <span className="ml-2 rounded bg-blue-50 px-1.5 py-0.5 text-xs font-medium text-brand-blue">{TYPE_LABEL[l.lesson_type]}</span>
           {l.is_preview && <span className="ml-1 rounded bg-green-50 px-1.5 py-0.5 text-xs text-green-600">Preview</span>}
         </button>
         {editable && (
-          <div className="flex items-center gap-1 text-gray-400">
-            <button onClick={onUp} title="Up">↑</button>
-            <button onClick={onDown} title="Down">↓</button>
-            <button onClick={onDup} title="Duplicate">⧉</button>
-            <button onClick={onDelete} title="Delete" className="text-red-500">🗑</button>
+          <div className="flex shrink-0 flex-wrap items-center justify-end gap-1 text-gray-400">
+            <button onClick={onUp} title="Up" className="tap-target inline-flex items-center justify-center rounded hover:bg-gray-100">↑</button>
+            <button onClick={onDown} title="Down" className="tap-target inline-flex items-center justify-center rounded hover:bg-gray-100">↓</button>
+            <button onClick={onDup} title="Duplicate" className="tap-target inline-flex items-center justify-center rounded hover:bg-gray-100">⧉</button>
+            <button onClick={onDelete} title="Delete" className="tap-target inline-flex items-center justify-center rounded text-red-500 hover:bg-red-50">🗑</button>
           </div>
         )}
       </div>
       {open && editable && (
         <div className="mt-2 grid grid-cols-1 gap-2 rounded-lg bg-gray-50 p-3 sm:grid-cols-2">
-          <input defaultValue={l.title} onBlur={(e) => onSave({ title: e.target.value })} placeholder="Lesson title" className="rounded-md border border-gray-200 px-2 py-1 text-sm" />
-          <select defaultValue={l.lesson_type} onChange={(e) => onSave({ lesson_type: e.target.value })} className="rounded-md border border-gray-200 px-2 py-1 text-sm">
+          <input defaultValue={l.title} onBlur={(e) => onSave({ title: e.target.value })} placeholder="Lesson title" className="w-full rounded-md border border-gray-200 px-2 py-1.5 text-base" />
+          <select defaultValue={l.lesson_type} onChange={(e) => onSave({ lesson_type: e.target.value })} className="w-full rounded-md border border-gray-200 px-2 py-1.5 text-base">
             {LESSON_TYPES.map((t) => <option key={t} value={t}>{TYPE_LABEL[t]}</option>)}
           </select>
-          <input defaultValue={l.youtube_video_id} onBlur={(e) => onSave({ youtube_video_id: e.target.value })} placeholder="YouTube video ID" className="rounded-md border border-gray-200 px-2 py-1 text-sm" />
-          <input defaultValue={l.duration_minutes} onBlur={(e) => onSave({ duration_minutes: Number(e.target.value) || 0 })} placeholder="Duration (min)" className="rounded-md border border-gray-200 px-2 py-1 text-sm" />
-          <input defaultValue={l.resource_url} onBlur={(e) => onSave({ resource_url: e.target.value })} placeholder="Resource/PDF URL" className="rounded-md border border-gray-200 px-2 py-1 text-sm sm:col-span-2" />
-          <textarea defaultValue={l.content} onBlur={(e) => onSave({ content: e.target.value })} placeholder="Text content / notes" rows={2} className="rounded-md border border-gray-200 px-2 py-1 text-sm sm:col-span-2" />
+          <input defaultValue={l.youtube_video_id} onBlur={(e) => onSave({ youtube_video_id: e.target.value })} placeholder="YouTube video ID" className="w-full rounded-md border border-gray-200 px-2 py-1.5 text-base" />
+          <input defaultValue={l.duration_minutes} onBlur={(e) => onSave({ duration_minutes: Number(e.target.value) || 0 })} placeholder="Duration (min)" className="w-full rounded-md border border-gray-200 px-2 py-1.5 text-base" />
+          <input defaultValue={l.resource_url} onBlur={(e) => onSave({ resource_url: e.target.value })} placeholder="Resource/PDF URL" className="w-full rounded-md border border-gray-200 px-2 py-1.5 text-base sm:col-span-2" />
+          <textarea defaultValue={l.content} onBlur={(e) => onSave({ content: e.target.value })} placeholder="Text content / notes" rows={2} className="w-full rounded-md border border-gray-200 px-2 py-1.5 text-base sm:col-span-2" />
           <label className="flex items-center gap-2 text-sm"><input type="checkbox" defaultChecked={l.is_preview} onChange={(e) => onSave({ is_preview: e.target.checked })} /> Free preview</label>
           <label className="flex items-center gap-2 text-sm">
             Move to:
-            <select value="" onChange={(e) => e.target.value && onMoveTo(Number(e.target.value))} className="rounded-md border border-gray-200 px-2 py-1 text-sm">
+            <select value="" onChange={(e) => e.target.value && onMoveTo(Number(e.target.value))} className="flex-1 rounded-md border border-gray-200 px-2 py-1.5 text-base">
               <option value="">(choose chapter)</option>
               {modules.map((m) => <option key={m.id} value={m.id}>{m.title}</option>)}
             </select>

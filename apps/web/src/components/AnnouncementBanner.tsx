@@ -24,10 +24,18 @@ export default function AnnouncementBanner() {
   }
 
   return (
-    <div className="bg-brand-navy px-4 py-2 text-center text-sm text-white">
-      <span className="font-semibold">{a.title}</span>
-      {a.content && <span className="ml-2 text-white/80">{a.content}</span>}
-      <button onClick={dismiss} aria-label="Dismiss" className="ml-3 text-white/60 hover:text-white">✕</button>
+    <div className="relative bg-brand-navy px-4 py-2 text-sm text-white">
+      <div className="mx-auto max-w-6xl pr-8 text-left sm:pr-10 sm:text-center">
+        <span className="font-semibold">{a.title}</span>
+        {a.content && <span className="ml-0 block text-white/80 sm:ml-2 sm:inline">{a.content}</span>}
+      </div>
+      <button
+        onClick={dismiss}
+        aria-label="Dismiss"
+        className="tap-target absolute right-1 top-1/2 flex -translate-y-1/2 items-center justify-center text-white/60 hover:text-white"
+      >
+        ✕
+      </button>
     </div>
   );
 }

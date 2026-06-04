@@ -18,7 +18,7 @@ export default async function CoursesPage() {
     <div className="parchment min-h-screen">
       <div className="mx-auto max-w-6xl px-4 py-14">
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-nal-saffron">Learn</p>
-        <h1 className="mt-2 font-display text-4xl font-bold tracking-tight text-nal-navy">All Courses</h1>
+        <h1 className="mt-2 font-display text-3xl font-bold tracking-tight text-nal-navy md:text-4xl">All Courses</h1>
         <p className="mt-3 max-w-2xl text-nal-slate">
           Explore our growing library of courses — every one free, forever. Search
           or filter by category and level to find your next step.

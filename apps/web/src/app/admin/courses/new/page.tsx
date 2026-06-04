@@ -29,16 +29,16 @@ export default function AdminNewCoursePage() {
         <p className="mt-1 text-sm text-gray-500">Create a course, then add curriculum and publish.</p>
         {err && <p className="mt-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-600">{err}</p>}
         <form onSubmit={submit} className="mt-6 space-y-4">
-          <input required placeholder="Course title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="w-full rounded-md border border-gray-200 px-3 py-2" />
-          <input placeholder="Short description" value={form.short_description} onChange={(e) => setForm({ ...form, short_description: e.target.value })} className="w-full rounded-md border border-gray-200 px-3 py-2" />
-          <textarea placeholder="Full description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={4} className="w-full rounded-md border border-gray-200 px-3 py-2" />
-          <div className="flex gap-3">
-            <select value={form.level} onChange={(e) => setForm({ ...form, level: e.target.value })} className="rounded-md border border-gray-200 px-3 py-2">
+          <input required placeholder="Course title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="w-full rounded-md border border-gray-200 px-3 py-2 text-base" />
+          <input placeholder="Short description" value={form.short_description} onChange={(e) => setForm({ ...form, short_description: e.target.value })} className="w-full rounded-md border border-gray-200 px-3 py-2 text-base" />
+          <textarea placeholder="Full description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={4} className="w-full rounded-md border border-gray-200 px-3 py-2 text-base" />
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <select value={form.level} onChange={(e) => setForm({ ...form, level: e.target.value })} className="w-full rounded-md border border-gray-200 px-3 py-2 text-base sm:w-auto">
               <option value="beginner">Beginner</option><option value="intermediate">Intermediate</option><option value="advanced">Advanced</option>
             </select>
-            <input placeholder="Language" value={form.language} onChange={(e) => setForm({ ...form, language: e.target.value })} className="rounded-md border border-gray-200 px-3 py-2" />
+            <input placeholder="Language" value={form.language} onChange={(e) => setForm({ ...form, language: e.target.value })} className="w-full rounded-md border border-gray-200 px-3 py-2 text-base sm:w-auto" />
           </div>
-          <button type="submit" className="rounded-md bg-brand-orange px-6 py-2 font-semibold text-white">Create</button>
+          <button type="submit" className="min-h-[44px] w-full rounded-md bg-brand-orange px-6 py-2 font-semibold text-white sm:w-auto">Create</button>
         </form>
       </div>
     </RequireRole>

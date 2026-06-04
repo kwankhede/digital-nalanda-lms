@@ -83,7 +83,7 @@ export default async function EventsPage() {
     <div className="parchment min-h-screen">
       <div className="mx-auto max-w-6xl px-4 py-14">
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-nal-saffron">What&apos;s on</p>
-        <h1 className="mt-2 font-display text-4xl font-bold tracking-tight text-nal-navy">
+        <h1 className="mt-2 font-display text-3xl font-bold tracking-tight text-nal-navy md:text-4xl">
           Live Classes &amp; Events
         </h1>
         <p className="mt-3 max-w-2xl text-nal-slate">

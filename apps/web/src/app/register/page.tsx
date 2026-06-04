@@ -61,7 +61,7 @@ export default function RegisterPage() {
             type="text"
             value={form.full_name}
             onChange={(e) => update("full_name", e.target.value)}
-            className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 outline-none focus:border-brand-blue"
+            className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-base outline-none focus:border-brand-blue"
           />
         </div>
         <div>
@@ -71,7 +71,7 @@ export default function RegisterPage() {
             required
             value={form.email}
             onChange={(e) => update("email", e.target.value)}
-            className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 outline-none focus:border-brand-blue"
+            className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-base outline-none focus:border-brand-blue"
           />
         </div>
         <div>
@@ -80,7 +80,7 @@ export default function RegisterPage() {
             type="tel"
             value={form.phone}
             onChange={(e) => update("phone", e.target.value)}
-            className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 outline-none focus:border-brand-blue"
+            className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-base outline-none focus:border-brand-blue"
           />
         </div>
         <div>
@@ -91,13 +91,13 @@ export default function RegisterPage() {
             value={form.password}
             onChange={(e) => update("password", e.target.value)}
             placeholder="At least 8 characters"
-            className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 outline-none focus:border-brand-blue"
+            className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-base outline-none focus:border-brand-blue"
           />
         </div>
         <button
           type="submit"
           disabled={submitting}
-          className="w-full rounded-md bg-brand-orange py-2 font-semibold text-white hover:opacity-90 disabled:opacity-60"
+          className="tap-target w-full rounded-md bg-brand-orange py-2.5 font-semibold text-white hover:opacity-90 disabled:opacity-60"
         >
           {submitting ? "Creating account…" : "Register"}
         </button>

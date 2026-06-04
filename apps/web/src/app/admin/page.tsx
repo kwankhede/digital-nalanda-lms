@@ -71,7 +71,7 @@ export default function AdminDashboard() {
       )}
 
       {/* Metrics */}
-      <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3">
+      <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
         {METRIC_CARDS.map((m) => (
           <div key={m.key} className="rounded-xl border border-gray-100 p-5 shadow-sm">
             <p className="text-3xl font-extrabold text-brand-blue">
@@ -104,7 +104,7 @@ export default function AdminDashboard() {
       <div className="mt-8">
         <button
           onClick={() => downloadNewsletterCsv()}
-          className="rounded-md bg-brand-orange px-5 py-2 text-sm font-semibold text-white hover:opacity-90"
+          className="min-h-[44px] w-full rounded-md bg-brand-orange px-5 py-2 text-sm font-semibold text-white hover:opacity-90 sm:w-auto"
         >
           Export Newsletter Subscribers (CSV)
         </button>

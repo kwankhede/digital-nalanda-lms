@@ -56,7 +56,7 @@ export default function ContactHelp() {
                 {ch.cta} →
               </OpenChatButton>
             ) : ch.external ? (
-              <a href={ch.href} className="mt-5 text-sm font-semibold text-nal-saffron hover:underline">
+              <a href={ch.href} className="mt-5 break-words text-sm font-semibold text-nal-saffron hover:underline">
                 {ch.cta}
               </a>
             ) : (

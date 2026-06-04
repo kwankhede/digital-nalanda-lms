@@ -49,7 +49,7 @@ export default function Navbar() {
           <button
             onClick={() => setDrawerOpen(true)}
             aria-label="Open menu"
-            className="rounded-md p-2 text-nal-navy hover:bg-nal-parchment md:hidden"
+            className="tap-target -mr-2 flex items-center justify-center rounded-md p-2 text-2xl leading-none text-nal-navy hover:bg-nal-parchment md:hidden"
           >
             ☰
           </button>

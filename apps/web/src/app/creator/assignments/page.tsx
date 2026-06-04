@@ -46,32 +46,32 @@ function Grader() {
       <h1 className="text-2xl font-extrabold text-brand-navy">Assignments &amp; Grading</h1>
       <form onSubmit={addAssignment} className="mt-6 grid grid-cols-1 gap-2 rounded-xl border border-gray-100 p-4 shadow-sm sm:grid-cols-2">
         <p className="sm:col-span-2 text-sm font-bold uppercase text-gray-400">New assignment</p>
-        <select value={form.course} onChange={(e) => setForm({ ...form, course: e.target.value })} className="rounded-md border border-gray-200 px-3 py-2 text-sm">
+        <select value={form.course} onChange={(e) => setForm({ ...form, course: e.target.value })} className="w-full rounded-md border border-gray-200 px-3 py-2 text-base">
           <option value="">Select course…</option>
           {courses.map((c) => <option key={c.id} value={c.id}>{c.title}</option>)}
         </select>
-        <input placeholder="Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="rounded-md border border-gray-200 px-3 py-2 text-sm" />
-        <input placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="rounded-md border border-gray-200 px-3 py-2 text-sm sm:col-span-2" />
-        <select value={form.assignment_type} onChange={(e) => setForm({ ...form, assignment_type: e.target.value })} className="rounded-md border border-gray-200 px-3 py-2 text-sm">
+        <input placeholder="Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="w-full rounded-md border border-gray-200 px-3 py-2 text-base" />
+        <input placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="w-full rounded-md border border-gray-200 px-3 py-2 text-base sm:col-span-2" />
+        <select value={form.assignment_type} onChange={(e) => setForm({ ...form, assignment_type: e.target.value })} className="w-full rounded-md border border-gray-200 px-3 py-2 text-base">
           <option value="text_response">Text Response</option>
           <option value="essay">Essay</option>
           <option value="pdf_upload">PDF Upload</option>
           <option value="file_upload">File Upload</option>
           <option value="external_form">External Form</option>
         </select>
-        <input type="number" placeholder="Max score" value={form.max_score} onChange={(e) => setForm({ ...form, max_score: e.target.value })} className="rounded-md border border-gray-200 px-3 py-2 text-sm" />
+        <input type="number" placeholder="Max score" value={form.max_score} onChange={(e) => setForm({ ...form, max_score: e.target.value })} className="w-full rounded-md border border-gray-200 px-3 py-2 text-base" />
         <button className="rounded-md bg-brand-navy px-4 py-2 text-sm font-semibold text-white sm:col-span-2">Create assignment</button>
       </form>
       {assignments.length === 0 && <p className="mt-4 text-gray-500">No assignments yet — create one above.</p>}
       <div className="mt-6 space-y-3">
         {assignments.map((a) => (
           <div key={a.id} className="rounded-xl border border-gray-100 p-4 shadow-sm">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-semibold text-brand-navy">{a.title}</p>
-                <p className="text-xs text-gray-400">{a.course_title} · max {a.max_score}</p>
+            <div className="flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <p className="break-words font-semibold text-brand-navy">{a.title}</p>
+                <p className="break-words text-xs text-gray-400">{a.course_title} · max {a.max_score}</p>
               </div>
-              <button onClick={() => open(a)} className="rounded-md bg-brand-blue px-4 py-1.5 text-sm font-medium text-white">View submissions</button>
+              <button onClick={() => open(a)} className="shrink-0 rounded-md bg-brand-blue px-4 py-1.5 text-sm font-medium text-white">View submissions</button>
             </div>
             {openId === a.id && (
               <div className="mt-3 space-y-3 border-t border-gray-100 pt-3">
@@ -82,8 +82,8 @@ function Grader() {
                     {s.text_response && <p className="mt-1 text-sm text-gray-600">{s.text_response}</p>}
                     {s.file_url && <a href={s.file_url} target="_blank" rel="noopener noreferrer" className="text-sm text-brand-blue underline">View file</a>}
                     <div className="mt-2 flex flex-wrap items-center gap-2">
-                      <input type="number" placeholder={`Score /${a.max_score}`} defaultValue={s.score ?? ""} onChange={(e) => setGrade({ ...grade, [s.id]: { ...(grade[s.id] || { feedback: s.feedback }), score: e.target.value } })} className="w-24 rounded-md border border-gray-200 px-2 py-1 text-sm" />
-                      <input placeholder="Feedback" defaultValue={s.feedback} onChange={(e) => setGrade({ ...grade, [s.id]: { ...(grade[s.id] || { score: String(s.score ?? "") }), feedback: e.target.value } })} className="flex-1 rounded-md border border-gray-200 px-2 py-1 text-sm" />
+                      <input type="number" placeholder={`Score /${a.max_score}`} defaultValue={s.score ?? ""} onChange={(e) => setGrade({ ...grade, [s.id]: { ...(grade[s.id] || { feedback: s.feedback }), score: e.target.value } })} className="w-24 rounded-md border border-gray-200 px-2 py-1.5 text-base" />
+                      <input placeholder="Feedback" defaultValue={s.feedback} onChange={(e) => setGrade({ ...grade, [s.id]: { ...(grade[s.id] || { score: String(s.score ?? "") }), feedback: e.target.value } })} className="w-full flex-1 rounded-md border border-gray-200 px-2 py-1.5 text-base sm:w-auto" />
                       <button onClick={() => doGrade(s)} className="rounded-md bg-brand-orange px-4 py-1 text-sm font-semibold text-white">Grade</button>
                     </div>
                   </div>

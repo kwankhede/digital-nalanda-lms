@@ -28,10 +28,10 @@ export default function VideoModal({
           aria-modal="true"
         >
           <div
-            className="w-full max-w-3xl"
+            className="w-full max-w-3xl max-h-[90vh]"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="aspect-video w-full overflow-hidden rounded-lg">
+            <div className="aspect-video max-h-[75vh] w-full overflow-hidden rounded-lg">
               <iframe
                 className="h-full w-full"
                 src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}

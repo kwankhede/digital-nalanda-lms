@@ -21,7 +21,7 @@ export default async function EducatorsPage() {
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-nal-saffron">
           Educators &amp; Mentors
         </p>
-        <h1 className="mt-2 font-display text-4xl font-bold tracking-tight text-nal-navy">
+        <h1 className="mt-2 font-display text-3xl font-bold tracking-tight text-nal-navy md:text-4xl">
           The people who teach &amp; mentor
         </h1>
         <p className="mt-3 max-w-2xl text-nal-slate">

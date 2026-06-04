@@ -20,7 +20,7 @@ export default function RecordingsCarousel({
   if (!recordings || recordings.length === 0) {
     return (
       <section className="mx-auto max-w-6xl px-4 py-12">
-        <h2 className="font-display text-3xl font-bold text-nal-navy">
+        <h2 className="font-display text-2xl font-bold text-nal-navy md:text-3xl">
           Recent Online Class Recordings
         </h2>
         <p className="mt-3 text-nal-slate">
@@ -36,8 +36,8 @@ export default function RecordingsCarousel({
 
   return (
     <section className="mx-auto max-w-6xl px-4 py-12">
-      <div className="flex items-center justify-between">
-        <h2 className="font-display text-3xl font-bold text-nal-navy">
+      <div className="flex items-center justify-between gap-4">
+        <h2 className="font-display text-2xl font-bold text-nal-navy md:text-3xl">
           Recent Online Class Recordings
         </h2>
         <div className="hidden gap-2 sm:flex">

@@ -7,6 +7,32 @@
   --foreground: #062447; /* deep navy */
 }
 
+/* ---- Mobile/tablet safety guards (do not affect desktop layout) ---- */
+/* Prevent accidental horizontal scrolling on small screens caused by a wide
+   child, while leaving the approved desktop layout untouched. */
+html {
+  -webkit-text-size-adjust: 100%; /* stop iOS auto-zooming text on rotate */
+}
+body {
+  overflow-x: hidden;
+}
+/* Media never forces the page wider than the viewport. */
+img,
+video,
+canvas,
+svg {
+  max-width: 100%;
+}
+/* Long words / URLs wrap instead of overflowing their container. */
+h1, h2, h3, h4, p, span, a, li, td, th, label {
+  overflow-wrap: break-word;
+}
+/* Reusable helper: guarantee a 44px minimum touch target on icon buttons. */
+.tap-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
 body {
   color: var(--foreground);
   background-color: var(--background);

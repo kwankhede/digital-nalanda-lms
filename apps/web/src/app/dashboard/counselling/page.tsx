@@ -34,12 +34,12 @@ export default function CounsellingPage() {
       {err && <p className="mt-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-600">{err}</p>}
 
       <form onSubmit={submit} className="mt-6 space-y-3 rounded-xl border border-gray-100 p-5 shadow-sm">
-        <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm">
+        <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className="w-full rounded-md border border-gray-200 px-3 py-2 text-base">
           {COUNSELLING_CATEGORIES.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
         </select>
-        <input placeholder="Subject" value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })} className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm" />
-        <textarea placeholder="Describe your question…" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} rows={4} className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm" />
-        <button className="rounded-md bg-brand-orange px-5 py-2 text-sm font-semibold text-white">Submit Question</button>
+        <input placeholder="Subject" value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })} className="w-full rounded-md border border-gray-200 px-3 py-2 text-base" />
+        <textarea placeholder="Describe your question…" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} rows={4} className="w-full rounded-md border border-gray-200 px-3 py-2 text-base" />
+        <button className="tap-target w-full rounded-md bg-brand-orange px-5 py-2.5 text-sm font-semibold text-white sm:w-auto">Submit Question</button>
       </form>
 
       <h2 className="mt-10 text-lg font-bold text-brand-navy">My Requests</h2>
@@ -47,9 +47,9 @@ export default function CounsellingPage() {
         {items.length === 0 && <p className="text-sm text-gray-500">No requests yet.</p>}
         {items.map((c) => (
           <div key={c.id} className="rounded-lg border border-gray-100 p-4 shadow-sm">
-            <div className="flex items-center justify-between">
-              <p className="font-semibold text-brand-navy">{c.subject}</p>
-              <span className="rounded bg-gray-100 px-2 py-0.5 text-xs capitalize">{c.status.replace("_", " ")}</span>
+            <div className="flex items-start justify-between gap-2">
+              <p className="min-w-0 break-words font-semibold text-brand-navy">{c.subject}</p>
+              <span className="shrink-0 rounded bg-gray-100 px-2 py-0.5 text-xs capitalize">{c.status.replace("_", " ")}</span>
             </div>
             <p className="mt-1 text-sm text-gray-600">{c.message}</p>
             {c.mentor_reply && (

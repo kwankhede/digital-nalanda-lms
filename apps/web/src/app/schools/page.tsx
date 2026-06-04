@@ -19,7 +19,7 @@ export default async function SchoolsPage() {
         <p className="text-sm font-semibold uppercase tracking-wide text-nal-saffron">
           Schools of Digital Nalanda
         </p>
-        <h1 className="mt-1 font-display text-4xl font-bold tracking-tight text-nal-navy">
+        <h1 className="mt-1 font-display text-3xl font-bold tracking-tight text-nal-navy md:text-4xl">
           Our Schools
         </h1>
         <p className="mt-3 max-w-2xl text-nal-slate">

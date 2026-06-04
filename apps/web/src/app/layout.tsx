@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/SiteFooter";
@@ -9,6 +9,14 @@ import AnnouncementBanner from "@/components/AnnouncementBanner";
 export const metadata: Metadata = {
   title: "Digital Nalanda LMS",
   description: "Free quality education for everyone, everywhere.",
+};
+
+// Mobile-first viewport. initialScale 1 with no maximum-scale so users can
+// still pinch-zoom (accessibility); viewportFit cover enables safe-area insets.
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -22,7 +30,7 @@ export default function RootLayout({
         <AuthProvider>
           <AnnouncementBanner />
           <Navbar />
-          <main className="flex-1 pb-16 md:pb-0">{children}</main>
+          <main className="flex-1 pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0">{children}</main>
           <Footer />
           <ChatbotWidget />
         </AuthProvider>

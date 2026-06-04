@@ -30,19 +30,19 @@ export default function CounsellingQueuePage() {
         {items.map((c) => (
           <div key={c.id} className="rounded-xl border border-gray-100 p-5 shadow-sm">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="font-bold text-brand-navy">{c.subject} <span className="ml-2 rounded bg-gray-100 px-2 py-0.5 text-xs capitalize">{c.status.replace("_", " ")}</span></p>
-                <p className="text-xs text-gray-400">{c.student_name} · {c.category}{c.assigned_name ? ` · assigned: ${c.assigned_name}` : ""}</p>
+              <div className="min-w-0">
+                <p className="font-bold text-brand-navy break-words">{c.subject} <span className="ml-2 rounded bg-gray-100 px-2 py-0.5 text-xs capitalize">{c.status.replace("_", " ")}</span></p>
+                <p className="text-xs text-gray-400 break-words">{c.student_name} · {c.category}{c.assigned_name ? ` · assigned: ${c.assigned_name}` : ""}</p>
               </div>
             </div>
             <p className="mt-2 text-sm text-gray-600">{c.message}</p>
             {c.mentor_reply && <p className="mt-2 rounded-md bg-blue-50 p-2 text-sm text-gray-700">{c.mentor_reply}</p>}
             {c.status !== "closed" && (
-              <div className="mt-3 flex flex-col gap-2 sm:flex-row">
-                <input placeholder="Reply…" value={reply[c.id] ?? ""} onChange={(e) => setReply({ ...reply, [c.id]: e.target.value })} className="flex-1 rounded-md border border-gray-200 px-3 py-1.5 text-sm" />
-                <button onClick={() => act(c.id, "reply")} className="rounded-md bg-brand-blue px-4 py-1.5 text-sm font-medium text-white">Reply</button>
-                <button onClick={() => act(c.id, "assign")} className="rounded-md border border-gray-200 px-4 py-1.5 text-sm">Assign to me</button>
-                <button onClick={() => act(c.id, "close")} className="rounded-md border border-gray-200 px-4 py-1.5 text-sm">Close</button>
+              <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+                <input placeholder="Reply…" value={reply[c.id] ?? ""} onChange={(e) => setReply({ ...reply, [c.id]: e.target.value })} className="min-h-[44px] flex-1 rounded-md border border-gray-200 px-3 py-1.5 text-base sm:text-sm" />
+                <button onClick={() => act(c.id, "reply")} className="min-h-[44px] whitespace-nowrap rounded-md bg-brand-blue px-4 py-1.5 text-sm font-medium text-white">Reply</button>
+                <button onClick={() => act(c.id, "assign")} className="min-h-[44px] whitespace-nowrap rounded-md border border-gray-200 px-4 py-1.5 text-sm">Assign to me</button>
+                <button onClick={() => act(c.id, "close")} className="min-h-[44px] whitespace-nowrap rounded-md border border-gray-200 px-4 py-1.5 text-sm">Close</button>
               </div>
             )}
           </div>

@@ -53,7 +53,7 @@ export default function LoginPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@example.com"
-            className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 outline-none focus:border-brand-blue"
+            className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-base outline-none focus:border-brand-blue"
           />
         </div>
         <div>
@@ -64,13 +64,13 @@ export default function LoginPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="••••••••"
-            className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 outline-none focus:border-brand-blue"
+            className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-base outline-none focus:border-brand-blue"
           />
         </div>
         <button
           type="submit"
           disabled={submitting}
-          className="w-full rounded-md bg-brand-orange py-2 font-semibold text-white hover:opacity-90 disabled:opacity-60"
+          className="tap-target w-full rounded-md bg-brand-orange py-2.5 font-semibold text-white hover:opacity-90 disabled:opacity-60"
         >
           {submitting ? "Logging in…" : "Login"}
         </button>

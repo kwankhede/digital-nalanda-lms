@@ -43,9 +43,9 @@ export default function CreatorDashboard() {
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-12">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-extrabold text-brand-navy">Creator Dashboard</h1>
-        <div className="flex gap-2">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <h1 className="text-2xl font-extrabold text-brand-navy md:text-3xl">Creator Dashboard</h1>
+        <div className="flex flex-wrap gap-2">
           <Link href="/creator/assignments" className="rounded-md border border-gray-200 px-5 py-2 font-semibold text-brand-navy">
             Assignments
           </Link>
@@ -67,14 +67,14 @@ export default function CreatorDashboard() {
             <h2 className="text-sm font-bold uppercase tracking-wide text-gray-400">{g} ({list.length})</h2>
             <div className="mt-3 space-y-3">
               {list.map((c) => (
-                <div key={c.id} className="flex items-center justify-between rounded-lg border border-gray-100 p-4 shadow-sm">
-                  <div>
-                    <p className="font-semibold text-brand-navy">{c.title}</p>
+                <div key={c.id} className="flex items-center justify-between gap-3 rounded-lg border border-gray-100 p-4 shadow-sm">
+                  <div className="min-w-0">
+                    <p className="break-words font-semibold text-brand-navy">{c.title}</p>
                     {c.status === "rejected" && c.rejected_reason && (
-                      <p className="text-xs text-red-500">Reason: {c.rejected_reason}</p>
+                      <p className="break-words text-xs text-red-500">Reason: {c.rejected_reason}</p>
                     )}
                   </div>
-                  <Link href={`/creator/courses/${c.id}/edit`} className="rounded-md bg-brand-blue px-4 py-1.5 text-sm font-medium text-white">
+                  <Link href={`/creator/courses/${c.id}/edit`} className="shrink-0 rounded-md bg-brand-blue px-4 py-1.5 text-sm font-medium text-white">
                     {["draft", "rejected"].includes(c.status) ? "Edit" : "View"}
                   </Link>
                 </div>

@@ -38,14 +38,14 @@ export default function Assignments() {
             {a.submission ? (
               <p className="mt-2 text-xs text-green-600">Submitted — awaiting grade.</p>
             ) : a.assignment_type === "external_form" ? (
-              <div className="mt-2 flex gap-2">
-                <input placeholder="Link to your work / form response URL" value={draft[a.id] ?? ""} onChange={(e) => setDraft({ ...draft, [a.id]: e.target.value })} className="flex-1 rounded-md border border-gray-200 px-3 py-1.5 text-sm" />
-                <button onClick={() => submit(a)} className="rounded-md bg-brand-orange px-4 py-1.5 text-sm font-semibold text-white">Submit</button>
+              <div className="mt-2 flex flex-col gap-2 sm:flex-row">
+                <input placeholder="Link to your work / form response URL" value={draft[a.id] ?? ""} onChange={(e) => setDraft({ ...draft, [a.id]: e.target.value })} className="flex-1 rounded-md border border-gray-200 px-3 py-2 text-base" />
+                <button onClick={() => submit(a)} className="tap-target shrink-0 rounded-md bg-brand-orange px-4 py-1.5 text-sm font-semibold text-white">Submit</button>
               </div>
             ) : (
               <div className="mt-2">
-                <textarea placeholder="Your response… (paste a file link for uploads)" value={draft[a.id] ?? ""} onChange={(e) => setDraft({ ...draft, [a.id]: e.target.value })} rows={3} className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm" />
-                <button onClick={() => submit(a)} className="mt-2 rounded-md bg-brand-orange px-4 py-1.5 text-sm font-semibold text-white">Submit</button>
+                <textarea placeholder="Your response… (paste a file link for uploads)" value={draft[a.id] ?? ""} onChange={(e) => setDraft({ ...draft, [a.id]: e.target.value })} rows={3} className="w-full rounded-md border border-gray-200 px-3 py-2 text-base" />
+                <button onClick={() => submit(a)} className="tap-target mt-2 w-full rounded-md bg-brand-orange px-4 py-1.5 text-sm font-semibold text-white sm:w-auto">Submit</button>
               </div>
             )}
           </div>

@@ -44,14 +44,14 @@ export default function BecomeTeacherPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-12">
-      <h1 className="text-3xl font-extrabold text-brand-navy">Teach on Digital Nalanda</h1>
+      <h1 className="text-2xl font-extrabold text-brand-navy md:text-3xl">Teach on Digital Nalanda</h1>
       <p className="mt-3 text-gray-600">
         Share your knowledge with thousands of learners across India. Apply to
         become a course creator — our team reviews every application.
       </p>
 
       {loading ? null : !user ? (
-        <div className="mt-8 flex gap-3">
+        <div className="mt-8 flex flex-wrap gap-3">
           <Link href="/login" className="rounded-md bg-brand-orange px-6 py-3 font-semibold text-white">Login to Apply</Link>
           <Link href="/register" className="rounded-md border border-gray-200 px-6 py-3 font-semibold">Register</Link>
         </div>

@@ -228,19 +228,19 @@ export default function CourseDetail({ course }: { course: Course }) {
                   const done = completed.has(l.id);
                   return (
                     <li key={l.id} className="px-4 py-3 text-sm">
-                      <div className="flex items-center justify-between gap-3">
-                      <span className="flex items-center gap-2">
+                      <div className="flex items-start justify-between gap-3">
+                      <span className="flex min-w-0 flex-wrap items-center gap-2">
                         <span className={done ? "text-green-600" : "text-gray-400"}>
                           {done ? "✓" : "▶"}
                         </span>
-                        {l.title}
+                        <span className="break-words">{l.title}</span>
                         {l.is_preview && (
                           <span className="rounded bg-green-50 px-1.5 py-0.5 text-xs font-medium text-green-600">
                             Preview
                           </span>
                         )}
                       </span>
-                      <span className="flex items-center gap-3">
+                      <span className="flex shrink-0 items-center gap-3">
                         {l.duration_minutes > 0 && (
                           <span className="text-gray-400">
                             {l.duration_minutes} min

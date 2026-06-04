@@ -39,10 +39,10 @@ export default function BlockEditor({
         <div key={b.id} className="rounded-lg border border-gray-100 bg-white p-3">
           <div className="mb-2 flex items-center justify-between">
             <span className="rounded bg-gray-100 px-2 py-0.5 text-xs font-semibold text-gray-600">{LABEL[b.type] ?? b.type}</span>
-            <div className="flex gap-1 text-gray-400">
-              <button onClick={() => reorder(i, -1)} title="Up">↑</button>
-              <button onClick={() => reorder(i, 1)} title="Down">↓</button>
-              <button onClick={() => remove(b.id)} title="Delete" className="text-red-500">🗑</button>
+            <div className="flex flex-wrap gap-1 text-gray-400">
+              <button onClick={() => reorder(i, -1)} title="Up" className="tap-target inline-flex items-center justify-center rounded hover:bg-gray-100">↑</button>
+              <button onClick={() => reorder(i, 1)} title="Down" className="tap-target inline-flex items-center justify-center rounded hover:bg-gray-100">↓</button>
+              <button onClick={() => remove(b.id)} title="Delete" className="tap-target inline-flex items-center justify-center rounded text-red-500 hover:bg-red-50">🗑</button>
             </div>
           </div>
           <BlockFields block={b} onUpdate={(d) => update(b.id, d)} />
@@ -76,9 +76,9 @@ export default function BlockEditor({
 
 function Field({ ph, value, onChange, area }: { ph: string; value?: string; onChange: (v: string) => void; area?: boolean }) {
   return area ? (
-    <textarea placeholder={ph} defaultValue={value} onBlur={(e) => onChange(e.target.value)} rows={3} className="w-full rounded-md border border-gray-200 px-2 py-1 text-sm" />
+    <textarea placeholder={ph} defaultValue={value} onBlur={(e) => onChange(e.target.value)} rows={3} className="w-full rounded-md border border-gray-200 px-2 py-1.5 text-base" />
   ) : (
-    <input placeholder={ph} defaultValue={value} onBlur={(e) => onChange(e.target.value)} className="w-full rounded-md border border-gray-200 px-2 py-1 text-sm" />
+    <input placeholder={ph} defaultValue={value} onBlur={(e) => onChange(e.target.value)} className="w-full rounded-md border border-gray-200 px-2 py-1.5 text-base" />
   );
 }
 

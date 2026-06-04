@@ -85,14 +85,14 @@ export default function DashboardPage() {
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-12">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-extrabold text-brand-navy">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0">
+          <h1 className="break-words text-xl font-extrabold text-brand-navy md:text-2xl">
             Welcome back, {user.full_name || user.email} 👋
           </h1>
           <p className="mt-1 text-gray-500">Keep learning, keep growing.</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <Link href="/dashboard/counselling" className="rounded-md border border-gray-200 px-4 py-2 text-sm font-medium hover:bg-gray-50">
             Guidance
           </Link>
@@ -124,9 +124,9 @@ export default function DashboardPage() {
                 key={e.id}
                 className="rounded-lg border border-gray-100 p-4 shadow-sm"
               >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-semibold text-brand-navy">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="min-w-0">
+                    <p className="break-words font-semibold text-brand-navy">
                       {e.course.title}
                     </p>
                     <p className="text-xs text-gray-400">
@@ -136,7 +136,7 @@ export default function DashboardPage() {
                   </div>
                   <Link
                     href={`/courses/${e.course.slug}`}
-                    className="rounded-md bg-brand-blue px-4 py-1.5 text-sm font-medium text-white hover:opacity-90"
+                    className="shrink-0 rounded-md bg-brand-blue px-4 py-1.5 text-sm font-medium text-white hover:opacity-90"
                   >
                     Continue
                   </Link>
@@ -255,7 +255,7 @@ export default function DashboardPage() {
                     onChange={(e) =>
                       setForm((s) => ({ ...s, [f.key]: e.target.value }))
                     }
-                    className="mt-1 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:border-brand-blue"
+                    className="mt-1 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-base outline-none focus:border-brand-blue"
                   >
                     <option value="">Select…</option>
                     <option value="male">Male</option>
@@ -269,7 +269,7 @@ export default function DashboardPage() {
                     onChange={(e) =>
                       setForm((s) => ({ ...s, [f.key]: e.target.value }))
                     }
-                    className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-blue"
+                    className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-base outline-none focus:border-brand-blue"
                   />
                 )}
               </div>
