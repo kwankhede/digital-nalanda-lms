@@ -46,6 +46,8 @@ export const DASHBOARDS: Record<string, RoleDashboardConfig> = {
       { key: "certificates", label: "Certificates" },
     ],
     quickActions: [
+      { label: "Command Center", href: "/admin/command-center", primary: true },
+      { label: "Reports", href: "/admin/reports" },
       { label: "Manage Users & Roles", href: "/admin/users", primary: true },
       { label: "Review Teachers", href: "/admin/applications" },
       { label: "Review Courses", href: "/admin/course-reviews" },

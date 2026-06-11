@@ -12,3 +12,14 @@ class IsStaffOrAdmin(BasePermission):
             u and u.is_authenticated
             and (u.is_staff or u.is_superuser or getattr(u, "role", None) in ADMIN_ROLES)
         )
+
+
+class IsSuperAdmin(BasePermission):
+    """Superuser, or users with the super_admin role."""
+
+    def has_permission(self, request, view):
+        u = request.user
+        return bool(
+            u and u.is_authenticated
+            and (u.is_superuser or getattr(u, "role", None) == "super_admin")
+        )

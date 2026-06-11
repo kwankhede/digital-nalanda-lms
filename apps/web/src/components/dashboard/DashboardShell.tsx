@@ -36,7 +36,7 @@ const QUEUE_LABELS: Record<string, string> = {
   ungraded_submissions: "Ungraded submissions",
 };
 
-function OpsInbox({ attention }: { attention: AdminAttention }) {
+export function OpsInbox({ attention }: { attention: AdminAttention }) {
   const entries = Object.entries(attention.queues);
   return (
     <section className="mt-6 rounded-2xl border border-nal-border bg-white p-6 shadow-soft">
