@@ -1,9 +1,10 @@
 from django.urls import path
 
-from .views import AdminStatsView, NewsletterExportView, NewsletterListView
+from .views import AdminAttentionView, AdminStatsView, NewsletterExportView, NewsletterListView
 
 urlpatterns = [
     path("admin/stats/", AdminStatsView.as_view(), name="admin-stats"),
+    path("admin/attention/", AdminAttentionView.as_view(), name="admin-attention"),
     path("admin/newsletter/", NewsletterListView.as_view(), name="admin-newsletter"),
     path("admin/newsletter/export/", NewsletterExportView.as_view(), name="admin-newsletter-export"),
 ]

@@ -103,3 +103,96 @@ class NewsletterExportView(APIView):
         for s in NewsletterSubscriber.objects.all():
             writer.writerow([s.email, s.created_at.isoformat()])
         return response
+
+
+class AdminAttentionView(APIView):
+    """
+    GET /api/admin/attention/ — the operations "needs attention" inbox.
+
+    One call returns everything waiting on a human, each with a count, the
+    age of the oldest waiting item (days), and a small preview list. Born out
+    of the gap analysis: unanswered queues are invisible until someone goes
+    looking — this endpoint makes them impossible to miss.
+    """
+
+    permission_classes = [IsAuthenticated, IsStaffOrAdmin]
+
+    PREVIEW = 5
+
+    def get(self, request):
+        from assignments.models import Submission
+        from assistant.models import CounsellingRequest
+        from creators.models import CourseCreatorApplication
+
+        now = timezone.now()
+
+        def age_days(dt):
+            return (now - dt).days if dt else None
+
+        # Pending teacher applications
+        apps_qs = CourseCreatorApplication.objects.filter(
+            status=CourseCreatorApplication.Status.PENDING
+        ).order_by("created_at")
+        applications = {
+            "count": apps_qs.count(),
+            "oldest_days": age_days(apps_qs.values_list("created_at", flat=True).first()),
+            "items": [
+                {"id": a.id, "title": a.full_name, "waiting_days": age_days(a.created_at)}
+                for a in apps_qs[: self.PREVIEW]
+            ],
+            "link": "/admin/applications",
+        }
+
+        # Courses submitted for review
+        review_qs = Course.objects.filter(status=Course.Status.SUBMITTED).order_by("submitted_at")
+        course_reviews = {
+            "count": review_qs.count(),
+            "oldest_days": age_days(review_qs.values_list("submitted_at", flat=True).first()),
+            "items": [
+                {"id": c.id, "title": c.title, "waiting_days": age_days(c.submitted_at or c.updated_at)}
+                for c in review_qs[: self.PREVIEW]
+            ],
+            "link": "/admin/course-reviews",
+        }
+
+        # Counselling requests with no reply yet
+        open_counselling = CounsellingRequest.objects.filter(
+            status__in=[CounsellingRequest.Status.OPEN, CounsellingRequest.Status.IN_REVIEW]
+        ).order_by("created_at")
+        counselling = {
+            "count": open_counselling.count(),
+            "oldest_days": age_days(open_counselling.values_list("created_at", flat=True).first()),
+            "items": [
+                {"id": r.id, "title": r.subject, "waiting_days": age_days(r.created_at)}
+                for r in open_counselling[: self.PREVIEW]
+            ],
+            "link": "/admin/counselling",
+        }
+
+        # Ungraded assignment submissions
+        ungraded_qs = Submission.objects.filter(
+            status=Submission.Status.SUBMITTED
+        ).select_related("assignment").order_by("submitted_at")
+        ungraded = {
+            "count": ungraded_qs.count(),
+            "oldest_days": age_days(ungraded_qs.values_list("submitted_at", flat=True).first()),
+            "items": [
+                {"id": sub.id, "title": sub.assignment.title, "waiting_days": age_days(sub.submitted_at)}
+                for sub in ungraded_qs[: self.PREVIEW]
+            ],
+            "link": "/creator/assignments",
+        }
+
+        total = (
+            applications["count"] + course_reviews["count"]
+            + counselling["count"] + ungraded["count"]
+        )
+        return Response({
+            "total_waiting": total,
+            "queues": {
+                "teacher_applications": applications,
+                "course_reviews": course_reviews,
+                "counselling": counselling,
+                "ungraded_submissions": ungraded,
+            },
+        })

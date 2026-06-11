@@ -30,3 +30,21 @@ export async function downloadNewsletterCsv(): Promise<void> {
   a.remove();
   URL.revokeObjectURL(url);
 }
+
+export interface AttentionItem { id: number; title: string; waiting_days: number | null; }
+export interface AttentionQueue {
+  count: number;
+  oldest_days: number | null;
+  items: AttentionItem[];
+  link: string;
+}
+export interface AdminAttention {
+  total_waiting: number;
+  queues: Record<string, AttentionQueue>;
+}
+
+export async function getAdminAttention(): Promise<AdminAttention> {
+  const res = await authFetch("/api/admin/attention/");
+  if (!res.ok) throw new Error("Not authorized");
+  return res.json();
+}

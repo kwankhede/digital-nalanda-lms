@@ -7,7 +7,12 @@ import { isCreator } from "@/lib/roles";
 import { useAuth } from "@/lib/auth";
 import { configForRole } from "@/lib/dashboards";
 import { getDashboardSummary, type DashboardSummary } from "@/lib/dashboard";
-import { getCreatorCourses, type CreatorCourse } from "@/lib/creator";
+import {
+  getCreatorCourses,
+  getCreatorCourseStats,
+  type CreatorCourse,
+  type CreatorCourseStats,
+} from "@/lib/creator";
 
 // --- helpers -------------------------------------------------------------
 
@@ -103,6 +108,7 @@ function CreatorDashboard() {
   const { user } = useAuth();
   const [summary, setSummary] = useState<DashboardSummary | null>(null);
   const [courses, setCourses] = useState<CreatorCourse[]>([]);
+  const [stats, setStats] = useState<CreatorCourseStats[]>([]);
   const [loading, setLoading] = useState(true);
   const [coursesLoading, setCoursesLoading] = useState(true);
 
@@ -110,13 +116,15 @@ function CreatorDashboard() {
     let active = true;
     (async () => {
       // Both calls are independent and individually resilient.
-      const [s, c] = await Promise.all([
+      const [s, c, st] = await Promise.all([
         getDashboardSummary().catch(() => null),
         getCreatorCourses().catch(() => [] as CreatorCourse[]),
+        getCreatorCourseStats().catch(() => ({ courses: [] as CreatorCourseStats[] })),
       ]);
       if (!active) return;
       setSummary(s);
       setCourses(c);
+      setStats(st.courses);
       setLoading(false);
       setCoursesLoading(false);
     })();
@@ -222,6 +230,53 @@ function CreatorDashboard() {
             </ul>
           )}
         </section>
+
+
+        {/* 5b. Course performance (analytics v1) */}
+        {stats.some((s) => s.enrollments > 0) && (
+          <section className="mt-8 rounded-2xl border border-nal-border bg-white p-6 shadow-soft">
+            <h2 className="font-display text-lg font-bold text-nal-navy">Course performance</h2>
+            <p className="mt-1 text-sm text-nal-slate">
+              How learners are doing in your published courses.
+            </p>
+            <div className="mt-4 overflow-x-auto">
+              <table className="w-full min-w-[560px] text-sm">
+                <thead>
+                  <tr className="border-b border-nal-border text-left text-xs uppercase tracking-wide text-nal-slate">
+                    <th className="py-2 pr-3">Course</th>
+                    <th className="py-2 pr-3">Enrolled</th>
+                    <th className="py-2 pr-3">Completed</th>
+                    <th className="py-2 pr-3">Completion</th>
+                    <th className="py-2 pr-3">Avg progress</th>
+                    <th className="py-2">Active (7d)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {stats.map((s) => (
+                    <tr key={s.id} className="border-b border-nal-border/60 last:border-0">
+                      <td className="max-w-[220px] truncate py-2.5 pr-3 font-medium text-nal-navy">{s.title}</td>
+                      <td className="py-2.5 pr-3">{s.enrollments}</td>
+                      <td className="py-2.5 pr-3">{s.completed}</td>
+                      <td className="py-2.5 pr-3">{s.completion_rate}%</td>
+                      <td className="py-2.5 pr-3">
+                        <span className="inline-flex items-center gap-2">
+                          <span className="h-1.5 w-16 overflow-hidden rounded-full bg-nal-parchment">
+                            <span
+                              className="block h-full rounded-full bg-nal-saffron"
+                              style={{ width: `${Math.min(100, s.avg_progress)}%` }}
+                            />
+                          </span>
+                          {s.avg_progress}%
+                        </span>
+                      </td>
+                      <td className="py-2.5">{s.active_last_7_days}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        )}
 
         {/* 5. Course pipeline */}
         <section className="mt-8">

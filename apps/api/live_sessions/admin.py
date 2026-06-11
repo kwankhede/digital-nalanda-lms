@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Event, LiveSession, SessionAttendance
+from .models import SessionReminderLog, Event, LiveSession, SessionAttendance
 
 
 class AttendanceInline(admin.TabularInline):
@@ -40,3 +40,9 @@ class SessionAttendanceAdmin(admin.ModelAdmin):
     list_display = ("student", "session", "attendance_status", "joined_at")
     list_filter = ("attendance_status",)
     search_fields = ("student__email", "session__title")
+
+
+@admin.register(SessionReminderLog)
+class SessionReminderLogAdmin(admin.ModelAdmin):
+    list_display = ("session", "kind", "sent_at", "recipients_count")
+    list_filter = ("kind",)

@@ -195,3 +195,20 @@ export const reorderCurriculum = (
     method: "POST", headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ modules }),
   }).then((r) => j(r));
+
+export interface CreatorCourseStats {
+  id: number;
+  title: string;
+  slug: string;
+  status: string;
+  enrollments: number;
+  completed: number;
+  completion_rate: number;
+  avg_progress: number;
+  active_last_7_days: number;
+}
+
+export const getCreatorCourseStats = () =>
+  authFetch("/api/creator/courses/stats/").then((r) =>
+    j<{ courses: CreatorCourseStats[] }>(r),
+  );

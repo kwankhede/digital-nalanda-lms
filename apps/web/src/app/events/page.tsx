@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { getHomeUpcoming, type HomeUpcomingItem } from "@/lib/api";
-import { sampleUpcoming } from "@/lib/homeFallbacks";
 
 export const dynamic = "force-dynamic";
 
@@ -73,9 +72,12 @@ function Column({ title, subtitle, items }: { title: string; subtitle: string; i
 
 export default async function EventsPage() {
   const fetched = await getHomeUpcoming({ limit: 100, days: 365 });
-  const items = (fetched.length > 0 ? fetched : sampleUpcoming()).sort(
-    (a, b) => +new Date(a.start_time) - +new Date(b.start_time),
-  );
+  // Never substitute sample data here: showing fake "upcoming" events erodes
+  // trust faster than an honest empty state (see gap analysis §6/§8).
+  const now = Date.now();
+  const items = fetched
+    .filter((i) => +new Date(i.start_time) >= now)
+    .sort((a, b) => +new Date(a.start_time) - +new Date(b.start_time));
   const liveClasses = items.filter((i) => i.type === "live_session");
   const events = items.filter((i) => i.type === "event");
 

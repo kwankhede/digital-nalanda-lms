@@ -1,6 +1,7 @@
 from django.urls import path
 
 from .course_views import (
+    CreatorCourseStatsView,
     CurriculumView,
     CurriculumReorderView,
     DuplicateModuleView,
@@ -42,6 +43,7 @@ urlpatterns = [
 
     # Creator courses
     path("creator/courses/", CreatorCourseListCreateView.as_view(), name="creator-courses"),
+    path("creator/courses/stats/", CreatorCourseStatsView.as_view(), name="creator-course-stats"),
     path("creator/courses/<int:pk>/", CreatorCourseDetailView.as_view(), name="creator-course-detail"),
     path("creator/courses/<int:pk>/submit/", SubmitCourseView.as_view(), name="creator-course-submit"),
     path("creator/courses/<int:pk>/curriculum/", CurriculumView.as_view(), name="creator-curriculum"),

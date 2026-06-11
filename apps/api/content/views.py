@@ -12,6 +12,7 @@ from .serializers import (
     EducatorDetailSerializer,
     EducatorWriteSerializer,
     ImpactMetricSerializer,
+    LearningPathDetailSerializer,
     LearningPathSerializer,
     NewsletterSerializer,
     SchoolSerializer,
@@ -61,6 +62,15 @@ class LearningPathListView(generics.ListAPIView):
     serializer_class = LearningPathSerializer
     permission_classes = [AllowAny]
     pagination_class = None
+
+
+class LearningPathDetailView(generics.RetrieveAPIView):
+    """GET /api/learning-paths/<slug>/ — path with its ordered courses."""
+
+    queryset = LearningPath.objects.filter(is_published=True)
+    serializer_class = LearningPathDetailSerializer
+    permission_classes = [AllowAny]
+    lookup_field = "slug"
 
 
 class EducatorListView(generics.ListAPIView):

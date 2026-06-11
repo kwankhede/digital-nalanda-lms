@@ -97,12 +97,27 @@ class JoinSessionView(APIView):
 # ---------------- Events (public reads) ----------------
 
 class EventListView(generics.ListAPIView):
+    """
+    GET /api/events/?when=upcoming|past
+
+    Events auto-classify by start_time: a past event can never appear as
+    upcoming, regardless of its stored status (content can go stale; time
+    math can't). Upcoming sorts soonest-first, past sorts newest-first.
+    """
+
     serializer_class = EventSerializer
     permission_classes = [AllowAny]
     pagination_class = None
 
     def get_queryset(self):
-        return Event.objects.exclude(status=Event.Status.CANCELLED)
+        qs = Event.objects.exclude(status=Event.Status.CANCELLED)
+        when = self.request.query_params.get("when")
+        now = timezone.now()
+        if when == "upcoming":
+            return qs.filter(start_time__gte=now).order_by("start_time")
+        if when == "past":
+            return qs.filter(start_time__lt=now).order_by("-start_time")
+        return qs
 
 
 class UpcomingEventsView(generics.ListAPIView):

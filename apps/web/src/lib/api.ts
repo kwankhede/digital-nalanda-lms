@@ -172,6 +172,19 @@ export interface PathDTO {
   icon: string;
   course_count: number;
 }
+export interface PathCourseDTO {
+  id: number;
+  title: string;
+  slug: string;
+  short_description: string;
+  thumbnail_url: string;
+  level: string;
+  order: number;
+}
+export interface PathDetailDTO extends PathDTO {
+  image_url?: string;
+  courses: PathCourseDTO[];
+}
 export interface EducatorDTO {
   id?: number;
   name: string;
@@ -220,6 +233,15 @@ export async function getSchool(slug: string): Promise<SchoolDetailDTO | null> {
   return res.json();
 }
 export const getLearningPaths = () => getList<PathDTO>("/api/learning-paths/");
+export async function getLearningPath(slug: string): Promise<PathDetailDTO | null> {
+  try {
+    const res = await fetch(`${API_URL}/api/learning-paths/${slug}/`, { cache: "no-store" });
+    if (!res.ok) return null;
+    return res.json();
+  } catch {
+    return null;
+  }
+}
 export const getEducators = () => getList<EducatorDTO>("/api/educators/featured/");
 export const getAllEducators = () => getList<EducatorDTO>("/api/educators/");
 export async function getEducator(slug: string): Promise<EducatorDetailDTO | null> {

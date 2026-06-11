@@ -30,9 +30,44 @@ class SchoolWriteSerializer(serializers.ModelSerializer):
 
 
 class LearningPathSerializer(serializers.ModelSerializer):
+    course_count = serializers.SerializerMethodField()
+
     class Meta:
         model = LearningPath
         fields = ["id", "name", "slug", "description", "icon", "image_url", "course_count"]
+
+    def get_course_count(self, obj):
+        # Prefer the real number of linked courses; fall back to the manual
+        # count for paths that haven't been wired up yet.
+        linked = obj.path_courses.count()
+        return linked or obj.course_count
+
+
+class PathCourseSerializer(serializers.Serializer):
+    """Compact course card inside a path detail payload."""
+
+    id = serializers.IntegerField(source="course.id")
+    title = serializers.CharField(source="course.title")
+    slug = serializers.CharField(source="course.slug")
+    short_description = serializers.CharField(source="course.short_description")
+    thumbnail_url = serializers.CharField(source="course.thumbnail_url")
+    level = serializers.CharField(source="course.level")
+    order = serializers.IntegerField()
+
+
+class LearningPathDetailSerializer(LearningPathSerializer):
+    courses = serializers.SerializerMethodField()
+
+    class Meta(LearningPathSerializer.Meta):
+        fields = LearningPathSerializer.Meta.fields + ["courses"]
+
+    def get_courses(self, obj):
+        links = (
+            obj.path_courses.select_related("course", "course__category")
+            .filter(course__status="published")
+            .order_by("order", "id")
+        )
+        return PathCourseSerializer(links, many=True).data
 
 
 class EducatorSerializer(serializers.ModelSerializer):

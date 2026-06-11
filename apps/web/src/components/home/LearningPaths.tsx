@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { getLearningPaths } from "@/lib/api";
 import { useApi } from "@/lib/useApi";
 import SectionHeading from "./SectionHeading";
@@ -24,7 +25,8 @@ export default function LearningPaths() {
       ) : (
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {data.map((p) => (
-            <div
+            <Link
+              href={`/paths/${p.slug}`}
               key={p.slug}
               className="flex flex-col rounded-xl border border-gray-100 p-6 shadow-sm transition hover:shadow-md"
             >
@@ -34,9 +36,9 @@ export default function LearningPaths() {
               <h3 className="mt-4 font-bold text-brand-navy">{p.name}</h3>
               <p className="mt-1 flex-1 text-sm text-gray-500">{p.description}</p>
               <p className="mt-3 text-xs font-semibold text-brand-blue">
-                {p.course_count} courses
+                {p.course_count} courses →
               </p>
-            </div>
+            </Link>
           ))}
         </div>
       )}

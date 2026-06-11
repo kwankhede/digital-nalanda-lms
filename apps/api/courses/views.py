@@ -1,3 +1,4 @@
+from django.db.models import Q
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
 
@@ -20,7 +21,8 @@ class CategoryListView(generics.ListAPIView):
 class CourseListView(generics.ListAPIView):
     """
     GET /api/courses/
-    Optional query filters: ?category=<slug>&level=<level>&language=<language>
+    Optional query filters:
+    ?category=<slug>&level=<level>&language=<language>&search=<term>
     """
 
     serializer_class = CourseListSerializer
@@ -35,6 +37,13 @@ class CourseListView(generics.ListAPIView):
             qs = qs.filter(level=level)
         if language := params.get("language"):
             qs = qs.filter(language__iexact=language)
+        if search := params.get("search", "").strip():
+            qs = qs.filter(
+                Q(title__icontains=search)
+                | Q(short_description__icontains=search)
+                | Q(description__icontains=search)
+                | Q(category__name__icontains=search)
+            )
         return qs
 
 

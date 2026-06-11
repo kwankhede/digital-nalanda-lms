@@ -50,10 +50,40 @@ def recalc_progress(student, course) -> Enrollment | None:
     # Issue the certificate AFTER the enrollment is persisted, so the
     # certificate service sees the completed status. Idempotent + best-effort.
     if just_completed:
+        certificate = None
         from certificates.services import issue_certificate, NotEligible
         try:
-            issue_certificate(student, course)
+            certificate = issue_certificate(student, course)
         except NotEligible:
             pass
+        _send_completion_email(student, course, certificate)
 
     return enrollment
+
+
+def _send_completion_email(student, course, certificate=None):
+    """Congratulate the student on completing a course. Best-effort."""
+    from django.conf import settings as dj_settings
+
+    from core.email import send_email
+
+    base = getattr(dj_settings, "FRONTEND_URL", "").rstrip("/")
+    cert_line = ""
+    if certificate is not None:
+        cert_line = (
+            "Your certificate is ready — view and download it from your "
+            f"dashboard: {base}/dashboard\n"
+            f"Certificate number: {certificate.certificate_number}\n\n"
+        )
+    send_email(
+        f"Congratulations — you completed {course.title}!",
+        getattr(student, "email", None),
+        (
+            f"Hi {getattr(student, 'full_name', '') or 'there'},\n\n"
+            f"You've completed \"{course.title}\" on Digital Nalanda. "
+            "Wonderful work!\n\n"
+            f"{cert_line}"
+            f"Find your next course: {base}/courses\n\n"
+            "— Digital Nalanda"
+        ),
+    )

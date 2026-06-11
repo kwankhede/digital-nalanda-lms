@@ -5,6 +5,7 @@ from .models import (
     Educator,
     ImpactMetric,
     LearningPath,
+    LearningPathCourse,
     NewsletterSubscriber,
     School,
 )
@@ -22,8 +23,15 @@ class SchoolAdmin(admin.ModelAdmin):
               "order", "is_featured", "is_published")
 
 
+class LearningPathCourseInline(admin.TabularInline):
+    model = LearningPathCourse
+    extra = 1
+    autocomplete_fields = ["course"]
+
+
 @admin.register(LearningPath)
 class LearningPathAdmin(admin.ModelAdmin):
+    inlines = [LearningPathCourseInline]
     list_display = ("name", "course_count", "order", "is_published")
     list_editable = ("course_count", "order", "is_published")
     prepopulated_fields = {"slug": ("name",)}

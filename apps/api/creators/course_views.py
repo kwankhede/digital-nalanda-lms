@@ -396,3 +396,58 @@ class DuplicateLessonView(APIView):
         )
         from .course_serializers import CreatorLessonSerializer
         return Response(CreatorLessonSerializer(new).data, status=status.HTTP_201_CREATED)
+
+
+class CreatorCourseStatsView(APIView):
+    """
+    GET /api/creator/courses/stats/ — per-course analytics v1 for the
+    logged-in creator: enrollments, completions, average progress, and
+    learners active in the last 7 days. (Gap analysis: creators previously
+    had zero visibility into learner behaviour.)
+    """
+
+    permission_classes = [IsCourseCreator]
+
+    def get(self, request):
+        from datetime import timedelta
+
+        from django.db.models import Avg, Count, Q
+        from django.utils import timezone
+
+        from enrollments.models import Enrollment
+        from progress.models import LessonProgress
+
+        week_ago = timezone.now() - timedelta(days=7)
+        courses = Course.objects.filter(created_by=request.user).select_related("category")
+
+        rows = []
+        for course in courses:
+            enr = Enrollment.objects.filter(course=course).exclude(
+                status=Enrollment.Status.CANCELLED
+            )
+            agg = enr.aggregate(
+                total=Count("id"),
+                completed=Count("id", filter=Q(status=Enrollment.Status.COMPLETED)),
+                avg_progress=Avg("progress_percentage"),
+            )
+            active_week = (
+                LessonProgress.objects.filter(course=course)
+                .filter(
+                    Q(last_watched_at__gte=week_ago) | Q(completed_at__gte=week_ago)
+                )
+                .values("student").distinct().count()
+            )
+            total = agg["total"] or 0
+            completed = agg["completed"] or 0
+            rows.append({
+                "id": course.id,
+                "title": course.title,
+                "slug": course.slug,
+                "status": course.status,
+                "enrollments": total,
+                "completed": completed,
+                "completion_rate": round(completed / total * 100) if total else 0,
+                "avg_progress": round(agg["avg_progress"] or 0),
+                "active_last_7_days": active_week,
+            })
+        return Response({"courses": rows})

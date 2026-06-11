@@ -161,3 +161,29 @@ class SessionAttendance(models.Model):
 
     def __str__(self):
         return f"{self.student} · {self.session} · {self.attendance_status}"
+
+
+class SessionReminderLog(models.Model):
+    """
+    Records that a reminder batch was sent for a session, making the
+    `send_session_reminders` management command idempotent. One row per
+    (session, kind) regardless of how many recipients were notified.
+    """
+
+    class Kind(models.TextChoices):
+        DAY_BEFORE = "24h", "24 hours before"
+        SOON = "30m", "30 minutes before"
+
+    session = models.ForeignKey(
+        LiveSession, related_name="reminder_logs", on_delete=models.CASCADE
+    )
+    kind = models.CharField(max_length=10, choices=Kind.choices)
+    sent_at = models.DateTimeField(auto_now_add=True)
+    recipients_count = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        unique_together = ("session", "kind")
+        ordering = ["-sent_at"]
+
+    def __str__(self):
+        return f"{self.session} · {self.kind} · {self.recipients_count} sent"

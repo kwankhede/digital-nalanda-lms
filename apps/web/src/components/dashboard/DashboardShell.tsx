@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth";
 import { configForRole } from "@/lib/dashboards";
 import { getDashboardSummary, type DashboardSummary } from "@/lib/dashboard";
+import { getAdminAttention, type AdminAttention } from "@/lib/admin";
 
 function timeAgo(iso: string) {
   const d = new Date(iso);
@@ -27,14 +28,75 @@ function QuickActionLink({ a }: { a: { label: string; href: string; primary?: bo
   );
 }
 
+
+const QUEUE_LABELS: Record<string, string> = {
+  teacher_applications: "Teacher applications",
+  course_reviews: "Courses awaiting review",
+  counselling: "Counselling requests",
+  ungraded_submissions: "Ungraded submissions",
+};
+
+function OpsInbox({ attention }: { attention: AdminAttention }) {
+  const entries = Object.entries(attention.queues);
+  return (
+    <section className="mt-6 rounded-2xl border border-nal-border bg-white p-6 shadow-soft">
+      <div className="flex items-baseline justify-between">
+        <h2 className="font-display text-lg font-bold text-nal-navy">Operations inbox</h2>
+        <span className="text-sm text-nal-slate">{attention.total_waiting} waiting</span>
+      </div>
+      <p className="mt-1 text-sm text-nal-slate">
+        Every queue with a human on the other end — oldest wait shown so nothing silently goes stale.
+      </p>
+      <div className="mt-4 grid gap-4 sm:grid-cols-2">
+        {entries.map(([key, q]) => (
+          <Link
+            key={key}
+            href={q.link}
+            className={`group rounded-xl border p-4 transition hover:-translate-y-0.5 hover:shadow-soft ${
+              (q.oldest_days ?? 0) >= 7 && q.count > 0
+                ? "border-red-300 bg-red-50/50"
+                : "border-nal-border bg-white"
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <span className="font-medium text-nal-navy">{QUEUE_LABELS[key] ?? key}</span>
+              <span className={`rounded-full px-2.5 py-0.5 text-sm font-bold text-white ${q.count > 0 ? "bg-nal-saffron" : "bg-nal-border"}`}>
+                {q.count}
+              </span>
+            </div>
+            {q.count > 0 && (
+              <p className="mt-1 text-xs text-nal-slate">
+                Oldest waiting {q.oldest_days ?? 0} day{(q.oldest_days ?? 0) === 1 ? "" : "s"}
+              </p>
+            )}
+            {q.items.slice(0, 3).map((it) => (
+              <p key={it.id} className="mt-1 truncate text-xs text-nal-slate">• {it.title}</p>
+            ))}
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 export default function DashboardShell() {
   const { user } = useAuth();
   const [summary, setSummary] = useState<DashboardSummary | null>(null);
+  const [attention, setAttention] = useState<AdminAttention | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const isAdmin =
+    !!user && (!!user.is_staff || !!user.is_superuser || ["admin", "super_admin", "content_manager"].includes(user.role));
 
   useEffect(() => {
     getDashboardSummary().then(setSummary).catch(() => setSummary(null)).finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    if (isAdmin) {
+      getAdminAttention().then(setAttention).catch(() => setAttention(null));
+    }
+  }, [isAdmin]);
 
   if (!user) return null;
   const cfg = configForRole(user.role, user.is_superuser);
@@ -73,6 +135,8 @@ export default function DashboardShell() {
             ))}
           </div>
         )}
+
+        {isAdmin && attention && <OpsInbox attention={attention} />}
 
         <div className="mt-8 grid gap-6 lg:grid-cols-3">
           {/* 3. Pending tasks */}

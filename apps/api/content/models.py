@@ -50,6 +50,28 @@ class LearningPath(models.Model):
         return self.name
 
 
+class LearningPathCourse(models.Model):
+    """
+    Ordered link between a LearningPath and a Course — makes paths real,
+    followable sequences instead of marketing cards (gap analysis §3.3/§13).
+    """
+
+    path = models.ForeignKey(
+        LearningPath, related_name="path_courses", on_delete=models.CASCADE
+    )
+    course = models.ForeignKey(
+        "courses.Course", related_name="path_links", on_delete=models.CASCADE
+    )
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        unique_together = ("path", "course")
+        ordering = ["order", "id"]
+
+    def __str__(self):
+        return f"{self.path.name} · {self.order}. {self.course.title}"
+
+
 class Educator(models.Model):
     name = models.CharField(max_length=150)
     slug = models.SlugField(max_length=170, unique=True, blank=True)
